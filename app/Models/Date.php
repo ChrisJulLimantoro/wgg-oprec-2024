@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models{{ classDirectory }};
+namespace App\Models;
 
 use App\Models\ModelUtils;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
-class {{ class }} extends Model
+class Date extends Model
 {
     use HasFactory;
     use HasUuids;
@@ -18,7 +18,9 @@ class {{ class }} extends Model
      *
      * @var array
      */
-    protected $fillable; 
+    protected $fillable=[
+        'date'
+    ]; 
 
     /**
      * The attributes that should be hidden for arrays.
@@ -26,7 +28,11 @@ class {{ class }} extends Model
      * @var array
      */
 
-    protected $hidden;
+    protected $hidden=[
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
 
     /**
      * Rules that applied in this model
@@ -35,7 +41,9 @@ class {{ class }} extends Model
      */
     public static function validationRules()
     {
-        return [];
+        return [
+            'date' => 'required|date|unique:dates',
+        ];
     }
 
     /**
@@ -45,7 +53,11 @@ class {{ class }} extends Model
      */
     public static function validationMessages()
     {
-        return [];
+        return [
+            'date.required' => 'Date is required',
+            'date.date' => 'Date must be a date',
+            'date.unique' => 'Date already exists',
+        ];
     }
 
     /**
@@ -55,7 +67,9 @@ class {{ class }} extends Model
      */
     public function resourceData($request)
     {
-        return ModelUtils::filterNullValues([]);
+        return ModelUtils::filterNullValues([
+            'date' => $request->date,
+        ]);
     }
 
 
@@ -67,7 +81,7 @@ class {{ class }} extends Model
 
     public function controller()
     {
-        return 'App\Http\Controllers{{ classDirectory }}\{{ class }}Controller';
+        return 'App\Http\Controllers\DateController';
     }
 
     /**
@@ -77,7 +91,7 @@ class {{ class }} extends Model
     */
     public function relations()
     {
-        return [];
+        return ['schedules'];
     }
 
     /**
@@ -85,4 +99,8 @@ class {{ class }} extends Model
     *
     *
     */
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
+    }
 }
