@@ -103,7 +103,7 @@ class Division extends Model
     */
     public function relations()
     {
-        return [];
+        return ['questions'];
     }
 
     /**
@@ -111,4 +111,8 @@ class Division extends Model
     *
     *
     */
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
 }

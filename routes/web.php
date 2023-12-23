@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DateController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\QuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,5 +31,13 @@ Route::prefix('admin')->group(function(){
     Route::prefix('schedules')->group(function(){
         Route::get('/select-schedule', [ScheduleController::class, 'index'])->name('admin.select.schedule');
         Route::post('/select-schedule', [ScheduleController::class, 'select'])->name('admin.select.schedule.update');
+    });
+
+    Route::prefix('questions')->group(function(){
+        Route::get('/', [QuestionController::class, 'index'])->name('admin.question');
+        Route::post('/get-question', [QuestionController::class, 'getQuestionByDept'])->name('admin.question.get');
+        Route::post('/add-question', [QuestionController::class, 'addQuestion'])->name('admin.question.add');
+        Route::post('/delete-question', [QuestionController::class, 'deleteQuestion'])->name('admin.question.delete');
+        Route::post('/update-question', [QuestionController::class, 'updateQuestion'])->name('admin.question.update');
     });
 });
