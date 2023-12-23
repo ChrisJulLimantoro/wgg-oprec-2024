@@ -154,4 +154,35 @@ class BaseController extends Controller
 
         return ['success' => 'Deleted Successfully!!'];
     }
+
+    public function getSelectedColumn($column = ['*'], $filter = [], $relations = [], $orderBy = "")
+    {
+        if($orderBy != ""){
+            if(!empty($filter)){
+                return $this->model
+                ->select($column)
+                ->with($relations)
+                ->where($filter)
+                ->orderBy($orderBy)
+                ->get();
+            }
+            return $this->model
+            ->select($column)
+            ->with($relations)
+            ->orderBy($orderBy)
+            ->get();
+        }else{
+            if(!empty($filter)){
+                return $this->model
+                ->select($column)
+                ->with($relations)
+                ->where($filter)
+                ->get();
+            }
+            return $this->model
+            ->select($column)
+            ->with($relations)
+            ->get();
+        }
+    }
 }

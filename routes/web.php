@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DateController;
+use App\Http\Controllers\ScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +17,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::prefix('admin')->group(function(){
+    // Dates
+    Route::prefix('dates')->group(function(){
+        Route::get('/', [DateController::class, 'index'])->name('admin.date');
+        Route::post('/', [DateController::class, 'add'])->name('admin.date.add');
+        Route::delete('/{id}', [DateController::class, 'destroy'])->name('admin.date.delete');
+    });
+
+    Route::prefix('schedules')->group(function(){
+        Route::get('/select-schedule', [ScheduleController::class, 'index'])->name('admin.select.schedule');
+        Route::post('/select-schedule', [ScheduleController::class, 'update'])->name('admin.select.schedule.update');
+    });
 });
