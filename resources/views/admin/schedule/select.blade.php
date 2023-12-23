@@ -120,18 +120,36 @@
                 let time = id.split(':')[2];
                 let status = id.split(':')[3];
                 if(status != 2){
-                    $("#loader").css('z-index',10);
+                    Swal.showLoading();
                     $.ajax({
                         url: "{{ route('admin.select.schedule.update') }}",
                         type: "POST",
                         data: {
                             "_token": "{{ csrf_token() }}",
-                            "date": date,
+                            "date_id": date,
                             "time": time,
                             "status": status
                         },
                         success: function(e){
-                            let d = JSON.parse(e);
+                            console.log(e)
+                            Swal.hideLoading();
+                            if(e.success){
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: e.message,
+                                    showConfirmButton: false,
+                                    timer: 500
+                                })
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: e.message,
+                                    showConfirmButton: false,
+                                    timer: 1000
+                                })
+                            }
                             statusBaru = status == 1 ? 0 : 1;
                             let idBaru = id.split(':')[0]+':'+id.split(':')[1]+':'+id.split(':')[2]+':'+statusBaru;
                             // console.log(d, id, idBaru);
@@ -146,7 +164,6 @@
                                 item.addClass('bg-red-500');
                                 item.attr('id',idBaru);
                             }
-                            $("#loader").css('z-index',-10);
                         }
                     });
                 }

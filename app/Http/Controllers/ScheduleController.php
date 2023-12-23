@@ -48,4 +48,28 @@ class ScheduleController extends BaseController
         // dd($data);
         return view('admin.schedule.select',$data);
     }
+
+    public function select(Request $request){
+        $schedules = $this->getSelectedColumn(['*'], ['admin_id' => session('admin_id')])->toArray();
+        $data = $request->only(['date_id','status','time']);
+        if($data['status'] < 0 && $data['status'] > 2) return response()->json(['success' => false, 'message' => 'Status tidak valid'],500);
+        $status = $data['status'] == 0 ? 1 : 0;
+        $exist = false;
+        foreach($schedules as $s){
+            if($s['date_id'] == $data['date_id'] && $s['time'] == $data['time']){
+                $id = $s['id'];
+                $this->update($id,['status' => $status]);
+                $exist = true;
+                return response()->json(['success' => true, 'message' => 'Berhasil mengubah jadwal'],200);
+            }
+        }
+        if(!$exist){
+            // dd("hello");
+            $request->merge(['admin_id' => session('admin_id')]);
+            $request->merge(['status' => $status]);
+            $store = $this->store($request);
+            if(isset($store['error'])) return response()->json(['success' => false, 'message' => 'Gagal mengubah jadwal'],500);
+            return response()->json(['success' => true, 'message' => 'Berhasil mengubah jadwal'],200);
+        }
+    }
 }

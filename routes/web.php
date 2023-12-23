@@ -29,6 +29,6 @@ Route::prefix('admin')->group(function(){
 
     Route::prefix('schedules')->group(function(){
         Route::get('/select-schedule', [ScheduleController::class, 'index'])->name('admin.select.schedule');
-        Route::post('/select-schedule', [ScheduleController::class, 'update'])->name('admin.select.schedule.update');
+        Route::post('/select-schedule', [ScheduleController::class, 'select'])->name('admin.select.schedule.update');
     });
 });
