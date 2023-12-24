@@ -25,8 +25,8 @@ class ApplicantSeeder extends Seeder
                 'email' => 'c14210206@john.petra.ac.id',
                 'gender' => 0,
                 'religion' => 'Kristen',
-                'birth_place' => 'Surabaya',
-                'birth_date' => '2003-08-14',
+                'birthplace' => 'Surabaya',
+                'birthdate' => '2003-08-14',
                 'address' => 'Jl. Raya Darmo Permai III/1',
                 'province' => 'Jawa Timur',
                 'city' => 'Surabaya',
@@ -46,14 +46,16 @@ class ApplicantSeeder extends Seeder
                 'astor' => 0,
                 'priority_division1' => Division::where('slug','it')->first()->id,
                 'priority_division2' => Division::where('slug','acara')->first()->id,
+                'division_accepted' => null,
+                'schedule_id' => null
             ],
             [
                 'name' => 'Nicholas Gunawan',
                 'email' => 'c14210098@john.petra.ac.id',
                 'gender' => 0,
                 'religion' => 'Kristen',
-                'birth_place' => 'Surabaya',
-                'birth_date' => '2003-08-14',
+                'birthplace' => 'Surabaya',
+                'birthdate' => '2003-08-14',
                 'address' => 'Jl. Raya Darmo Permai III/1',
                 'province' => 'Jawa Timur',
                 'city' => 'Surabaya',
@@ -73,14 +75,16 @@ class ApplicantSeeder extends Seeder
                 'astor' => 0,
                 'priority_division1' => Division::where('slug','it')->first()->id,
                 'priority_division2' => Division::where('slug','it')->first()->id,
+                'division_accepted' => null,
+                'schedule_id' => null
             ],
             [
                 'name' => 'Ella Arminta',
                 'email' => 'c14210109@john.petra.ac.id',
                 'gender' => 0,
                 'religion' => 'Kristen',
-                'birth_place' => 'Surabaya',
-                'birth_date' => '2003-08-14',
+                'birthplace' => 'Surabaya',
+                'birthdate' => '2003-08-14',
                 'address' => 'Jl. Raya Darmo Permai III/1',
                 'province' => 'Jawa Timur',
                 'city' => 'Surabaya',
@@ -99,6 +103,9 @@ class ApplicantSeeder extends Seeder
                 'allergy' => 'Tidak ada',
                 'astor' => 0,
                 'priority_division1' => Division::where('slug','it')->first()->id,
+                'priority_division2' => null,
+                'division_accepted' => null,
+                'schedule_id' => null
             ],
         ];
         foreach($applicants as $applicant){

@@ -38,14 +38,19 @@ return new class extends Migration
 
             $table->string('diet', 50);
             $table->string('allergy', 150)->nullable();
-            
             $table->boolean('astor')->comment('0: tidak, 1: ya');
-            $table->foreignUuid('priority_division1')->constrained(table: 'divisions');
-            $table->foreignUuid('priority_division2')->constrained(table: 'divisions')->nullable();
-            $table->foreignUuid('division_accepted')->constrained(table: 'divisions')->nullable();
-         
+            
+            $table->uuid('schedule_id')->nullable();
+            $table->uuid('division_accepted')->nullable();
+            $table->uuid('priority_division1');
+            $table->uuid('priority_division2')->nullable();
+
+            $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
+            $table->foreign('division_accepted')->references('id')->on('divisions')->onDelete('cascade');
+            $table->foreign('priority_division1')->references('id')->on('divisions')->onDelete('cascade');
+            $table->foreign('priority_division2')->references('id')->on('divisions')->onDelete('cascade');
+        
             $table->json('documents')->nullable();
-            $table->foreignUuid('schedule_id')->nullable()->constrained(table: 'schedules');
             
             $table->timestamps();
             $table->softDeletes();
