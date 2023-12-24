@@ -178,7 +178,7 @@ class Applicant extends Model
     */
     public function relations()
     {
-        return ['divisions'];
+        return ['priorityDivision1','priorityDivision2','divisionAccepted','answers','schedule'];
     }
 
     /**
@@ -204,5 +204,9 @@ class Applicant extends Model
     public function schedule()
     {
         return $this->belongsTo(Schedule::class);
+    }
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
     }
 }

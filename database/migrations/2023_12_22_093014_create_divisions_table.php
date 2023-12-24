@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name', 50)->nullable(false);
             $table->string('description', 255)->nullable();
             $table->string('slug')->nullable();
+            $table->text('project')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

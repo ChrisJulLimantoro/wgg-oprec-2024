@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DateController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\AnswerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,5 +40,15 @@ Route::prefix('admin')->group(function(){
         Route::post('/add-question', [QuestionController::class, 'addQuestion'])->name('admin.question.add');
         Route::post('/delete-question', [QuestionController::class, 'deleteQuestion'])->name('admin.question.delete');
         Route::post('/update-question', [QuestionController::class, 'updateQuestion'])->name('admin.question.update');
+    });
+
+    Route::prefix('interview')->group(function(){
+        Route::get('/{applicant_id}/page/{page}', [AnswerController::class, 'getQuestion'])->name('admin.interview');
+        Route::post('/submit-answer', [AnswerController::class, 'submitAnswer'])->name('admin.interview.submit.answer');
+        Route::post('/submit-score', [AnswerController::class, 'submitScore'])->name('admin.interview.submit.score');
+        Route::post('/update-answer', [AnswerController::class, 'updateAnswer'])->name('admin.interview.update.answer');
+        Route::post('/update-score', [AnswerController::class, 'updateScore'])->name('admin.interview.update.score');
+        Route::post('/add-project',[AnswerController::class, 'addProject'])->name('admin.interview.add.project');
+        Route::post('/finish',[AnswerController::class, 'finish'])->name('admin.interview.finish');
     });
 });

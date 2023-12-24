@@ -128,13 +128,14 @@ class BaseController extends Controller
      */
     public function updatePartial($data,$id)
     {
-        $model = $this->model->find($id);
+        $model = $this->model->find($id)->first();
         if(!$model){
             return ['error' => 'Id not Found!!'];
         }
         foreach($data as $key => $val){
             $model->{$key} = $val;    
         }
+        // dd($model); 
         $model->save();
 
         return $model->refresh();

@@ -22,6 +22,7 @@ class Division extends Model
         'name',
         'description',
         'slug',
+        'project'
     ]; 
 
     /**

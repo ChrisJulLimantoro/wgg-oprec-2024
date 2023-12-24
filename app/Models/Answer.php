@@ -21,7 +21,7 @@ class Answer extends Model
     protected $fillable = [
         'answer',
         'question_id',
-        'user_id',
+        'applicant_id',
         'score'
     ]; 
 
@@ -47,7 +47,7 @@ class Answer extends Model
         return [
             'answer' => 'required|string',
             'question_id' => 'required|uuid|exists:questions,id',
-            'user_id' => 'required|uuid|exists:users,id',
+            'applicant_id' => 'required|uuid|exists:applicants,id',
             'score' => 'required|integer',
         ];
     }
@@ -65,9 +65,9 @@ class Answer extends Model
             'question_id.required' => 'Question is required!',
             'question_id.uuid' => 'Question must be a uuid!',
             'question_id.exists' => 'Question must be exists!',
-            'user_id.required' => 'User is required!',
-            'user_id.uuid' => 'User must be a uuid!',
-            'user_id.exists' => 'User must be exists!',
+            'applicant_id.required' => 'Applicant is required!',
+            'applicant_id.uuid' => 'Applicant must be a uuid!',
+            'applicant_id.exists' => 'Applicant must be exists!',
             'score.required' => 'Score is required!',
             'score.integer' => 'Score must be an integer!',
         ];
@@ -83,7 +83,7 @@ class Answer extends Model
         return ModelUtils::filterNullValues([
             'answer' => $request->answer,
             'question_id' => $request->question_id,
-            'user_id' => $request->user_id,
+            'applicant_id' => $request->applicant_id,
             'score' => $request->score,
         ]);
     }
@@ -107,7 +107,7 @@ class Answer extends Model
     */
     public function relations()
     {
-        return ['question', 'user'];
+        return ['question', 'applicant'];
     }
 
     /**
@@ -119,4 +119,9 @@ class Answer extends Model
     {
         return $this->belongsTo(Question::class);
     }
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
+    }
+
 }
