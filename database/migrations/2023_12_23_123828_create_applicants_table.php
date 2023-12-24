@@ -42,9 +42,10 @@ return new class extends Migration
             $table->boolean('astor')->comment('0: tidak, 1: ya');
             $table->foreignUuid('priority_division1')->constrained(table: 'divisions');
             $table->foreignUuid('priority_division2')->constrained(table: 'divisions')->nullable();
-            $table->foreignUuid('division_accepted')->constrained(table: 'divisions');
+            $table->foreignUuid('division_accepted')->constrained(table: 'divisions')->nullable();
          
             $table->json('documents')->nullable();
+            $table->foreignUuid('schedule_id')->nullable()->constrained(table: 'schedules');
             
             $table->timestamps();
             $table->softDeletes();

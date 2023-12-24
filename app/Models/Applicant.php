@@ -62,9 +62,10 @@ class Applicant extends Model
             'astor' => 'required|boolean',
             'priority_division1' => 'required|uuid|exists:divisions,id',
             'priority_division2' => 'nullable|uuid|exists:divisions,id',
-            'division_accepted' => 'required|uuid|exists:divisions,id',
+            'division_accepted' => 'nullable|uuid|exists:divisions,id',
             'documents' => 'nullable|array',
-            'documents.*' => 'nullable|string|max:255'
+            'documents.*' => 'nullable|string|max:255',
+            'schedule_id' => 'nullable|uuid|exists:schedules,id',
         ];
     }
 
@@ -138,12 +139,13 @@ class Applicant extends Model
             'division_priority1.exists' => 'Division priority1 must be exists',
             'division_priority2.uuid' => 'Division priority2 must be a uuid',
             'division_priority2.exists' => 'Division priority2 must be exists',
-            'division_accepted.required' => 'Division accepted is required',
             'division_accepted.uuid' => 'Division accepted must be a uuid',
             'division_accepted.exists' => 'Division accepted must be exists',
             'documents.array' => 'Documents must be an array',
             'documents.*.string' => 'Documents must be a string',
             'documents.*.max' => 'Documents must be less than 255 characters',
+            'schedule_id.uuid' => 'Schedule must be a uuid',
+            'schedule_id.exists' => 'Schedule must be exists',
         ];
     }
 
@@ -197,5 +199,10 @@ class Applicant extends Model
     public function divisionAccepted()
     {
         return $this->belongsTo(Division::class, 'division_accepted');
+    }
+
+    public function schedule()
+    {
+        return $this->belongsTo(Schedule::class);
     }
 }
