@@ -59,10 +59,17 @@ class DivisionSeeder extends Seeder
                 "name" => "Peran",
                 "slug" => "peran"
             ],
-
+            [
+                "name" => "Opening",
+                "slug" => "open"
+            ],
+            [
+                "name" => "Closing",
+                "slug" => "close"
+            ]
         ];
-        foreach($divisions as $disvision){
-            Division::create($disvision);
+        foreach($divisions as $division){
+            Division::create($division);
         }
     }
 }
