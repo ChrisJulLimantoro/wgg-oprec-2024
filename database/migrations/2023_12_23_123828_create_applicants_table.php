@@ -40,6 +40,7 @@ return new class extends Migration
             $table->string('allergy', 150)->nullable();
             $table->boolean('astor')->comment('0: tidak, 1: ya');
             
+            $table->unsignedTinyInteger('stage')->default(2)->comment('1:Biodata, 2:Berkas, 3:Pilih Jadwal, 4:Menunggu Interview');
             $table->uuid('schedule_id')->nullable();
             $table->uuid('division_accepted')->nullable();
             $table->uuid('priority_division1');

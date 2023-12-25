@@ -13,7 +13,37 @@ class Applicant extends Model
     use HasFactory;
     use HasUuids;
 
-    protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = [
+        'name',
+        'email',
+        'gender',
+        'religion',
+        'birthplace',
+        'birthdate',
+        'province',
+        'city',
+        'address',
+        'postal_code',
+        'phone',
+        'line',
+        'instagram',
+        'tiktok',
+        'gpa',
+        'motivation',
+        'commitment',
+        'strength',
+        'weakness',
+        'experience',
+        'diet',
+        'allergy',
+        'astor',
+        'priority_division1',
+        'priority_division2',
+        'division_accepted',
+        'documents',
+        'schedule_id',
+        'stage'
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -42,16 +72,16 @@ class Applicant extends Model
             'gender' => 'required|boolean',
             'religion' => 'required|string|max:30',
             'birthplace' => 'required|string|max:50',
-            'birthdate' => 'required|date',
+            'birthdate' => 'required|date|date_format:Y-m-d',
             'province' => 'required|string|max:50',
             'city' => 'required|string|max:50',
             'address' => 'required|string',
             'postal_code' => 'required|string|max:5',
-            'phone' => 'required|string|max:15',
+            'phone' => 'required|string|regex:/^([0-9]{8,16})$/',
             'line' => 'nullable|string|max:50',
             'instagram' => 'nullable|string|max:50',
             'tiktok' => 'nullable|string|max:50',
-            'gpa' => 'required|string|max:4',
+            'gpa' => ['required', 'string', 'regex:/^(4\.00|[0-3]\.[0-9]{2})$/'],
             'motivation' => 'required|string',
             'commitment' => 'required|string',
             'strength' => 'required|string',
@@ -66,6 +96,7 @@ class Applicant extends Model
             'documents' => 'nullable|array',
             'documents.*' => 'nullable|string|max:255',
             'schedule_id' => 'nullable|uuid|exists:schedules,id',
+            'stage' => 'required|integer'
         ];
     }
 
@@ -107,7 +138,7 @@ class Applicant extends Model
             'postal_code.max' => 'Postal code must be less than 5 characters',
             'phone.required' => 'Phone is required',
             'phone.string' => 'Phone must be a string',
-            'phone.max' => 'Phone must be less than 15 characters',
+            'phone.regex' => 'Phone must be a valid phone number',
             'line.string' => 'Line must be a string',
             'line.max' => 'Line must be less than 50 characters',
             'instagram.string' => 'Instagram must be a string',
@@ -116,7 +147,7 @@ class Applicant extends Model
             'tiktok.max' => 'TikTok must be less than 50 characters',
             'gpa.required' => 'GPA is required',
             'gpa.string' => 'GPA must be a string',
-            'gpa.max' => 'GPA must be less than 4 characters',
+            'gpa.regex' => 'GPA format is invalid',
             'motivation.required' => 'Motivation is required',
             'motivation.string' => 'Motivation must be a string',
             'commitment.required' => 'Commitment is required',
@@ -146,6 +177,8 @@ class Applicant extends Model
             'documents.*.max' => 'Documents must be less than 255 characters',
             'schedule_id.uuid' => 'Schedule must be a uuid',
             'schedule_id.exists' => 'Schedule must be exists',
+            'stage.required' => 'Stage is required',
+            'stage.integer' => 'Stage must be an Integer',
         ];
     }
 
