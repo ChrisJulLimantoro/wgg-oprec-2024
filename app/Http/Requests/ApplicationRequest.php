@@ -7,9 +7,23 @@ use App\Http\Controllers\Diet;
 use App\Models\Applicant;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreApplicationRequest extends FormRequest
+class ApplicationRequest extends FormRequest
 {
-    protected Applicant $model;
+    private Applicant $model;
+    private const NON_UPDATABLE_FIELDS = [
+        'name', 
+        'email', 
+        'motivation', 
+        'commitment', 
+        'strength', 
+        'weakness', 
+        'experience', 
+        'astor',
+        'priority_division1',
+        'priority_division2',
+        'stage', 
+    ];
+
 
     public function __construct(Applicant $model)
     {
@@ -44,6 +58,12 @@ class StoreApplicationRequest extends FormRequest
                 'stage' => 2,
             ]);
         }
+
+        if ($this->has('id')) {
+            foreach (self::NON_UPDATABLE_FIELDS as $field) {
+                $this->offsetUnset($field);
+            }
+        }
     }
 
     /**
@@ -58,6 +78,13 @@ class StoreApplicationRequest extends FormRequest
         $rules['priority_division2'] .= '|astor';
         $rules['religion'] = '|in:' . join(',', self::enumValues(Religion::class));
         $rules['diet'] = '|in:' . join(',', self::enumValues(Diet::class));
+
+        if ($this->has('id')) {
+            foreach (self::NON_UPDATABLE_FIELDS as $field) {
+                unset($rules[$field]);
+            }
+        }
+
         return $rules;
     }
 
@@ -66,6 +93,12 @@ class StoreApplicationRequest extends FormRequest
         $messages = $this->model->validationMessages();
         $messages['priority_division1.astor'] = 'Divisi prioritas 1 Astor harus Peran';
         $messages['priority_division2.astor'] = 'Divisi prioritas 2 Astor harus kosong';
+
+        if ($this->has('id')) {
+            foreach (self::NON_UPDATABLE_FIELDS as $field) {
+                unset($messages[$field]);
+            }
+        }
 
         return $messages;
     }

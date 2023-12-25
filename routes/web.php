@@ -24,7 +24,9 @@ Route::get('/', function () {
 
 Route::prefix('main')->group(function () {
     Route::get('application-form', [ApplicantController::class, 'applicationForm'])->name('applicant.application-form');
-    Route::post('submit-application-form', [ApplicantController::class, 'submitApplicationForm'])->name('applicant.submit-application-form');
+    Route::post('store-application', [ApplicantController::class, 'storeApplication'])->name('applicant.application.store');
+    Route::patch('update-application/{id}', [ApplicantController::class, 'updateApplication'])->name('applicant.application.update');
+    
 });
 
 Route::prefix('admin')->group(function () {

@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\StoreApplicationRequest;
+use App\Http\Requests\ApplicationRequest;
 use App\Models\Applicant;
 use App\Models\Division;
+use Error;
 use ErrorException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -37,20 +38,33 @@ class ApplicantController extends BaseController
         try {
             $resJson = $res->json('hasil')[0];
             $data['form']['name'] = $resJson['nama'];
-            $data['form']['email'] = strtolower($nrp) . 'john.petra.ac.id';
+            $data['form']['email'] = strtolower($nrp) . '@john.petra.ac.id';
         } catch (ErrorException $e) {
             Log::warning('NRP {nrp} not found in john API.', ['nrp' => $nrp]);
+        }
+
+        $applicantData = Applicant::where('email', strtolower($nrp) . '@john.petra.ac.id')->first();
+        if ($applicantData) {
+            $data['form'] = $applicantData->toArray();
         }
 
         return view('main.application_form', $data);
     }
 
-    public function submitApplicationForm(StoreApplicationRequest $request)
+    public function storeApplication(ApplicationRequest $request)
     {
         $this->store($request);
 
         return redirect()->back()
             ->with('success', 'Pendaftaran berhasil!');
+    }
+
+    public function updateApplication(ApplicationRequest $request, $id)
+    {
+        $this->updatePartial($request->validated(), $id);
+
+        return redirect()->back()
+            ->with('success', 'Biodata berhasil diubah!');
     }
 
     private static function religions()
