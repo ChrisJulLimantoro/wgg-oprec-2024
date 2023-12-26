@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\ModelUtils;
+use App\Rules\AstorDivisionRule;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -90,8 +91,8 @@ class Applicant extends Model
             'diet' => 'required|string|max:50',
             'allergy' => 'nullable|string|max:150',
             'astor' => 'required|boolean',
-            'priority_division1' => 'required|uuid|exists:divisions,id',
-            'priority_division2' => 'nullable|uuid|exists:divisions,id',
+            'priority_division1' => ['required', 'uuid', 'exists:divisions,id', new AstorDivisionRule],
+            'priority_division2' => ['nullable', 'uuid', 'exists:divisions,id', new AstorDivisionRule],
             'division_accepted' => 'nullable|uuid|exists:divisions,id',
             'documents' => 'nullable|array',
             'documents.*' => 'nullable|string|max:255',
@@ -205,20 +206,20 @@ class Applicant extends Model
     }
 
     /**
-    * Relations associated with this model
-    *
-    * @var array
-    */
+     * Relations associated with this model
+     *
+     * @var array
+     */
     public function relations()
     {
-        return ['priorityDivision1','priorityDivision2','divisionAccepted','answers','schedule'];
+        return ['priorityDivision1', 'priorityDivision2', 'divisionAccepted', 'answers', 'schedule'];
     }
 
     /**
-    * Space for calling the relations
-    *
-    *
-    */
+     * Space for calling the relations
+     *
+     *
+     */
     public function priorityDivision1()
     {
         return $this->belongsTo(Division::class, 'priority_division1');
@@ -241,5 +242,11 @@ class Applicant extends Model
     public function answers()
     {
         return $this->hasMany(Answer::class);
+    }
+
+    public function getNRP()
+    {
+        $explodedEmail = explode('@', $this->email);
+        return strtolower($explodedEmail[0]);
     }
 }

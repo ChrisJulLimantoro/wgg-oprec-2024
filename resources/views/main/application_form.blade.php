@@ -12,10 +12,9 @@
                 @csrf
                 @if (array_key_exists('id', $form))
                     @method('PATCH')
-                    <input type="hidden" name="id" value="{{ $form['id'] }}">
                 @endif
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid sm:grid-cols-2 sm:gap-4">
                     {{-- {{ array_key_exists('name', $form) }} --}}
                     <div class="relative mb-8" data-te-validate="input"
                         @error('name') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
@@ -48,7 +47,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid sm:grid-cols-2 sm:gap-4">
                     <div class="relative mb-8" data-te-validate="input"
                         @error('gender') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
                         <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->
@@ -79,7 +78,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid sm:grid-cols-2 sm:gap-4">
                     <div class="relative mb-8" data-te-validate="input"
                         @error('birthplace') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                         data-te-input-wrapper-init>
@@ -104,12 +103,12 @@
                             placeholder="Tanggal Lahir" name="birthdate" />
                         <label for="floatingInput"
                             class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">
-                            Tanggal Lahir
+                            Tanggal Lahir (yyyy-mm-dd)
                         </label>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid sm:grid-cols-2 sm:gap-4">
                     <div class="relative mb-8" data-te-validate="input"
                         @error('province') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                         data-te-input-wrapper-init>
@@ -151,7 +150,7 @@
                     </label>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid sm:grid-cols-2 sm:gap-4">
                     <div class="relative mb-8" data-te-validate="input"
                         @error('postal_code') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                         data-te-input-wrapper-init>
@@ -180,7 +179,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid sm:grid-cols-3 sm:gap-4">
                     <div class="relative mb-8" data-te-validate="input"
                         @error('line') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                         data-te-input-wrapper-init>
@@ -222,7 +221,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid sm:grid-cols-3 sm:gap-4">
                     <div></div>
                     <div class="relative mb-8" data-te-validate="input"
                         @error('gpa') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
@@ -239,7 +238,7 @@
                     <div></div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid sm:grid-cols-2 sm:gap-4">
                     <div class="relative mb-8" data-te-validate="input"
                         @error('diet') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
                         <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->
@@ -343,10 +342,10 @@
                     </label>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid sm:grid-cols-2 sm:gap-4">
                     <div class="relative mb-8" data-te-validate="input"
                         @error('priority_division1') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
-                        <select {{ array_key_exists('id', $form) ? 'disabled' : '' }} data-te-select-init
+                        <select {{ !empty(old('astor')) || data_get($form, 'astor', false) ? 'disabled' : '' }} {{ array_key_exists('id', $form) ? 'disabled' : '' }} data-te-select-init
                             id="priority-division1" name="priority_division1">
                             <option value="" selected disabled></option>
                             @foreach ($divisions as $division)
@@ -360,7 +359,7 @@
 
                     <div class="relative mb-8" data-te-validate="input"
                         @error('priority_division2') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
-                        <select {{ array_key_exists('id', $form) ? 'disabled' : '' }} data-te-select-init
+                        <select {{ !empty(old('astor')) || data_get($form, 'astor', false) ? 'disabled' : '' }} {{ array_key_exists('id', $form) ? 'disabled' : '' }} data-te-select-init
                             id="priority-division2" name="priority_division2">
                             <option value="" selected disabled></option>
                             @foreach ($divisions as $division)

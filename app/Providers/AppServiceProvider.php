@@ -21,21 +21,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Validator::extend('astor', function ($attribute, $value, $parameters, $validator) {
-            $astor = data_get($validator->getData(), 'astor');
-
-            $peran = Division::where('name', 'Peran')->first();
-
-            if (!$astor) {
-                return true;
-            }
-            if ($attribute === 'priority_division1') {
-                return $value === $peran->id;
-            }
-            if ($attribute === 'priority_division2') {
-                return $value === null;
-            }
-            return false;
-        });
+        //
     }
 }

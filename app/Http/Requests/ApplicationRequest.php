@@ -11,17 +11,17 @@ class ApplicationRequest extends FormRequest
 {
     private Applicant $model;
     private const NON_UPDATABLE_FIELDS = [
-        'name', 
-        'email', 
-        'motivation', 
-        'commitment', 
-        'strength', 
-        'weakness', 
-        'experience', 
+        'name',
+        'email',
+        'motivation',
+        'commitment',
+        'strength',
+        'weakness',
+        'experience',
         'astor',
         'priority_division1',
         'priority_division2',
-        'stage', 
+        'stage',
     ];
 
 
@@ -29,7 +29,7 @@ class ApplicationRequest extends FormRequest
     {
         $this->model = $model;
     }
-    
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -59,10 +59,11 @@ class ApplicationRequest extends FormRequest
             ]);
         }
 
-        if ($this->has('id')) {
-            foreach (self::NON_UPDATABLE_FIELDS as $field) {
-                $this->offsetUnset($field);
-            }
+        if ($this->routeIs('applicant.application.store'))
+            return;
+
+        foreach (self::NON_UPDATABLE_FIELDS as $field) {
+            $this->offsetUnset($field);
         }
     }
 
@@ -74,12 +75,10 @@ class ApplicationRequest extends FormRequest
     public function rules(): array
     {
         $rules = $this->model->validationRules();
-        $rules['priority_division1'] .= '|astor';
-        $rules['priority_division2'] .= '|astor';
         $rules['religion'] = '|in:' . join(',', self::enumValues(Religion::class));
         $rules['diet'] = '|in:' . join(',', self::enumValues(Diet::class));
 
-        if ($this->has('id')) {
+        if ($this->routeIs('applicant.application.update')) {
             foreach (self::NON_UPDATABLE_FIELDS as $field) {
                 unset($rules[$field]);
             }
@@ -91,10 +90,8 @@ class ApplicationRequest extends FormRequest
     public function messages()
     {
         $messages = $this->model->validationMessages();
-        $messages['priority_division1.astor'] = 'Divisi prioritas 1 Astor harus Peran';
-        $messages['priority_division2.astor'] = 'Divisi prioritas 2 Astor harus kosong';
 
-        if ($this->has('id')) {
+        if ($this->routeIs('applicant.application.update')) {
             foreach (self::NON_UPDATABLE_FIELDS as $field) {
                 unset($messages[$field]);
             }
