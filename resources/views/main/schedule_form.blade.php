@@ -5,7 +5,6 @@
 
     <h1 class="text-3xl font-bold text-center">Biodata Pendaftar</h1>
     <section class="max-w-[940px] mx-auto pt-3 pb-16">
-        <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->
         <div
             class="block  rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
             <form data-te-validation-init
@@ -14,9 +13,7 @@
                 @csrf
                 @if (array_key_exists('id', $form))
                     @method('PATCH')
-                @endif
-
-
+                @endif  
 
                 <div class="grid sm:grid-cols-2 sm:gap-4">
                     {{-- {{ array_key_exists('name', $form) }} --}}
@@ -396,54 +393,4 @@
             </form>
         </div>
     </section>
-@endsection
-
-@php
-    $peran = array_filter($divisions, function ($division) {
-        return $division['name'] == 'Peran';
-    });
-    $peran = array_values($peran)[0];
-@endphp
-
-@section('scripts')
-    <script>
-        $(document).ready(() => {
-            $('form[data-te-validation-init]').attr('data-te-validated', true);
-            $('input[data-te-input-state-active] ~ div').attr('data-te-input-state-active', true);
-            $('textarea[data-te-input-state-active] ~ div').attr('data-te-input-state-active', true);
-
-            $('#astor').on('change', function() {
-                if ($(this).is(':checked')) {
-                    $('#priority-division1').val('{{ $peran['id'] }}');
-                    $('#priority-division1').attr('disabled', true);
-
-                    $('#priority-division2').val('');
-                    $('#priority-division2').attr('disabled', true);
-                } else {
-                    $('#priority-division1').val('');
-                    $('#priority-division1').attr('disabled', false);
-
-                    $('#priority-division2').attr('disabled', false);
-                }
-            });
-
-            $('#application-form').submit(function(e) {
-                e.preventDefault();
-                $('#priority-division1').attr('disabled', false);
-                $('#priority-division2').attr('disabled', false);
-                $(this).unbind('submit').submit();
-            });
-
-            // flash message
-            @if (Session::has('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: '{{ Session::get('success') }}',
-                    showConfirmButton: false,
-                    timer: 1700
-                });
-            @endif
-        });
-    </script>
 @endsection

@@ -36,6 +36,10 @@ Route::prefix('main')->group(function () {
                 join('|', array_keys(ApplicantController::documentTypes()))
             )
         );
+
+    Route::get('schedule-form', [ApplicantController::class, 'scheduleForm'])->name('applicant.schedule-form');
+
+    Route::get('interview-detail', [ApplicantController::class, 'interviewDetail'])->name('applicant.interview-detail');
 });
 
 Route::prefix('admin')->group(function () {

@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Error;
+use ErrorException;
+use PhpOption\None;
+use App\Models\Admin;
+use App\Models\Division;
+use App\Models\Schedule;
+use App\Models\Applicant;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\ApplicationRequest;
 use App\Http\Requests\StoreDocumentRequest;
-use App\Models\Applicant;
-use App\Models\Division;
-use Error;
-use ErrorException;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use PhpOption\None;
 
 class ApplicantController extends BaseController
 {
-    private const NRP = 'C14210025';
+    private const NRP = 'C14210017';
 
     public function __construct(Applicant $model)
     {
@@ -44,6 +46,7 @@ class ApplicantController extends BaseController
             $resJson = $res->json('hasil')[0];
             $data['form']['name'] = ucwords($resJson['nama']);
             $data['form']['email'] = $nrp . '@john.petra.ac.id';
+            $data['form']['stage'] = 1;
         } catch (ErrorException $e) {
             Log::warning('NRP {nrp} not found in john API.', ['nrp' => $nrp]);
         }
@@ -78,7 +81,7 @@ class ApplicantController extends BaseController
         $data['documentTypes'] = self::documentTypes();
         $nrp = strtolower(self::NRP);
 
-        $applicant = Applicant::select('id', 'documents')
+        $applicant = Applicant::select('id', 'stage', 'documents')
             ->where('email', $nrp . '@john.petra.ac.id')->first();
 
         if (!$applicant)
@@ -123,6 +126,48 @@ class ApplicantController extends BaseController
         return response()
             ->json(['message' => 'File uploaded successfully!', 'type' => $type])
             ->setStatusCode(201);
+    }
+
+    public function scheduleForm() {
+        $data['title'] = 'Pilih Jadwal Interview';
+        $nrp = strtolower(self::NRP);
+
+        $applicant = Applicant::where('email', $nrp . '@john.petra.ac.id')->where('stage', '>', 2)->first();
+
+        if (!$applicant)
+            return 'Silahkan isi form upload berkas terlebih dahulu di <a href="' . route('applicant.documents-form') . '">sini</a>!';
+
+        $data['applicant'] = $applicant->toArray();
+
+        $interviewers = Admin::whereIn('division_id', [$applicant->priority_division1, $applicant->priority_division1])->get();
+
+        $schedules = Schedule::with(['date', 'admin'])
+            ->whereIn('admin_id', $interviewers->pluck('id'))   
+            ->get()
+            ->toArray();
+
+        foreach($schedules as $s) {
+            $data['schedules'][] = [
+                'id' => $s['id'],
+                'date' => $s['date']['date'],
+                'time' => $s['time'],
+                'admin' => $s['admin']['name'],
+                'admin_id' => $s['admin']['id'],
+                'date_ud' => $s['date']['id'],
+            ];      
+        }
+
+        $dates = array_column($data['schedules'], 'date');
+        $time = array_column($data['schedules'], 'time');
+
+        array_multisort($dates, SORT_ASC, $time, SORT_ASC, $data['schedules']);
+
+        dd($data['schedules']); 
+        return view('main.schedule_form', $data);
+    }
+
+    public function pickSchedule(Request $request) {
+
     }
 
     private static function religions()

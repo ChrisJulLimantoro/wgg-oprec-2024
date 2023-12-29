@@ -24,7 +24,7 @@ class ScheduleController extends BaseController
         Override existing controller here...
     */
     public function index(){
-        session(['admin_id' => '9aea54db-6b09-413f-bcc9-c53a61080c26']);
+        session(['admin_id' => '9af72d47-1a13-4be4-b2aa-8cb509b4211a']);
         $date = $this->dateController->getOrderedDates()->toArray();
         $data['title'] = 'Pilih Jadwal';
         $schedule = $this->getSelectedColumn(['*'], ['admin_id' => session('admin_id')])->toArray();

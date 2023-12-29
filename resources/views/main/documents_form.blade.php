@@ -1,6 +1,8 @@
 @extends('main.layout')
 
 @section('content')
+    @include('main.stepper', ['applicant' => $applicant])
+
     <h1 class="text-3xl font-bold text-center">Berkas Pendaftar</h1>
     <section class="max-w-[940px] mx-auto pt-3 pb-16">
         <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->

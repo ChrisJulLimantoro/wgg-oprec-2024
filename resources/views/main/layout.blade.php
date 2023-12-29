@@ -62,6 +62,7 @@
         </div>
     </nav>
     <main class="lg:px-16 px-3 pt-8">
+        @yield('stepper')
         @yield('content')
     </main>
 
