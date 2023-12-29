@@ -14,7 +14,7 @@
                         {{ $label }}
                     </label>
                     <form class="grid sm:grid-cols-5 sm:gap-4 grid-cols-3 gap-2"
-                        action="{{ route('applicant.document.store', ['applicant' => $applicant['id'], 'type' => strtolower($type)]) }}">
+                        action="{{ route('applicant.document.store', ['type' => strtolower($type)]) }}">
                         @csrf
                         @if ($applicant['documents'] && array_key_exists(strtolower($type), $applicant['documents']))
                             <input

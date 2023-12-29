@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Controllers\DocumentType;
+use App\Rules\DocumentExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\File;
@@ -36,6 +37,7 @@ class StoreDocumentRequest extends FormRequest
                 File::image()
                     ->max('5mb'),
                 'mimes:jpg,png',
+                new DocumentExistsRule(),
             ];
         }
 

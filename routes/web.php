@@ -29,7 +29,7 @@ Route::prefix('main')->group(function () {
     Route::patch('update-application/{id}', [ApplicantController::class, 'updateApplication'])->name('applicant.application.update');
 
     Route::get('documents-form', [ApplicantController::class, 'documentsForm'])->name('applicant.documents-form');
-    Route::post('store-document/{applicant}/type/{type}', [ApplicantController::class, 'storeDocument'])->name('applicant.document.store')
+    Route::post('store-document/{type}', [ApplicantController::class, 'storeDocument'])->name('applicant.document.store')
         ->where(
             'type',
             strtolower(
@@ -40,6 +40,7 @@ Route::prefix('main')->group(function () {
     Route::get('schedule-form', [ApplicantController::class, 'scheduleForm'])->name('applicant.schedule-form');
 
     Route::get('interview-detail', [ApplicantController::class, 'interviewDetail'])->name('applicant.interview-detail');
+    Route::get('download-cv', [ApplicantController::class, 'downloadCV'])->name('applicant.download-cv');
 });
 
 Route::prefix('admin')->group(function () {
