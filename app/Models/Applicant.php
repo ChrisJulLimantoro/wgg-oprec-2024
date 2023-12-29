@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\ModelUtils;
 use App\Rules\AstorDivisionRule;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -87,7 +88,7 @@ class Applicant extends Model
             'commitment' => 'required|string',
             'strength' => 'required|string',
             'weakness' => 'required|string',
-            'experience' => 'required|string',
+            'experience' => 'nullable|string',
             'diet' => 'required|string|max:50',
             'allergy' => 'nullable|string|max:150',
             'astor' => 'required|boolean',
@@ -157,7 +158,6 @@ class Applicant extends Model
             'strength.string' => 'Strength must be a string',
             'weakness.required' => 'Weakness is required',
             'weakness.string' => 'Weakness must be a string',
-            'experience.required' => 'Experience is required',
             'experience.string' => 'Experience must be a string',
             'diet.required' => 'Diet is required',
             'diet.string' => 'Diet must be a string',
@@ -248,5 +248,37 @@ class Applicant extends Model
     {
         $explodedEmail = explode('@', $this->email);
         return strtolower($explodedEmail[0]);
+    }
+
+    public function addDocument($documentType, $filename)
+    {
+        $documents = $this->documents;
+
+        if (!$documents) $documents = [];
+
+        $documents[$documentType] = $filename;
+        $this->documents = $documents;
+        $this->save();
+    }
+
+    public function findByEmail($email, array $columns = ['*'], $relations = null)
+    {
+        $builder = $relations ? $this->with($relations) : $this;
+        return $builder->select(...$columns)
+            ->where('email', $email)
+            ->first();
+    }
+
+    public function findByNRP($nrp, array $columns = ['*'], $relations = null)
+    {
+        return $this->findByEmail($nrp . '@john.petra.ac.id', $columns, $relations);
+    }
+
+    public function cv()
+    {
+        return Pdf::loadView(
+            'pdf.applicant_cv',
+            ['applicant' => $this->toArray()]
+        );
     }
 }

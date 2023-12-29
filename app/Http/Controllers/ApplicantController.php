@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ApplicantDocumentsUploaded;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\ApplicationRequest;
 use App\Http\Requests\StoreDocumentRequest;
@@ -10,6 +11,7 @@ use App\Models\Division;
 use Error;
 use ErrorException;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -48,7 +50,7 @@ class ApplicantController extends BaseController
             Log::warning('NRP {nrp} not found in john API.', ['nrp' => $nrp]);
         }
 
-        $applicantData = Applicant::where('email', $nrp . '@john.petra.ac.id')->first();
+        $applicantData = $this->model->findByNRP($nrp, relations: $this->model->relations());
         if ($applicantData) {
             $data['form'] = $applicantData->toArray();
         }
@@ -74,12 +76,14 @@ class ApplicantController extends BaseController
 
     public function documentsForm()
     {
-        $data['title'] = 'Upload Berkas';
-        $data['documentTypes'] = self::documentTypes();
         $nrp = strtolower(self::NRP);
+        $applicant = $this->model->findByEmail(
+            $nrp . '@john.petra.ac.id',
+            ['id', 'documents', 'astor']
+        );
 
-        $applicant = Applicant::select('id', 'documents')
-            ->where('email', $nrp . '@john.petra.ac.id')->first();
+        $data['title'] = 'Upload Berkas';
+        $data['documentTypes'] = self::documentTypes($applicant->astor);
 
         if (!$applicant)
             return 'Silahkan isi form pendaftaran terlebih dahulu di <a href="' . route('applicant.application-form') . '">sini</a>!';
@@ -88,42 +92,43 @@ class ApplicantController extends BaseController
         return view('main.documents_form', $data);
     }
 
-    public function storeDocument(StoreDocumentRequest $request, Applicant $applicant, $type)
+    public function storeDocument(StoreDocumentRequest $request, $type)
     {
-        $type = strtolower($type);
-        $nrp = $applicant->getNRP();
-        $timestamp = time();
+        $nrp = strtolower(self::NRP);
+        $applicant = $this->model->findByNRP($nrp);
+        $storeName = self::saveFile($request->file($type), $applicant, $type);
 
-        $documents = $applicant->documents;
-        if ($documents && array_key_exists($type, $documents)) {
-            return response()
-                ->json(['message' => 'You cannot upload the same document twice'])
-                ->setStatusCode(400);
-        }
-
-        $file = $request->file($type);
-        $path = 'public/uploads/' . $type;
-        $storeName = sprintf('%s_%s_%d.%s', $nrp, $type, $timestamp, $file->extension());
-
-        $filePath = $request->file($type)->storeAs($path, $storeName);
-
-        if (!$filePath) {
+        if (!$storeName) {
             return response()
                 ->json(['message' => 'Failed to upload file. Please try again!'])
                 ->setStatusCode(500);
         }
 
-        if (!$documents)
-            $documents = [];
-
-        $documents[$type] = $storeName;
-        $applicant->documents = $documents;
-        $applicant->save();
+        $applicant->addDocument($type, $storeName);
+        ApplicantDocumentsUploaded::dispatch(
+            $applicant,
+            3,
+            self::documentTypes($applicant->astor)
+        );
 
         return response()
             ->json(['message' => 'File uploaded successfully!', 'type' => $type])
             ->setStatusCode(201);
     }
+
+    public function downloadCV()
+    {
+        $nrp = strtolower(self::NRP);
+        $applicant = $this->model->findByNRP($nrp, relations: $this->model->relations());
+
+        if (!$applicant) {
+            return 'Pendaftar tidak ditemukan';
+        }
+        $pdf = $applicant->cv();
+
+        return $pdf->download('CV_' . $nrp . '.pdf');
+    }
+
 
     private static function religions()
     {
@@ -135,9 +140,31 @@ class ApplicantController extends BaseController
         return array_column(Diet::cases(), 'name');
     }
 
-    public static function documentTypes()
+    public static function documentTypes($isAstor = true)
     {
-        return array_column(DocumentType::cases(), 'value', 'name');
+        $allDocuments = array_column(DocumentType::cases(), 'value', 'name');
+
+        if ($isAstor) {
+            return $allDocuments;
+        }
+
+        return array_filter($allDocuments, function ($v, $k) {
+            return $k !== DocumentType::Frontline_Test->name;
+        }, ARRAY_FILTER_USE_BOTH);
+    }
+
+    private static function saveFile(UploadedFile $file, Applicant $applicant, $type)
+    {
+        $type = strtolower($type);
+        $nrp = $applicant->getNRP();
+        $timestamp = time();
+
+        $path = 'public/uploads/' . $type;
+        $storeName = sprintf('%s_%s_%d.%s', $nrp, $type, $timestamp, $file->extension());
+
+        $filePath = $file->storeAs($path, $storeName);
+
+        return ($filePath) ? $storeName : false;
     }
 }
 
@@ -160,10 +187,10 @@ enum Diet
 
 enum DocumentType: String
 {
-    case Photo = 'Foto Formal 3x4';
+    case Photo = 'Foto Diri 3x4';
     case Ktm = 'KTM / Profile Petra Mobile';
     case Grades = 'Transkrip Nilai';
     case Skkk = 'Transkrip SKKK';
     case Schedule = 'Jadwal Kuliah';
-    case Frontlinetest = 'Jawaban Tes Calon Frontline';
+    case Frontline_Test = 'Jawaban Tes Calon Frontline';
 }
