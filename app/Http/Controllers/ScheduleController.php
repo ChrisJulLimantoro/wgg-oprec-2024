@@ -24,7 +24,7 @@ class ScheduleController extends BaseController
         Override existing controller here...
     */
     public function index(){
-        session(['admin_id' => '9aea54db-6b09-413f-bcc9-c53a61080c26']);
+        session(['admin_id' => '9aec71b3-88d8-442d-89b4-7f57bd30384d']);
         $date = $this->dateController->getOrderedDates()->toArray();
         $data['title'] = 'Pilih Jadwal';
         $schedule = $this->getSelectedColumn(['*'], ['admin_id' => session('admin_id')])->toArray();
@@ -71,5 +71,12 @@ class ScheduleController extends BaseController
             if(isset($store['error'])) return response()->json(['success' => false, 'message' => 'Gagal mengubah jadwal'],500);
             return response()->json(['success' => true, 'message' => 'Berhasil mengubah jadwal'],200);
         }
+    }
+
+    public function myInterview(){
+        $data['title'] = 'My Interview';
+        $data['interview'] = $this->getSelectedColumn(['*'], ['admin_id' => session('admin_id'),'status' => 2])->toArray();
+
+        return view('admin.interview.my',$data);
     }
 }
