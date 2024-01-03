@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\ModelUtils;
+use App\Rules\AstorDivisionRule;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +15,37 @@ class Applicant extends Model
     use HasFactory;
     use HasUuids;
 
-    protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = [
+        'name',
+        'email',
+        'gender',
+        'religion',
+        'birthplace',
+        'birthdate',
+        'province',
+        'city',
+        'address',
+        'postal_code',
+        'phone',
+        'line',
+        'instagram',
+        'tiktok',
+        'gpa',
+        'motivation',
+        'commitment',
+        'strength',
+        'weakness',
+        'experience',
+        'diet',
+        'allergy',
+        'astor',
+        'priority_division1',
+        'priority_division2',
+        'division_accepted',
+        'documents',
+        'schedule_id',
+        'stage'
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -42,30 +74,31 @@ class Applicant extends Model
             'gender' => 'required|boolean',
             'religion' => 'required|string|max:30',
             'birthplace' => 'required|string|max:50',
-            'birthdate' => 'required|date',
+            'birthdate' => 'required|date|date_format:Y-m-d',
             'province' => 'required|string|max:50',
             'city' => 'required|string|max:50',
             'address' => 'required|string',
             'postal_code' => 'required|string|max:5',
-            'phone' => 'required|string|max:15',
+            'phone' => 'required|string|regex:/^([0-9]{8,16})$/',
             'line' => 'nullable|string|max:50',
             'instagram' => 'nullable|string|max:50',
             'tiktok' => 'nullable|string|max:50',
-            'gpa' => 'required|string|max:4',
+            'gpa' => ['required', 'string', 'regex:/^(4\.00|[0-3]\.[0-9]{2})$/'],
             'motivation' => 'required|string',
             'commitment' => 'required|string',
             'strength' => 'required|string',
             'weakness' => 'required|string',
-            'experience' => 'required|string',
+            'experience' => 'nullable|string',
             'diet' => 'required|string|max:50',
             'allergy' => 'nullable|string|max:150',
             'astor' => 'required|boolean',
-            'priority_division1' => 'required|uuid|exists:divisions,id',
-            'priority_division2' => 'nullable|uuid|exists:divisions,id',
+            'priority_division1' => ['required', 'uuid', 'exists:divisions,id', new AstorDivisionRule],
+            'priority_division2' => ['nullable', 'uuid', 'exists:divisions,id', new AstorDivisionRule],
             'division_accepted' => 'nullable|uuid|exists:divisions,id',
             'documents' => 'nullable|array',
             'documents.*' => 'nullable|string|max:255',
             'schedule_id' => 'nullable|uuid|exists:schedules,id',
+            'stage' => 'required|integer'
         ];
     }
 
@@ -107,7 +140,7 @@ class Applicant extends Model
             'postal_code.max' => 'Postal code must be less than 5 characters',
             'phone.required' => 'Phone is required',
             'phone.string' => 'Phone must be a string',
-            'phone.max' => 'Phone must be less than 15 characters',
+            'phone.regex' => 'Phone must be a valid phone number',
             'line.string' => 'Line must be a string',
             'line.max' => 'Line must be less than 50 characters',
             'instagram.string' => 'Instagram must be a string',
@@ -116,7 +149,7 @@ class Applicant extends Model
             'tiktok.max' => 'TikTok must be less than 50 characters',
             'gpa.required' => 'GPA is required',
             'gpa.string' => 'GPA must be a string',
-            'gpa.max' => 'GPA must be less than 4 characters',
+            'gpa.regex' => 'GPA format is invalid',
             'motivation.required' => 'Motivation is required',
             'motivation.string' => 'Motivation must be a string',
             'commitment.required' => 'Commitment is required',
@@ -125,7 +158,6 @@ class Applicant extends Model
             'strength.string' => 'Strength must be a string',
             'weakness.required' => 'Weakness is required',
             'weakness.string' => 'Weakness must be a string',
-            'experience.required' => 'Experience is required',
             'experience.string' => 'Experience must be a string',
             'diet.required' => 'Diet is required',
             'diet.string' => 'Diet must be a string',
@@ -146,6 +178,8 @@ class Applicant extends Model
             'documents.*.max' => 'Documents must be less than 255 characters',
             'schedule_id.uuid' => 'Schedule must be a uuid',
             'schedule_id.exists' => 'Schedule must be exists',
+            'stage.required' => 'Stage is required',
+            'stage.integer' => 'Stage must be an Integer',
         ];
     }
 
@@ -172,20 +206,20 @@ class Applicant extends Model
     }
 
     /**
-    * Relations associated with this model
-    *
-    * @var array
-    */
+     * Relations associated with this model
+     *
+     * @var array
+     */
     public function relations()
     {
-        return ['priorityDivision1','priorityDivision2','divisionAccepted','answers','schedule'];
+        return ['priorityDivision1', 'priorityDivision2', 'divisionAccepted', 'answers', 'schedule'];
     }
 
     /**
-    * Space for calling the relations
-    *
-    *
-    */
+     * Space for calling the relations
+     *
+     *
+     */
     public function priorityDivision1()
     {
         return $this->belongsTo(Division::class, 'priority_division1');
@@ -208,5 +242,43 @@ class Applicant extends Model
     public function answers()
     {
         return $this->hasMany(Answer::class);
+    }
+
+    public function getNRP()
+    {
+        $explodedEmail = explode('@', $this->email);
+        return strtolower($explodedEmail[0]);
+    }
+
+    public function addDocument($documentType, $filename)
+    {
+        $documents = $this->documents;
+
+        if (!$documents) $documents = [];
+
+        $documents[$documentType] = $filename;
+        $this->documents = $documents;
+        $this->save();
+    }
+
+    public function findByEmail($email, array $columns = ['*'], $relations = null)
+    {
+        $builder = $relations ? $this->with($relations) : $this;
+        return $builder->select(...$columns)
+            ->where('email', $email)
+            ->first();
+    }
+
+    public function findByNRP($nrp, array $columns = ['*'], $relations = null)
+    {
+        return $this->findByEmail($nrp . '@john.petra.ac.id', $columns, $relations);
+    }
+
+    public function cv()
+    {
+        return Pdf::loadView(
+            'pdf.applicant_cv',
+            ['applicant' => $this->toArray()]
+        );
     }
 }

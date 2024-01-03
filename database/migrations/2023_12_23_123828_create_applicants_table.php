@@ -28,19 +28,20 @@ return new class extends Migration
             $table->string('line', 50)->nullable();
             $table->string('instagram', 50)->nullable();
             $table->string('tiktok', 50)->nullable();
-            
+
             $table->string('gpa', 4)->comment('IPK');
             $table->text('motivation');
             $table->text('commitment');
             $table->text('strength');
             $table->text('weakness');
-            $table->text('experience');
+            $table->text('experience')->nullable();
 
             $table->string('diet', 50);
             $table->string('allergy', 150)->nullable();
             $table->boolean('astor')->comment('0: tidak, 1: ya');
-            
-            $table->uuid('schedule_id')->nullable();
+
+            $table->unsignedTinyInteger('stage')->default(2)->comment('1:Biodata, 2:Berkas, 3:Pilih Jadwal, 4:Menunggu Interview');
+            $table->uuid('schedule_id')->nullable()->unique();
             $table->uuid('division_accepted')->nullable();
             $table->uuid('priority_division1');
             $table->uuid('priority_division2')->nullable();
@@ -49,9 +50,9 @@ return new class extends Migration
             $table->foreign('division_accepted')->references('id')->on('divisions')->onDelete('cascade');
             $table->foreign('priority_division1')->references('id')->on('divisions')->onDelete('cascade');
             $table->foreign('priority_division2')->references('id')->on('divisions')->onDelete('cascade');
-        
+
             $table->json('documents')->nullable();
-            
+
             $table->timestamps();
             $table->softDeletes();
         });

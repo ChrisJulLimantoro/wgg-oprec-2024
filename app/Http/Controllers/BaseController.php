@@ -128,7 +128,7 @@ class BaseController extends Controller
      */
     public function updatePartial($data,$id)
     {
-        $model = $this->model->find($id)->first();
+        $model = $this->model->find($id);
         if(!$model){
             return ['error' => 'Id not Found!!'];
         }

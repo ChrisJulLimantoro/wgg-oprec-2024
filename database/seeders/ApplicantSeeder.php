@@ -47,7 +47,7 @@ class ApplicantSeeder extends Seeder
                 'priority_division1' => Division::where('slug','it')->first()->id,
                 'priority_division2' => Division::where('slug','acara')->first()->id,
                 'division_accepted' => null,
-                'schedule_id' => null
+                'schedule_id' => null,
             ],
             [
                 'name' => 'Nicholas Gunawan',
@@ -76,7 +76,7 @@ class ApplicantSeeder extends Seeder
                 'priority_division1' => Division::where('slug','it')->first()->id,
                 'priority_division2' => Division::where('slug','it')->first()->id,
                 'division_accepted' => null,
-                'schedule_id' => null
+                'schedule_id' => null,
             ],
             [
                 'name' => 'Ella Arminta',
@@ -105,7 +105,7 @@ class ApplicantSeeder extends Seeder
                 'priority_division1' => Division::where('slug','it')->first()->id,
                 'priority_division2' => null,
                 'division_accepted' => null,
-                'schedule_id' => null
+                'schedule_id' => null,
             ],
         ];
         foreach($applicants as $applicant){
