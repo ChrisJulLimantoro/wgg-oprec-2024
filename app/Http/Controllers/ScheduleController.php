@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 use App\Models\Schedule;
 use App\Models\Date;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\DateController;
 use Carbon\Carbon;
@@ -24,7 +25,7 @@ class ScheduleController extends BaseController
         Override existing controller here...
     */
     public function index(){
-        session(['admin_id' => '9aec71b3-88d8-442d-89b4-7f57bd30384d']);
+        session(['admin_id' => Admin::get()->first()->id ]);
         $date = $this->dateController->getOrderedDates()->toArray();
         $data['title'] = 'Pilih Jadwal';
         $schedule = $this->getSelectedColumn(['*'], ['admin_id' => session('admin_id')])->toArray();
@@ -58,7 +59,7 @@ class ScheduleController extends BaseController
         foreach($schedules as $s){
             if($s['date_id'] == $data['date_id'] && $s['time'] == $data['time']){
                 $id = $s['id'];
-                $this->update($id,['status' => $status]);
+                $this->updatePartial(['status' => $status],$id);
                 $exist = true;
                 return response()->json(['success' => true, 'message' => 'Berhasil mengubah jadwal'],200);
             }

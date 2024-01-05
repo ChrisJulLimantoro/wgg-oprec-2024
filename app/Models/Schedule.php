@@ -22,7 +22,9 @@ class Schedule extends Model
         'date_id',
         'time',
         'admin_id',
-        'status'
+        'status',
+        'type',
+        'applicant_id'
     ]; 
 
     /**
@@ -49,6 +51,8 @@ class Schedule extends Model
             'time' => 'required|integer|min:0|max:23',
             'admin_id' => 'required|uuid|exists:admins,id',
             'status' => 'required|integer|min:0|max:2',
+            'type' => 'integer|min:0|max:2',
+            'applicant_id' => 'uuid|exists:applicants,id',
         ];
     }
 
@@ -74,6 +78,11 @@ class Schedule extends Model
             'status.integer' => 'Status must be an integer',
             'status.min' => 'Status must be at least 0',
             'status.max' => 'Status must be at most 2',
+            'type.integer' => 'Type must be an integer',
+            'type.min' => 'Type must be at least 0',
+            'type.max' => 'Type must be at most 2',
+            'applicant_id.uuid' => 'Applicant must be a uuid',
+            'applicant_id.exists' => 'Applicant must be exists',
         ];
     }
 
@@ -89,6 +98,8 @@ class Schedule extends Model
             'time' => $request->time,
             'admin_id' => $request->admin_id,
             'status' => $request->status,
+            'type' => $request->type,
+            'applicant_id' => $request->applicant_id,
         ]);
     }
 
@@ -111,7 +122,7 @@ class Schedule extends Model
     */
     public function relations()
     {
-        return ['admin', 'date'];
+        return ['admin', 'date','applicant'];
     }
 
     /**
@@ -127,5 +138,10 @@ class Schedule extends Model
     public function date()
     {
         return $this->belongsTo(Date::class);
+    }
+
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Question;
 use App\Models\Applicant;
 use App\Models\Answer;
 use App\Models\Division;
+use App\Models\Schedule;
 use Illuminate\Http\Request;
 
 class AnswerController extends BaseController
@@ -14,12 +15,14 @@ class AnswerController extends BaseController
     private $question;
     private $applicant;
     private $division;
+    private $schedule;
     public function __construct(Answer $model)
     {
         parent::__construct($model);
         $this->question = new Question();
         $this->applicant = new Applicant();
         $this->division = new Division();
+        $this->schedule = new Schedule();
     }
 
     /*
@@ -27,35 +30,49 @@ class AnswerController extends BaseController
         OR
         Override existing controller here...
     */
-    public function getQuestion($applicant_id,$page=0)
+    public function getQuestion($schedule_id,$page=0)
     {
         $page = intval($page);
-        // Fetch applicant division
-        $applicant = Applicant::with($this->applicant->relations())->where('id',$applicant_id)->first();  
+
+        // Fetch Interview Schedule information
+        $schedule = Schedule::with(['applicant.priorityDivision1','applicant.priorityDivision2','applicant.answers'])->where('id',$schedule_id)->first();
+        $applicant = $schedule->applicant;
+        $type = $schedule->type;
         // dd($applicant->priority_division2);
-        if($applicant == null){
+        if($applicant == null || $schedule == null){
             return view('errors.404');
         }else{
             $applicant = $applicant->toArray();
-            if($applicant['priority_division2'] == null){
-                $divisions = [$applicant['priority_division1']];
-            }else{
-                if($applicant['priority_division1'] != $applicant['priority_division2']){
-                    $divisions = [$applicant['priority_division1'],$applicant['priority_division2']];
+            $questions = [];
+            $divisions = [];
+            $part = [];
+            $count = 0;
+            // pertanyaan pembuka hanya jika tipenya bukan 2
+            if($type != 2){
+                if($type == 0){
+                    if($applicant['priority_division2'] == null){
+                        $divisions = [$applicant['priority_division1']];
+                    }else{
+                        if($applicant['priority_division1'] != $applicant['priority_division2']){
+                            $divisions = [$applicant['priority_division1'],$applicant['priority_division2']];
+                        }else{
+                            $divisions = [$applicant['priority_division1']];
+                        }
+                    }
                 }else{
                     $divisions = [$applicant['priority_division1']];
                 }
+                $part[] = 'Opening';
+                // Get Opening Question
+                $opening = Question::where(['division_id' => Division::where(['slug' => 'open'])->first()->id])
+                ->orderBy('number','asc')
+                ->get()
+                ->toArray();
+                $questions[$count] = $opening;
+                $count += 1;
+            }else{
+                $divisions = [$applicant['priority_division2']];
             }
-            $questions = [];
-            $count = 0;
-            $part = ['Opening'];
-            // Get Opening Question
-            $opening = Question::where(['division_id' => Division::where(['slug' => 'open'])->first()->id])
-            ->orderBy('number','asc')
-            ->get()
-            ->toArray();
-            $questions[$count] = $opening;
-            $count += 1;
             // Get Questions
             foreach($divisions as $division){
                 $questions[$count] = Question::where(['division_id' => $division['id']])
@@ -65,13 +82,18 @@ class AnswerController extends BaseController
                 $part[] = $division['name'];
                 $count += 1;
             }
-            // Get Closing Question
-            $closing = Question::where(['division_id' => Division::where(['slug' => 'close'])->first()->id])
-            ->orderBy('number','asc')
-            ->get()
-            ->toArray();
-            $questions[$count] = $closing;
-            $part[] = 'Closing';
+
+            // pertanyaan penutup hanya jika tipenya bukan 2
+            if($type != 2){
+                // Get Closing Question
+                $closing = Question::where(['division_id' => Division::where(['slug' => 'close'])->first()->id])
+                ->orderBy('number','asc')
+                ->get()
+                ->toArray();
+                $questions[$count] = $closing;
+                $part[] = 'Closing';
+                $count += 1;
+            }
             $answers = $applicant['answers'];
             
             $data['part'] = $part[$page];
@@ -88,11 +110,13 @@ class AnswerController extends BaseController
                 }
                 $data['questions'][] = $q;
             }
+            $count -= 1;
             $data['title'] = 'Interview page '.$page.' of '.$count;
             $data['next'] = $page < $count;
             $data['prev'] = $page > 0;
             $data['now'] = $page;
-            $data['applicant'] = $applicant_id;
+            $data['applicant'] = $applicant['id'];
+            $data['schedule'] = $schedule_id;
             
             foreach($divisions as $d){
                 if($d['project'] == null){
@@ -100,6 +124,7 @@ class AnswerController extends BaseController
                 }
             }
             
+            // dd($data,$count,$questions,$part);
             return view('admin.interview.interview', $data);
         }
     }

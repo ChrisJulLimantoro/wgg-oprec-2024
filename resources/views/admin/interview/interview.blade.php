@@ -54,7 +54,7 @@
         @endif
         <div class="w-full flex justify-center align-center gap-2">
             @if($prev)
-            <a href="{{ route('admin.interview',['applicant_id' => $applicant,'page'=> $now-1 ]) }}">
+            <a href="{{ route('admin.interview.session',['schedule_id' => $schedule,'page'=> $now-1 ]) }}">
                 <button
                 type="button"
                 data-te-ripple-init
@@ -65,7 +65,7 @@
             </a>
             @endif
             @if($next)
-                <a href="{{ route('admin.interview',['applicant_id' => $applicant,'page'=> $now+1 ]) }}">
+                <a href="{{ route('admin.interview.session',['schedule_id' => $schedule,'page'=> $now+1 ]) }}">
                     <button
                     type="button"
                     data-te-ripple-init
