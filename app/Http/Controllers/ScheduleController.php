@@ -9,6 +9,7 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\DateController;
 use Carbon\Carbon;
+use DateTime;
 
 class ScheduleController extends BaseController
 {
@@ -76,8 +77,25 @@ class ScheduleController extends BaseController
 
     public function myInterview(){
         $data['title'] = 'My Interview';
-        $data['interview'] = $this->getSelectedColumn(['*'], ['admin_id' => session('admin_id'),'status' => 2])->toArray();
-
+        $interview = $this->getSelectedColumn(['*'], ['admin_id' => session('admin_id'),'status' => 2],['applicant.priorityDivision1','applicant.priorityDivision2','date'])->toArray();
+        $data['interview'] = [];
+        foreach($interview as $i){
+            $temp = [];
+            $temp['id'] = $i['id'];
+            $dateObj = DateTime::createFromFormat('Y-m-d', $i['date']['date']);
+            $temp['date'] = $dateObj->format('l, d M Y');
+            if($i['time'] < 9) $temp['time'] = '0'.$i['time'].':00 - 0'.($i['time']+1).':00';
+            else if($i['time'] == 9) $temp['time'] = '0'.$i['time'].':00 - '.($i['time']+1).':00';
+            else $temp['time'] = $i['time'].':00 - '.($i['time']+1).':00';
+            $temp['name'] = $i['applicant']['name'];
+            $temp['priorityDivision1'] = $i['applicant']['priority_division1']['name'];
+            $temp['priorityDivision2'] = $i['applicant']['priority_division2']['name'];
+            $temp['type'] = $i['type'];
+            $temp['link'] = route('admin.interview.start',$i['id']);
+            $data['interview'][] = $temp;
+        }
+        $data['interview'] = json_encode($data['interview']);
+        // dd($data);
         return view('admin.interview.my',$data);
     }
 }
