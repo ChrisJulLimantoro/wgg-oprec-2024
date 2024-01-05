@@ -28,6 +28,3 @@
 
 
 @endsection
-@section('script')
-
-@endsection
