@@ -154,7 +154,8 @@ class AnswerController extends BaseController
     // update Answer
     public function updateAnswer(Request $request)
     {
-        $res = $this->updatePartial($request->only(['answer']),$request->only(['answer_id']));
+        // dd($request->only(['answer']),$request->only(['answer_id']));
+        $res = $this->updatePartial($request->only(['answer']),$request->answer_id);
         if(isset($res['error'])){
             return response()->json(['success' => false,'message' => $res['error']]);
         }
@@ -164,7 +165,7 @@ class AnswerController extends BaseController
     // update Score
     public function updateScore(Request $request)
     {
-        $res = $this->updatePartial($request->only(['score']),$request->only(['answer_id']));
+        $res = $this->updatePartial($request->only(['score']),$request->answer_id);
         if(isset($res['error'])){
             return response()->json(['success' => false,'message' => $res['error']]);
         }
@@ -181,5 +182,80 @@ class AnswerController extends BaseController
     public function finish(Request $request)
     {
         return response()->json(['success' => false, 'message' => 'Interview Not Finished Yet!!']);
+    }
+
+    public function index($applicant_id)
+    {
+        $applicant = Applicant::with(['answers','priorityDivision1','priorityDivision2'])->where(['id' => $applicant_id])->first();
+
+        $data = [];
+        $data['title'] = 'Interview Answer';
+        $data['name'] = $applicant->name;
+        $data['nrp'] = substr($applicant->email,0,9);
+        $sections = [];
+        // Opening Section
+        $opening = Question::where(['division_id' => Division::where(['slug' => 'open'])->first()->id])->orderBy('number','asc')->get()->toArray();
+        $sections[] = ['name' => 'Opening','questions' => $opening];
+        // Division Section
+        $divisions = [];
+        if($applicant->priority_division2 == null){
+            $divisions = [$applicant->priorityDivision1];
+        }else{
+            if($applicant->priorityDivision1 != $applicant->priorityDivision2){
+                $divisions = [$applicant->priorityDivision1,$applicant->priorityDivision2];
+            }else{
+                $divisions = [$applicant->priorityDivision1];
+            }
+        }
+        foreach($divisions as $division){
+            $questions = Question::where(['division_id' => $division->id])->orderBy('number','asc')->get()->toArray();
+            $sections[] = ['name' => $division->name,'questions' => $questions];
+        }
+        // Closing Section
+        $closing = Question::where(['division_id' => Division::where(['slug' => 'close'])->first()->id])->orderBy('number','asc')->get()->toArray();
+        $sections[] = ['name' => 'Closing','questions' => $closing];
+
+        // Get Schedule Interview
+        $schedule = Schedule::with(['admin'])->where(['applicant_id' => $applicant_id])->get()->toArray();
+        $interviewer = ["Belum ada","Belum ada"];
+        foreach($schedule as $s){
+            if($s['type'] == 0 ){
+                $interviewer = [$s['admin']['name'],$s['admin']['name']];
+            }else if($s['type'] == 1){
+                $interviewer[0] = $s['admin']['name'];
+            }else{
+                $interviewer[1] = $s['admin']['name'];
+            }
+        }
+
+        // now check for answer in every question
+        $answers = $applicant->answers->toArray();
+        foreach($sections as $key => $section){
+            $sections[$key]['interviewed'] = false;
+            if(count($sections) == 3){
+                $sections[$key]['interviewer'] = $interviewer[0];
+            }else{
+                if($key == 2){
+                    $sections[$key]['interviewer'] = $interviewer[1];
+                }else{
+                    $sections[$key]['interviewer'] = $interviewer[0];
+                }
+            }
+            foreach($section['questions'] as $key2 => $question){
+                $sections[$key]['questions'][$key2]['answered'] = false;
+                foreach($answers as $answer){
+                    if($answer['question_id'] == $question['id']){
+                        $sections[$key]['interviewed'] = true;
+                        $sections[$key]['questions'][$key2]['answered'] = true;
+                        $sections[$key]['questions'][$key2]['answer'] = $answer['answer'];
+                        $sections[$key]['questions'][$key2]['score'] = $answer['score'];
+                        break;
+                    }
+                }
+            }
+        }
+        
+        $data['sections'] = $sections;
+        return view('admin.interview.answer',$data);
     }
 }

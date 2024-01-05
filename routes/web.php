@@ -75,4 +75,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/add-project', [AnswerController::class, 'addProject'])->name('admin.interview.add.project');
         Route::post('/finish', [AnswerController::class, 'finish'])->name('admin.interview.finish');
     });
+
+    Route::prefix('answers')->group(function(){
+        Route::get('/{applicant_id}', [AnswerController::class, 'index'])->name('admin.applicant.answer');
+    });
 });
