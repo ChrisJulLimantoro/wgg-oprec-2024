@@ -6,6 +6,7 @@ use App\Http\Controllers\DateController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\ProjectController;
 use App\Models\Applicant;
 
 /*
@@ -41,6 +42,11 @@ Route::prefix('main')->group(function () {
 
     Route::get('interview-detail', [ApplicantController::class, 'interviewDetail'])->name('applicant.interview-detail');
     Route::get('download-cv', [ApplicantController::class, 'downloadCV'])->name('applicant.download-cv');
+
+    Route::get('projects-form/{selected_priority?}', [ProjectController::class, 'projectsForm'])->name('applicant.projects-form')
+        ->where('selected_priority', '[1-2]');
+    Route::post('store-project/{selected_priority}', [ProjectController::class, 'storeProject'])->name('applicant.project.store')
+        ->where('selected_priority', '[1-2]');
 });
 
 Route::prefix('admin')->group(function () {
@@ -64,7 +70,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/update-question', [QuestionController::class, 'updateQuestion'])->name('admin.question.update');
     });
 
-    Route::prefix('interview')->group(function(){
+    Route::prefix('interview')->group(function () {
         Route::get('/', [ScheduleController::class, 'myInterview'])->name('admin.interview');
         Route::get('/{schedule_id}', [AnswerController::class, 'getQuestion'])->name('admin.interview.start');
         Route::get('/{schedule_id}/page/{page}', [AnswerController::class, 'getQuestion'])->name('admin.interview.session');
