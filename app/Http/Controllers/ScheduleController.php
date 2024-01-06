@@ -77,6 +77,7 @@ class ScheduleController extends BaseController
 
     public function myInterview(){
         $data['title'] = 'My Interview';
+        session(['admin_id' => Admin::get()->first()->id ]);
         $interview = $this->getSelectedColumn(['*'], ['admin_id' => session('admin_id'),'status' => 2],['applicant.priorityDivision1','applicant.priorityDivision2','date'])->toArray();
         $data['interview'] = [];
         foreach($interview as $i){
