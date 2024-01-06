@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\ApplicantDocumentsUploaded;
-use Error;
 use ErrorException;
-use PhpOption\None;
 use App\Models\Admin;
 use App\Models\Division;
 use App\Models\Schedule;
@@ -14,15 +12,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\ApplicationRequest;
 use App\Http\Requests\StoreDocumentRequest;
 
 class ApplicantController extends BaseController
 {
-    private const NRP = 'C14210017';
-
     public function __construct(Applicant $model)
     {
         parent::__construct($model);
@@ -40,7 +35,7 @@ class ApplicantController extends BaseController
             return !in_array($division['name'], $excludedDivisions);
         });
 
-        $nrp = strtolower(self::NRP);
+        $nrp = strtolower(session('nrp'));
         $res = Http::get('https://john.petra.ac.id/~justin/finger.php?s=' . $nrp);
 
         $data['form'] = [];
@@ -79,7 +74,7 @@ class ApplicantController extends BaseController
 
     public function documentsForm()
     {
-        $nrp = strtolower(self::NRP);
+        $nrp = strtolower(session('nrp'));
         $applicant = $this->model->findByEmail(
             $nrp . '@john.petra.ac.id',
             ['id', 'documents', 'astor']
@@ -87,7 +82,6 @@ class ApplicantController extends BaseController
 
         $data['title'] = 'Upload Berkas';
         $data['documentTypes'] = self::documentTypes();
-        $nrp = strtolower(self::NRP);
 
         $applicant = Applicant::select('id', 'stage', 'documents')
             ->where('email', $nrp . '@john.petra.ac.id')->first();
@@ -101,7 +95,7 @@ class ApplicantController extends BaseController
 
     public function storeDocument(StoreDocumentRequest $request, $type)
     {
-        $nrp = strtolower(self::NRP);
+        $nrp = strtolower(session('nrp'));
         $applicant = $this->model->findByNRP($nrp);
         $storeName = self::saveFile($request->file($type), $applicant, $type);
 
@@ -123,9 +117,10 @@ class ApplicantController extends BaseController
             ->setStatusCode(201);
     }
 
-    public function scheduleForm() {
+    public function scheduleForm()
+    {
         $data['title'] = 'Pilih Jadwal Interview';
-        $nrp = strtolower(self::NRP);
+        $nrp = strtolower(session('nrp'));
 
         $applicant = Applicant::where('email', $nrp . '@john.petra.ac.id')->where('stage', '>', 2)->first();
 
@@ -137,11 +132,11 @@ class ApplicantController extends BaseController
         $interviewers = Admin::whereIn('division_id', [$applicant->priority_division1, $applicant->priority_division1])->get();
 
         $schedules = Schedule::with(['date', 'admin'])
-            ->whereIn('admin_id', $interviewers->pluck('id'))   
+            ->whereIn('admin_id', $interviewers->pluck('id'))
             ->get()
             ->toArray();
 
-        foreach($schedules as $s) {
+        foreach ($schedules as $s) {
             $data['schedules'][] = [
                 'id' => $s['id'],
                 'date' => $s['date']['date'],
@@ -149,7 +144,7 @@ class ApplicantController extends BaseController
                 'admin' => $s['admin']['name'],
                 'admin_id' => $s['admin']['id'],
                 'date_ud' => $s['date']['id'],
-            ];      
+            ];
         }
 
         $dates = array_column($data['schedules'], 'date');
@@ -157,17 +152,17 @@ class ApplicantController extends BaseController
 
         array_multisort($dates, SORT_ASC, $time, SORT_ASC, $data['schedules']);
 
-        dd($data['schedules']); 
+        dd($data['schedules']);
         return view('main.schedule_form', $data);
     }
 
-    public function pickSchedule(Request $request) {
-
+    public function pickSchedule(Request $request)
+    {
     }
 
     public function downloadCV()
     {
-        $nrp = strtolower(self::NRP);
+        $nrp = strtolower(session('nrp'));
         $applicant = $this->model->findByNRP($nrp, relations: $this->model->relations());
 
         if (!$applicant) {

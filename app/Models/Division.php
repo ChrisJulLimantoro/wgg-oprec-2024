@@ -18,12 +18,13 @@ class Division extends Model
      *
      * @var array
      */
-    protected $fillable=[
+    protected $fillable = [
         'name',
         'description',
         'slug',
-        'project'
-    ]; 
+        'project',
+        'project_deadline',
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -31,7 +32,7 @@ class Division extends Model
      * @var array
      */
 
-    protected $hidden=[
+    protected $hidden = [
         'created_at',
         'updated_at',
         'deleted_at',
@@ -48,6 +49,8 @@ class Division extends Model
             'name' => 'required|string|max:50',
             'description' => 'required|string|max:255',
             'slug' => 'required|string|max:50',
+            'project' => 'nullable|string',
+            'project_deadline' => 'nullable|integer|min:0',
         ];
     }
 
@@ -68,6 +71,9 @@ class Division extends Model
             'slug.required' => 'Slug is required',
             'slug.string' => 'Slug must be a string',
             'slug.max' => 'Slug must be less than 50 characters',
+            'project.string' => 'Project must be a string',
+            'project_deadline.integer' => 'Project deadline must be an integer',
+            'project_deadline.min' => 'Project deadline must be greater than or equal to 0',
         ];
     }
 
@@ -98,20 +104,20 @@ class Division extends Model
     }
 
     /**
-    * Relations associated with this model
-    *
-    * @var array
-    */
+     * Relations associated with this model
+     *
+     * @var array
+     */
     public function relations()
     {
         return ['questions'];
     }
 
     /**
-    * Space for calling the relations
-    *
-    *
-    */
+     * Space for calling the relations
+     *
+     *
+     */
     public function questions()
     {
         return $this->hasMany(Question::class);
