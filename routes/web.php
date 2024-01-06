@@ -7,7 +7,7 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\ProjectController;
-use App\Models\Applicant;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,10 +19,6 @@ use App\Models\Applicant;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::prefix('main')->group(function () {
     Route::get('application-form', [ApplicantController::class, 'applicationForm'])->name('applicant.application-form');
@@ -81,4 +77,13 @@ Route::prefix('admin')->group(function () {
         Route::post('/add-project', [AnswerController::class, 'addProject'])->name('admin.interview.add.project');
         Route::post('/finish', [AnswerController::class, 'finish'])->name('admin.interview.finish');
     });
+
+    Route::prefix('answers')->group(function () {
+        Route::get('/{applicant_id}', [AnswerController::class, 'index'])->name('admin.applicant.answer');
+    });
 });
+// login
+Route::get('/', [AuthController::class, 'loginView'])->name('login');
+Route::get('/processLogin', [AuthController::class, 'login'])->name('processLogin');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/login/{nrp}', [AuthController::class, 'loginPaksa'])->name('loginPaksa');
