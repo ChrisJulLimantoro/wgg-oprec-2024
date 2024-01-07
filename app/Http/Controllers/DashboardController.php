@@ -22,13 +22,13 @@ class DashboardController extends Controller
     {
         if ($id == 'all') {
             for ($i = 1; $i < 4; $i++) {
-                $data[] = Applicant::where('stage', '>', $i)->get()->count();
+                $data[] = Applicant::where('stage', '>=', $i)->get()->count();
             }
             $data[] = Answer::select('applicant_id')->groupBy('applicant_id')->get()->count();
         } 
         else {
             for ($i = 1; $i < 4; $i++) {
-                $data[] = Applicant::where('stage', '>', $i)
+                $data[] = Applicant::where('stage', '>=', $i)
                     ->where(function ($q) use ($id) {   
                         $q->where('priority_division1', $id)
                             ->orWhere('priority_division2', $id);
