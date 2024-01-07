@@ -91,7 +91,7 @@ class ScheduleController extends BaseController
             else $temp['time'] = $i['time'].':00 - '.($i['time']+1).':00';
             $temp['name'] = $i['applicant']['name'];
             $temp['priorityDivision1'] = $i['applicant']['priority_division1']['name'];
-            $temp['priorityDivision2'] = $i['applicant']['priority_division2']['name'];
+            $temp['priorityDivision2'] = $i['applicant']['priority_division2'] ? $i['applicant']['priority_division2']['name'] : '-';
             $temp['type'] = $i['type'];
             $temp['link'] = route('admin.interview.start',$i['id']);
             $data['interview'][] = $temp;
