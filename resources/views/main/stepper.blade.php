@@ -1,4 +1,4 @@
-<ul data-te-stepper-init
+<ul 
     class="relative m-0 flex list-none justify-between overflow-hidden p-0 transition-[height] duration-200 ease-in-out pb-3 mb-10">
 
     <!--First item-->
