@@ -93,7 +93,7 @@ class Applicant extends Model
             'allergy' => 'nullable|string|max:150',
             'astor' => 'required|boolean',
             'priority_division1' => ['required', 'uuid', 'exists:divisions,id', new AstorDivisionRule],
-            'priority_division2' => ['nullable', 'uuid', 'exists:divisions,id', 'different', new AstorDivisionRule],
+            'priority_division2' => ['nullable', 'uuid', 'exists:divisions,id', 'different:priority_division1', new AstorDivisionRule],
             'division_accepted' => 'nullable|uuid|exists:divisions,id',
             'documents' => 'nullable|array',
             'documents.*' => 'nullable|string|max:255',

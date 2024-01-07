@@ -69,6 +69,7 @@ class ScheduleController extends BaseController
             // dd("hello");
             $request->merge(['admin_id' => session('admin_id')]);
             $request->merge(['status' => $status]);
+            $request->merge(['online' => 0]);
             $store = $this->store($request);
             if(isset($store['error'])) return response()->json(['success' => false, 'message' => 'Gagal mengubah jadwal'],500);
             return response()->json(['success' => true, 'message' => 'Berhasil mengubah jadwal'],200);

@@ -37,6 +37,8 @@ Route::prefix('main')->group(function () {
         );
 
     Route::get('schedule-form', [ApplicantController::class, 'scheduleForm'])->name('applicant.schedule-form');
+    Route::get('schedule/{date}/{online}/{divsion}', [ApplicantController::class, 'getTimeSlot'])->name('applicant.get-schedule');
+    Route::post('pick-schedule', [ApplicantController::class, 'pickSchedule'])->name('applicant.pick-schedule');
 
     Route::get('interview-detail', [ApplicantController::class, 'interviewDetail'])->name('applicant.interview-detail');
     Route::get('download-cv', [ApplicantController::class, 'downloadCV'])->name('applicant.download-cv');

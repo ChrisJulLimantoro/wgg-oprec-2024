@@ -7,15 +7,15 @@
             $numClass = '';
             $textClass = '';
             $connR = '';
-            if ($applicant['stage'] == 1) {
+            if ($applicant['stage'] == 0) {
                 $numClass = '!bg-blue-100 !text-blue-500';
                 $textClass = '!text-blue-500';
                 $connR = 'after:bg-neutral-200';
-            } else if ($applicant['stage'] > 1){
+            } else if ($applicant['stage'] > 0){
                 $numClass = '!bg-green-100 !text-green-600';
                 $textClass = '!text-green-500';
 
-                if ($applicant['stage'] == 2) {
+                if ($applicant['stage'] == 1) {
                     $connR = 'after:bg-blue-200';
                 }
                 else {
@@ -52,17 +52,17 @@
             $textClass = '';
             $connL = '';
             $connR = '';
-            if ($applicant['stage'] == 2) {
+            if ($applicant['stage'] == 1) {
                 $numClass = '!bg-blue-100 !text-blue-500';
                 $textClass = 'font-medium !text-blue-500';
                 $connL = 'before:bg-blue-200';
                 $connR = 'after:bg-neutral-200';
-            } else if ($applicant['stage'] > 2) {
+            } else if ($applicant['stage'] > 1) {
                 $numClass = '!bg-green-100 !text-green-500';
                 $textClass = 'font-medium !text-green-500';
                 $connL = 'before:bg-green-200';
 
-                if ($applicant['stage'] == 3) {
+                if ($applicant['stage'] == 2) {
                     $connR = 'after:bg-blue-200';
                 }
                 else {
@@ -103,17 +103,17 @@
             $textClass = '';
             $connL = '';
             $connR = '';
-            if ($applicant['stage'] == 3) {
+            if ($applicant['stage'] == 2) {
                 $numClass = '!bg-blue-100 !text-blue-500';
                 $textClass = 'font-medium !text-blue-500';
                 $connL = 'before:bg-blue-200';
                 $connR = 'after:bg-neutral-200';
-            } else if ($applicant['stage'] > 3) {
+            } else if ($applicant['stage'] > 2) {
                 $numClass = '!bg-green-100 !text-green-500';
                 $textClass = 'font-medium !text-green-500';
                 $connL = 'before:bg-green-200';
 
-                if ($applicant['stage'] == 4) {
+                if ($applicant['stage'] == 3) {
                     $connR = 'after:bg-blue-200';
                 }
                 else {
@@ -152,7 +152,7 @@
             $numClass = '';
             $textClass = '';
             $connL = '';
-            if ($applicant['stage'] == 4) {
+            if ($applicant['stage'] == 3) {
                 $numClass = '!bg-blue-100 !text-blue-500';
                 $textClass = 'font-medium !text-blue-500';
                 $connL = 'before:bg-blue-200';

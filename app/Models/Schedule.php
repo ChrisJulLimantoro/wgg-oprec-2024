@@ -23,6 +23,7 @@ class Schedule extends Model
         'time',
         'admin_id',
         'status',
+        'online',
         'type',
         'applicant_id'
     ]; 
@@ -51,6 +52,7 @@ class Schedule extends Model
             'time' => 'required|integer|min:0|max:23',
             'admin_id' => 'required|uuid|exists:admins,id',
             'status' => 'required|integer|min:0|max:2',
+            'online' => 'required|boolean',
             'type' => 'integer|min:0|max:2',
             'applicant_id' => 'uuid|exists:applicants,id',
         ];
@@ -81,7 +83,9 @@ class Schedule extends Model
             'type.integer' => 'Type must be an integer',
             'type.min' => 'Type must be at least 0',
             'type.max' => 'Type must be at most 2',
-            'applicant_id.uuid' => 'Applicant must be a uuid',
+            'online.required' => 'Interview mode must be chosen',
+            'online.boolean' => 'Interview mode must be either onsite / online',
+            'applicant_id.uuid' => 'Applicant must be a uuid', 
             'applicant_id.exists' => 'Applicant must be exists',
         ];
     }
@@ -99,6 +103,7 @@ class Schedule extends Model
             'admin_id' => $request->admin_id,
             'status' => $request->status,
             'type' => $request->type,
+            'online' => $request->online,
             'applicant_id' => $request->applicant_id,
         ]);
     }
