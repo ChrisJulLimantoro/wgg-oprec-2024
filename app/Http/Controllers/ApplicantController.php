@@ -350,7 +350,7 @@ enum DocumentType: String
     case Photo = 'Foto Diri 3x4';
     case Ktm = 'KTM / Profile Petra Mobile';
     case Grades = 'Transkrip Nilai';
-    case Skkk = 'Transkrip SKKK';
+    case Skkk = 'Transkrip SKKK Petra Mobile';
     case Schedule = 'Jadwal Kuliah';
     case Frontline_Test = 'Jawaban Tes Calon Frontline';
 }
