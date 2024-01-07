@@ -108,7 +108,7 @@ class ApplicantController extends BaseController
         $applicant->addDocument($type, $storeName);
         ApplicantDocumentsUploaded::dispatch(
             $applicant,
-            3,
+            2,
             self::documentTypes($applicant->astor)
         );
 

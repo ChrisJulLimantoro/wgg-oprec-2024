@@ -1,5 +1,27 @@
 @extends('main.layout')
 
+@section('styles')
+    <style>
+        .project-description a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+
+        .project-description ul,
+        .project-description ol {
+            margin-left: 1.25rem;
+        }
+
+        .project-description ul {
+            list-style-type: initial;
+        }
+
+        .project-description ol {
+            list-style-type: decimal;
+        }
+    </style>
+@endsection
+
 @section('content')
     <div class="mb-4 pt-5">
         <div class="flex justify-center mb-5">
@@ -15,12 +37,10 @@
                         <label class="text-xl font-bold">Pilih Divisi : </label>
                         <select id="selectDivision"
                             class=" w-full bg-transparent border-2 font-serif text-sm rounded-lg block py-3 pl-3 shadow-lg hover:shadow-xl">
-                            <option value="" disabled selected class="font-serif">-- Pilih Divisi --</option>
-                            @if ($applicant['priority_division1']['project'])
-                                <option value="1" {{ $selected == 1 ? 'selected' : '' }}>
-                                    {{ $applicant['priority_division1']['name'] }}</option>
-                            @endif
-                            @if ($applicant['priority_division2'] && $applicant['priority_division2']['project'])
+                            <option value="" selected disabled class="font-serif">-- Pilih Divisi --</option>
+                            <option value="1" {{ $selected == 1 ? 'selected' : '' }}>
+                                {{ $applicant['priority_division1']['name'] }}</option>
+                            @if ($applicant['priority_division2'])
                                 <option value="2" {{ $selected == 2 ? 'selected' : '' }}>
                                     {{ $applicant['priority_division2']['name'] }}</option>
                             @endif
@@ -32,9 +52,9 @@
                             <div class="mb-2 text-lg font-medium leading-tight text-neutral-800 dark:text-neutral-50">
                                 Project Description
                             </div>
-                            <p class="mb-4 text-sm text-neutral-600 dark:text-neutral-200">
-                                {{ $projectDescription }}
-                            </p>
+                            <div class="mb-4 text-sm text-neutral-600 dark:text-neutral-200 project-description">
+                                {!! $projectDescription !!}
+                            </div>
                         </div>
                     @endif
                     <form action="{{ $selected ? route('applicant.project.store', $selected) : '' }}" method="POST"

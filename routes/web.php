@@ -81,6 +81,12 @@ Route::prefix('admin')->group(function () {
     Route::prefix('answers')->group(function () {
         Route::get('/{applicant_id}', [AnswerController::class, 'index'])->name('admin.applicant.answer');
     });
+
+    Route::prefix('projects')->controller(ProjectController::class)
+        ->group(function () {
+            Route::get('{division?}', 'index')->name('admin.project');
+            Route::patch('{division}', 'storeProjectDescription')->name('admin.project.store');
+        });
 });
 // login
 Route::get('/', [AuthController::class, 'loginView'])->name('login');

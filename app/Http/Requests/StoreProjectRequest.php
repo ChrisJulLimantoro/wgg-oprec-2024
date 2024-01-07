@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Controllers\ProjectController;
 use App\Models\Applicant;
+use DateTime;
+use DateTimeZone;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProjectRequest extends FormRequest
@@ -21,6 +24,12 @@ class StoreProjectRequest extends FormRequest
             ->where('email', $nrp . '@john.petra.ac.id')->first();
 
         if (!$applicant->priority_division2) return false;
+
+        $deadline = ProjectController::getProjectDeadline($applicant, $nrp, $selectedPriority);
+        $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
+        $nowTimestamp = $now->getTimestamp() + $now->getOffset();
+
+        if ($nowTimestamp > $deadline) return false;
 
         return true;
     }

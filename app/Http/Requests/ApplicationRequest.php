@@ -55,7 +55,7 @@ class ApplicationRequest extends FormRequest
 
         if (!$this->has('stage')) {
             $this->merge([
-                'stage' => 2,
+                'stage' => 1,
             ]);
         }
 

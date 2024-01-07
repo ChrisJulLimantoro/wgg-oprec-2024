@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProjectDescriptionRequest;
 use App\Http\Requests\StoreProjectRequest;
 use App\Models\Applicant;
+use App\Models\Division;
 use App\Models\Schedule;
 use DateTime;
+use DateTimeZone;
 use Illuminate\Support\Facades\Log;
 
 class ProjectController extends BaseController
@@ -15,9 +18,27 @@ class ProjectController extends BaseController
         parent::__construct($model);
     }
 
+    public function index(?Division $division = null)
+    {
+        $data['title'] = 'Projects';
+        $data['divisions'] = Division::all();
+        $data['division'] = $division;
+
+        return view('admin.project', $data);
+    }
+
+    public function storeProjectDescription(StoreProjectDescriptionRequest $request, Division $division)
+    {
+        $division->project = $request->project;
+        $division->project_deadline = $request->project_deadline;
+        $division->save();
+
+        return back()->with('success', 'Deskripsi proyek berhasil disimpan.');
+    }
+
     public function projectsForm(?int $selected = null)
     {
-        $nrp = strtolower('c14210206');
+        $nrp = strtolower(session('nrp'));
         $data['title'] = 'Projects Form';
         $applicant = $this->model->findByNrp(
             $nrp,
@@ -32,10 +53,12 @@ class ProjectController extends BaseController
 
         if (!$selected) return view('main.projects_form', $data);
 
-        $now = (new DateTime('now', new \DateTimeZone('Asia/Jakarta')))->getTimestamp();
-        $data['passedDeadline'] = $now > $this->getProjectDeadline($applicant, $nrp, $selected);
-        $data['projectDescription'] = ($now > $this->getInterviewStartTimestamp($applicant, $nrp, $selected))
-            ? $applicant['priority_division' . $selected]['project']
+        $timezone = new DateTimeZone('Asia/Jakarta');
+        $now = new DateTime('now', $timezone);
+        $nowTimestamp = $now->getTimestamp() + $now->getOffset();
+        $data['passedDeadline'] = $nowTimestamp > self::getProjectDeadline($applicant, $nrp, $selected);
+        $data['projectDescription'] = ($nowTimestamp > self::getInterviewStartTimestamp($applicant, $nrp, $selected))
+            ? ($applicant['priority_division' . $selected]['project'] ?? 'Tidak ada proyek untuk divisi ini')
             : 'Silahkan lakukan interview terlebih dahulu untuk melihat deskripsi proyek';
 
         return view('main.projects_form', $data);
@@ -50,7 +73,7 @@ class ProjectController extends BaseController
         return back()->with('success', 'Proyek divisi ' . $applicant->{'priorityDivision' . $selectedPriority}->name . ' berhasil disimpan.');
     }
 
-    private function getInterviewStartTimestamp($applicant, $nrp, $selectedPriority)
+    private static function getInterviewStartTimestamp($applicant, $nrp, $selectedPriority)
     {
         $interviews = Schedule::with('date')->where('applicant_id', $applicant['id'])
             ->get()->toArray();
@@ -71,9 +94,9 @@ class ProjectController extends BaseController
         return $interviewTime + $interviewDate;
     }
 
-    private function getProjectDeadline($applicant, $nrp, $selectedPriority)
+    public static function getProjectDeadline($applicant, $nrp, $selectedPriority)
     {
-        $interviewStartTimestamp = $this->getInterviewStartTimestamp($applicant, $nrp, $selectedPriority);
+        $interviewStartTimestamp = self::getInterviewStartTimestamp($applicant, $nrp, $selectedPriority);
         $interval = $applicant['priority_division' . $selectedPriority]['project_deadline'];
         $projectDeadline = $interviewStartTimestamp + $interval;
 
