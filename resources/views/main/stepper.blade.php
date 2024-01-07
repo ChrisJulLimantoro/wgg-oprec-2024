@@ -152,7 +152,7 @@
             $numClass = '';
             $textClass = '';
             $connL = '';
-            if ($applicant['stage'] == 3) {
+            if ($applicant['stage'] >= 3) {
                 $numClass = '!bg-blue-100 !text-blue-500';
                 $textClass = 'font-medium !text-blue-500';
                 $connL = 'before:bg-blue-200';
