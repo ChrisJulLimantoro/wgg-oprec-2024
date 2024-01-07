@@ -20,7 +20,6 @@ use App\Http\Requests\ApplicationRequest;
 use App\Events\ApplicantDocumentsUploaded;
 use App\Http\Requests\PickScheduleRequest;
 use App\Http\Requests\StoreDocumentRequest;
-use App\Http\Controllers\ScheduleController;
 
 class ApplicantController extends BaseController
 {
@@ -209,8 +208,9 @@ class ApplicantController extends BaseController
         }
 
         $pickedSchedule = [];
+        $count = $isPeran && $applicant->priority_division2 != null ? 2 : 1;
 
-        for ($i = 0; $i < count($validated['division']); $i++) {
+        for ($i = 0; $i < $count; $i++) {
             // get available schedules
             $schedules = Schedule::join('admins', 'schedules.admin_id', '=', 'admins.id')
                 ->select('schedules.*')
@@ -269,7 +269,6 @@ class ApplicantController extends BaseController
 
             DB::commit();
         } catch (Exception $e) {
-            dd($e);
             DB::rollback();
             return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
         }

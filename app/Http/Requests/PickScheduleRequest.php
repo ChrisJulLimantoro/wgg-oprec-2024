@@ -24,24 +24,28 @@ class PickScheduleRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'time' => 'required',
+            'online' => 'required',
+            'date_id' => 'required',
+            'division' => 'required',
             'division.*' => 'uuid|exists:divisions,id',
-            'date_id.*' => 'required|uuid|exists:dates,id',
-            'time.*' => 'required|integer|min:0|max:23',
-            'online.*' => 'required|boolean',
+            'date_id.*' => 'uuid|exists:dates,id',
+            'time.*' => 'integer|min:0|max:23',
+            'online.*' => 'boolean',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'date_id.*.required' => 'Date is required',
+            'time.required' => 'Time is required',
+            'date_id.required' => 'Date is required',
+            'online.required' => 'Interview mode must be chosen',
             'date_id.*.uuid' => 'Date must be a uuid',
             'date_id.*.exists' => 'Date must be exists',
-            'time.*.required' => 'Time is required',
             'time.*.integer' => 'Time must be an integer',
             'time.*.min' => 'Time must be at least 0',
             'time.*.max' => 'Time must be at most 23',
-            'online.*.required' => 'Interview mode must be chosen',
             'online.*.boolean' => 'Interview mode must be either onsite / online',
         ];
     }

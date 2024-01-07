@@ -24,6 +24,7 @@
 
                 <div class="grid sm:grid-cols-3 sm:gap-4 mb-4">
                     <div data-te-validate="input" class="mb-4"
+                        @error('date_id') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                         @error('date_id.0') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
                         <select data-te-select-init name="date_id[]" id="date_1"
                             value="{{ $read_only ? $schedules[0]['date']['date'] : old('date_id')[0] ?? '' }}"
@@ -43,6 +44,7 @@
                     </div>
 
                     <div data-te-validate="input" class="mb-4"
+                        @error('online') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                         @error('online.0') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
 
                         <select data-te-select-init name="online[]" id="online_1" value=""
@@ -61,6 +63,7 @@
                     </div>
 
                     <div data-te-validate="input" class="mb-4"
+                        @error('time') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                         @error('time.0') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
 
                         <select data-te-select-init name="time[]" id="time_1" {{ $read_only ? 'disabled' : '' }}>
@@ -84,6 +87,7 @@
 
                     <div class="grid sm:grid-cols-3 sm:gap-4 mb-4">
                         <div data-te-validate="input" class="mb-4"
+                            @error('date_id') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                             @error('date_id.1') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
                             <select data-te-select-init name="date_id[]" id="date_2" {{ $read_only ? 'disabled' : '' }}>
                                 @foreach ($dates as $d)
@@ -99,6 +103,7 @@
                         </div>
 
                         <div data-te-validate="input" class="mb-4"
+                            @error('online') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                             @error('online.1') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
 
                             <select data-te-select-init name="online[]" id="online_2" {{ $read_only ? 'disabled' : '' }}>
@@ -116,6 +121,7 @@
                         </div>
 
                         <div data-te-validate="input" class="mb-4"
+                            @error('time') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                             @error('time.1') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
 
                             <select data-te-select-init name="time[]" id="time_2" {{ $read_only ? 'disabled' : '' }}>
