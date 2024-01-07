@@ -20,8 +20,9 @@ return new class extends Migration
             $table->integer('time');
             $table->integer('status')->default(1)->comment('0: not available, 1: available, 2: booked');
             $table->integer('type')->default(0)->comment('0: double interview, 1: interview choice 1, 2: interview choice 2');
+            $table->integer('online')->default(0)->comment('0: onsite, 1: online');
             $table->unique(array('admin_id', 'date_id', 'time'));
-
+                
 
             $table->timestamps();
             $table->softDeletes();
