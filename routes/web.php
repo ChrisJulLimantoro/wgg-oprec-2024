@@ -1,13 +1,15 @@
 <?php
 
-use App\Http\Controllers\ApplicantController;
+use App\Models\Applicant;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DateController;
-use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\QuestionController;
-use App\Http\Controllers\AnswerController;
-use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DateController;
+use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ApplicantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +48,9 @@ Route::prefix('main')->group(function () {
 });
 
 Route::prefix('admin')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/realtime/{id}', [DashboardController::class, 'getData'])->name('admin.dashboard.getData');
+
     // Dates
     Route::prefix('dates')->group(function () {
         Route::get('/', [DateController::class, 'index'])->name('admin.date');
