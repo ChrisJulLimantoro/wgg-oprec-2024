@@ -204,6 +204,16 @@
                 });
             }
 
+            @if(Session::has('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: '{{ Session::get('success') }}',
+                    showConfirmButton: false,
+                    timer: 1700
+                });
+            @endif
+
             @if (Session::has('error'))
                 Swal.fire({
                     icon: 'error',
