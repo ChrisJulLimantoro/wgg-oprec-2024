@@ -28,6 +28,7 @@ class ScheduleSeeder extends Seeder
             'admin_id' => Admin::get()->first()->id,
             'applicant_id' => Applicant::get()->first()->id,
             'type' => 0,
+            'online' => 0
         ];
         Schedule::create($schedules);
     }

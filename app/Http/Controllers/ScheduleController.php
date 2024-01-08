@@ -41,6 +41,7 @@ class ScheduleController extends BaseController
                     $arrS['schedule_id'] = $s['id'];
                     $arrS['time'] = $s['time'];
                     $arrS['status'] = $s['status'];
+                    $arrS['online'] = $s['online'];
                     $arr['schedules'][] = $arrS;
                 }
             }
@@ -53,14 +54,14 @@ class ScheduleController extends BaseController
 
     public function select(Request $request){
         $schedules = $this->getSelectedColumn(['*'], ['admin_id' => session('admin_id')])->toArray();
-        $data = $request->only(['date_id','status','time']);
+        $data = $request->only(['date_id','status','time','online']);
         if($data['status'] < 0 && $data['status'] > 2) return response()->json(['success' => false, 'message' => 'Status tidak valid'],500);
-        $status = $data['status'] == 0 ? 1 : 0;
+        $status = $data['status'];
         $exist = false;
         foreach($schedules as $s){
             if($s['date_id'] == $data['date_id'] && $s['time'] == $data['time']){
                 $id = $s['id'];
-                $this->updatePartial(['status' => $status],$id);
+                $this->updatePartial(['status' => $status,'online' => $data['online']],$id);
                 $exist = true;
                 return response()->json(['success' => true, 'message' => 'Berhasil mengubah jadwal'],200);
             }
@@ -69,7 +70,7 @@ class ScheduleController extends BaseController
             // dd("hello");
             $request->merge(['admin_id' => session('admin_id')]);
             $request->merge(['status' => $status]);
-            $request->merge(['online' => 0]);
+            $request->merge(['online' => $data['online']]);
             $store = $this->store($request);
             if(isset($store['error'])) return response()->json(['success' => false, 'message' => 'Gagal mengubah jadwal'],500);
             return response()->json(['success' => true, 'message' => 'Berhasil mengubah jadwal'],200);
