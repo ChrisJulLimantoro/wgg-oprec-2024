@@ -75,6 +75,7 @@ Route::prefix('admin')->group(function () {
 
     Route::prefix('interview')->group(function () {
         Route::get('/', [ScheduleController::class, 'myInterview'])->name('admin.interview');
+        Route::get('/my', [ScheduleController::class, 'myInterview'])->name('admin.interview.my');
         Route::get('/{schedule_id}', [AnswerController::class, 'getQuestion'])->name('admin.interview.start');
         Route::get('/{schedule_id}/page/{page}', [AnswerController::class, 'getQuestion'])->name('admin.interview.session');
         Route::post('/submit-answer', [AnswerController::class, 'submitAnswer'])->name('admin.interview.submit.answer');

@@ -148,7 +148,7 @@
                         online = id.split(':')[4];
                         if(online == 0){
                             await Swal.fire({
-                                title: "Change for this ",
+                                title: "Are you sure?",
                                 showDenyButton: true,
                                 showCancelButton: true,
                                 confirmButtonText: "Change to Online",
@@ -177,7 +177,7 @@
                             })
                         }else{
                             await Swal.fire({
-                                title: "Change for this ",
+                                title: "Are you sure?",
                                 showDenyButton: true,
                                 showCancelButton: true,
                                 confirmButtonText: "Change to Onsite",
