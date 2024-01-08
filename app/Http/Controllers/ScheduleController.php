@@ -94,6 +94,7 @@ class ScheduleController extends BaseController
             $temp['priorityDivision1'] = $i['applicant']['priority_division1']['name'];
             $temp['priorityDivision2'] = $i['applicant']['priority_division2'] ? $i['applicant']['priority_division2']['name'] : '-';
             $temp['type'] = $i['type'];
+            $temp['online'] = $i['online'];
             $temp['link'] = route('admin.interview.start',$i['id']);
             $data['interview'][] = $temp;
         }

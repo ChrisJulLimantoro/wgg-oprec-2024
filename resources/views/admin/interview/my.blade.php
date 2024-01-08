@@ -50,6 +50,7 @@
             { label: "Time", field: "time" },
             { label: "Name", field: "name" },
             { label: "Type", field: "type" },
+            { label: "Online", field: "online" },
             { label: "Division 1", field: "priorityDivision1" },
             { label: "Division 2", field: "priorityDivision2" },
             { label: "Action", field: "action"},
@@ -88,6 +89,7 @@
                     </a>
                     `,
                     type : item.type == 0 ? "Wawancara 2 Divisi" : "Wawancara Divisi ke "+item.type,
+                    online : item.online == 0 ? "Onsite" : "Online",
                 }
             }),
         },
