@@ -87,7 +87,7 @@ class ApplicantController extends BaseController
         );
 
         $data['title'] = 'Upload Berkas';
-        $data['documentTypes'] = self::documentTypes();
+        $data['documentTypes'] = self::documentTypes($applicant->astor);
 
         $applicant = Applicant::select('id', 'stage', 'documents')
             ->where('email', $nrp . '@john.petra.ac.id')->first();
