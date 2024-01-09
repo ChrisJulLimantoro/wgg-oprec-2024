@@ -99,6 +99,7 @@ class ScheduleController extends BaseController
             $temp['type'] = $i['type'];
             $temp['online'] = $i['online'];
             $temp['link'] = route('admin.interview.start',$i['id']);
+            $temp['detail'] = route('admin.applicant.cv',$i['applicant_id']);
             $data['interview'][] = $temp;
         }
         $data['interview'] = json_encode($data['interview']);
@@ -134,6 +135,7 @@ class ScheduleController extends BaseController
             $temp['link'] = route('admin.interview.start',$i['id']);
             $temp['interviewer'] = $i['admin']['name'];
             $temp['inter_id'] = $i['admin_id'];
+            $temp['detail'] = route('admin.applicant.cv',$i['applicant_id']);
             $data['interview'][] = $temp;
         }
         $data['interview'] = json_encode($data['interview']);
@@ -180,6 +182,7 @@ class ScheduleController extends BaseController
             $temp['link'] = route('admin.interview.start',$i['id']);
             $temp['interviewer'] = $i['admin']['name'];
             $temp['inter_id'] = $i['admin_id'];
+            $temp['detail'] = route('admin.applicant.cv',$i['applicant_id']);
             $data[] = $temp;
         }
         return response()->json(['success' => true, 'data' => $data],200);

@@ -71,7 +71,7 @@
                 return {
                     ...item,
                     action : `
-                    <a href="" target="_blank">
+                    <a href="${item.detail}" target="_blank">
                         <button
                             type="button"
                             data-te-ripple-init
@@ -167,7 +167,7 @@
                                 return {
                                     ...item,
                                     action : `
-                                    <a href="" target="_blank">
+                                    <a href="${item.detail}" target="_blank">
                                         <button
                                             type="button"
                                             data-te-ripple-init

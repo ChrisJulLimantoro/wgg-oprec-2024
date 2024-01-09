@@ -3,7 +3,8 @@
     <input type="hidden" id="applicant" value="{{ $applicant }}"> 
     <div class="flex flex-col w-full py-8 rounded-lg shadow-xl items-center justify-center mb-8">
         <h1 class="text-center text-6xl uppercase font-bold mb-5">Interview applicant</h1>
-        <h3 class="text-center text-4xl uppercase font-bold">Section : {{ $part }}</h3>
+        <h3 class="text-center text-4xl uppercase font-bold mb-3">Section : {{ $part }}</h3>
+        <a href="{{ route('admin.applicant.cv',$applicant) }}" target="_blank" class="text-center text-2xl uppercase font-bold italic text-blue-500"> < Detail Applicant > </a>
     </div>
     <div class="flex flex-col w-full p-8 rounded-lg shadow-xl items-center justify-center mb-8">
         @php
