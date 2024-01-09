@@ -54,7 +54,7 @@ class ApplicantController extends BaseController
             Log::warning('NRP {nrp} not found in john API.', ['nrp' => $nrp]);
         }
 
-        $applicantData = $this->model->findByNRP($nrp, relations: $this->model->relations());
+        $applicantData = $this->model->findByNRP($nrp);
         if ($applicantData) {
             $data['form'] = $applicantData->toArray();
         }

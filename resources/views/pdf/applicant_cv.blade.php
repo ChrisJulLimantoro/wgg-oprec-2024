@@ -269,28 +269,31 @@
                 <h3>KTM</h3>
             </a>
             <img src="{{ asset('storage/uploads/ktm/' . $applicant['documents']['ktm']) }}" alt="KTM"
-                style="max-width: 100%">
+                style="max-width: 100%; max-height: 85%">
         </div>
+        <div class="page-break"></div>
         <div>
             <a href="{{ asset('storage/uploads/skkk/' . $applicant['documents']['skkk']) }}" target="_blank">
                 <h3>SKKK</h3>
             </a>
             <img src="{{ asset('storage/uploads/skkk/' . $applicant['documents']['skkk']) }}" alt="SKKK"
-                style="max-width: 100%">
+                style="max-width: 100%; max-height: 85%">
         </div>
+        <div class="page-break"></div>
         <div>
             <a href="{{ asset('storage/uploads/grades/' . $applicant['documents']['grades']) }}" target="_blank">
                 <h3>Transkrip</h3>
             </a>
             <img src="{{ asset('storage/uploads/grades/' . $applicant['documents']['grades']) }}" alt="Transkrip"
-                style="max-width: 100%">
+                style="max-width: 100%; max-height: 85%">
         </div>
+        <div class="page-break"></div>
         <div>
             <a href="{{ asset('storage/uploads/schedule/' . $applicant['documents']['schedule']) }}" target="_blank">
                 <h3>Jadwal Hidup</h3>
             </a>
             <img src="{{ asset('storage/uploads/schedule/' . $applicant['documents']['schedule']) }}"
-                alt="Jadwal Hidup" style="max-width: 100%">
+                alt="Jadwal Hidup" style="max-width: 100%; max-height: 85%">
         </div>
     </footer>
 </body>

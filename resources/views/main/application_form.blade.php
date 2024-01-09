@@ -355,7 +355,7 @@
                             <option value="" selected disabled></option>
                             @foreach ($divisions as $division)
                                 <option value="{{ $division['id'] }}"
-                                    {{ old('priority_division1') === $division['id'] || data_get($form, 'priority_division1.id', '-1') === $division['id'] ? 'selected' : '' }}>
+                                    {{ old('priority_division1') === $division['id'] || data_get($form, 'priority_division1', '-1') === $division['id'] ? 'selected' : '' }}>
                                     {{ $division['name'] }}</option>
                             @endforeach
                         </select>
@@ -370,7 +370,7 @@
                             <option value="" selected disabled></option>
                             @foreach ($divisions as $division)
                                 <option value="{{ $division['id'] }}"
-                                    {{ old('priority_division2') === $division['id'] || data_get($form, 'priority_division2.id', '-1') === $division['id'] ? 'selected' : '' }}>
+                                    {{ old('priority_division2') === $division['id'] || data_get($form, 'priority_division2', '-1') === $division['id'] ? 'selected' : '' }}>
                                     {{ $division['name'] }}</option>
                             @endforeach
                         </select>
