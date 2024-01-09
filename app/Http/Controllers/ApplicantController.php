@@ -42,12 +42,12 @@ class ApplicantController extends BaseController
         });
 
         $nrp = strtolower(session('nrp'));
-        $res = Http::get('https://john.petra.ac.id/~justin/finger.php?s=' . $nrp);
+        $res = Http::get('http://john.petra.ac.id/~justin/finger.php?s=' . $nrp);
 
         $data['form'] = [];
         try {
             $resJson = $res->json('hasil')[0];
-            $data['form']['name'] = ucwords($resJson['nama']);
+            $data['form']['name'] = ucwords(strtolower($resJson['nama']));
             $data['form']['email'] = $nrp . '@john.petra.ac.id';
             $data['form']['stage'] = 0;
         } catch (ErrorException $e) {
@@ -87,7 +87,7 @@ class ApplicantController extends BaseController
         );
 
         $data['title'] = 'Upload Berkas';
-        $data['documentTypes'] = self::documentTypes();
+        $data['documentTypes'] = self::documentTypes($applicant->astor);
 
         $applicant = Applicant::select('id', 'stage', 'documents')
             ->where('email', $nrp . '@john.petra.ac.id')->first();
@@ -336,7 +336,7 @@ class ApplicantController extends BaseController
         $timestamp = time();
 
         $path = 'public/uploads/' . $type;
-        $valuetoreName = sprintf('%s_%s_%d.%s', $nrp, $type, $timestamp, $file->extension());
+        $storeName = sprintf('%s_%s_%d.%s', $nrp, $type, $timestamp, $file->extension());
 
         $filePath = $file->storeAs($path, $storeName);
 
