@@ -1,15 +1,17 @@
 <?php
 
+use App\Models\Schedule;
 use App\Models\Applicant;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DateController;
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ApplicantController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,6 +98,13 @@ Route::prefix('admin')->group(function () {
             Route::get('{division?}', 'index')->name('admin.project');
             Route::patch('{division}', 'storeProjectDescription')->name('admin.project.store');
         });
+});
+
+Route::get('interview-mail', function() {
+    $data['applicant'] = Applicant::with(['priorityDivision1', 'priorityDivision2'])->where('email', 'c14230006@john.petra.ac.id')->first()->toArray();
+    $data['schedules'] = Schedule::with(['admin', 'date'])->where('applicant_id', $data['applicant']['id'])->get()->toArray();
+
+    return view('mail.interview_schedule', ['data' => $data]);  
 });
 // login
 Route::get('/', [AuthController::class, 'loginView'])->name('login');

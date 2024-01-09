@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\BaseController;
+use App\Http\Controllers\MailController;
 use App\Http\Requests\ApplicationRequest;
 use App\Events\ApplicantDocumentsUploaded;
 use App\Http\Requests\PickScheduleRequest;
@@ -122,7 +123,7 @@ class ApplicantController extends BaseController
             ->setStatusCode(201);
     }
 
-    public function cekPeran(string $email)
+    public function cekPeran(string $email): bool
     {
         $applicant = Applicant::where('email', $email)->first();
         $peran = Division::where('name', 'Peran')->first();
@@ -177,9 +178,9 @@ class ApplicantController extends BaseController
         $schedules = Schedule::select('time')
             ->where([
                 'date_id' => $date,
-                'online' => $online,
                 'status' => 1,
             ])
+            ->whereIn('online', $online === 1 ? [0, 1] : [0])
             ->whereIn('admin_id', $interviewers->pluck('id'))
             ->groupBy('time')
             ->orderBy('time', 'asc')
@@ -213,14 +214,17 @@ class ApplicantController extends BaseController
         for ($i = 0; $i < $count; $i++) {
             // get available schedules
             $schedules = Schedule::join('admins', 'schedules.admin_id', '=', 'admins.id')
-                ->select('schedules.*')
+                ->select('schedules.id', 'schedules.admin_id', 'schedules.date_id', 'schedules.time', 'schedules.online')
                 ->where([
                     'admins.division_id' => $validated['division'][$i],
                     'date_id' => $validated['date_id'][$i],
                     'time' => $validated['time'][$i],
-                    'online' => $validated['online'][$i],
+                    'status' => 1,
                 ])
+                ->whereIn('online', $validated['online'][$i] === 1 ? [0, 1] : [0])
                 ->get();
+
+            // dd($schedules);
 
             // favor interviewer that haven't interview anyone
             $admin = Schedule::select('admin_id')
@@ -244,17 +248,16 @@ class ApplicantController extends BaseController
                     ->first();
             }
 
+            // dd($admin);
             $pickedSchedule[] = $schedules->where('admin_id', $admin->admin_id)->first();
         }
 
         DB::beginTransaction();
         try {
             // update schedule and applicant stage
-            $this->updatePartial(['stage' => 4], $applicant->id);
+            $this->updatePartial(['stage' => 3], $applicant->id);
 
-            // dd("tes");
-
-            foreach ($pickedSchedule as $key=>$value) {
+            foreach ($pickedSchedule as $key => $value) {
                 // dd($value);
                 $type = 0;
                 if (!$applicant->priority_division2) $type = 1;
@@ -267,12 +270,26 @@ class ApplicantController extends BaseController
                 $value->save();
             }
 
-            DB::commit();
+            $data['applicant'] = $applicant->load(['priorityDivision1', 'priorityDivision2'])->toArray();
+            foreach ($pickedSchedule as $s) {
+                $data['schedules'][] = $s->load(['admin', 'date'])->toArray();
+            }
+
+            $mailer = new MailController();
+            $emailed = $mailer->sendInterviewSchedule($data);
+
+            if ($emailed) {
+                DB::commit();
+                return redirect()->back()->with('success', 'Jadwal interview berhasil dipilih!');
+            } else {
+                DB::rollback();
+                return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
+            }
         } catch (Exception $e) {
+            // dd($e);
             DB::rollback();
             return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
         }
-        return redirect()->back()->with('success', 'Jadwal interview berhasil dipilih!');
     }
 
     public function downloadCV()
