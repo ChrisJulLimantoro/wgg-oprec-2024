@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Applicant;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\ValidatorAwareRule;
@@ -16,7 +17,8 @@ class DocumentExistsRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $applicantDocuments = request()->route('applicant')->documents;
+        $applicant = Applicant::where('email', session('nrp') . '@john.petra.ac.id')->first();
+        $applicantDocuments = $applicant->documents;
 
         if ($applicantDocuments && array_key_exists($attribute, $applicantDocuments)) {
             $fail('You cannot upload the same document twice');
