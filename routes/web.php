@@ -11,6 +11,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MailController;
 
 /*
@@ -55,6 +56,11 @@ Route::prefix('admin')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/realtime/{id}', [DashboardController::class, 'getData'])->name('admin.dashboard.getData');
 
+    Route::prefix('meeting-spot')->group(function(){
+        Route::get('/', [AdminController::class, 'meetingSpot'])->name('admin.meeting-spot');
+        Route::patch('/{admin}',[AdminController::class, 'updateMeetSpot'])->name('admin.meeting-spot.update');
+    });
+
     // Dates
     Route::prefix('dates')->group(function () {
         Route::get('/', [DateController::class, 'index'])->name('admin.date');
@@ -64,7 +70,7 @@ Route::prefix('admin')->group(function () {
 
     Route::prefix('schedules')->group(function () {
         Route::get('/select-schedule', [ScheduleController::class, 'index'])->name('admin.select.schedule');
-        Route::post('/select-schedule', [ScheduleController::class, 'select'])->name('admin.select.schedule.update');
+        Route::patch('/select-schedule', [ScheduleController::class, 'select'])->name('admin.select.schedule.update');
     });
 
     Route::prefix('questions')->group(function () {
