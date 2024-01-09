@@ -41,10 +41,11 @@ class AuthController extends Controller
         $request->session()->put('nrp',$nrp);
         $request->session()->put('name', $nrp);
         // check if it is an admin
-        $admin = Admin::where('email',$nrp."@john.petra.ac.id")->get();
+        $admin = Admin::where('email',$nrp."@john.petra.ac.id")->with('division')->get();
         if($admin->count() > 0){
             $request->session()->put('admin_id',$admin->first()->id);
             $request->session()->put('division_id',$admin->first()->division_id);
+            $request->session()->put('role',$admin->first()->division->slug);
             $request->session()->put('isAdmin',true);
             return redirect()->to(route('admin.interview'));
         }else{
