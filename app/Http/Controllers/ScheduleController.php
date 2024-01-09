@@ -9,15 +9,18 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\DateController;
 use Carbon\Carbon;
+use App\Models\Division;
 use DateTime;
 
 class ScheduleController extends BaseController
 {
     private $dateController;
+    private $division;
     public function __construct(Schedule $model)
     {
         parent::__construct($model);
         $this->dateController = new DateController(new Date());
+        $this->division = new Division();
     }
 
     /*
@@ -101,5 +104,82 @@ class ScheduleController extends BaseController
         $data['interview'] = json_encode($data['interview']);
         // dd($data);
         return view('admin.interview.my',$data);
+    }
+
+    public function divisionInterview(){
+        $data['title'] = 'My Interview';
+        if(session('role') == 'bph'){
+            $interview = $this->model->where('status',2)->with(['applicant.priorityDivision1','applicant.priorityDivision2','date','admin'])->get()->toArray();
+        }else{
+            $interview = $this->model->whereHas('applicant',function($q){
+                $q->where('priority_division1',session('division_id'))->orWhere('priority_division2',session('division_id'));
+            })->where('status',2)->with(['applicant.priorityDivision1','applicant.priorityDivision2','date','admin'])->get()->toArray();
+        }
+        // Query
+        $data['interview'] = [];
+        foreach($interview as $i){
+            $temp = [];
+            $temp['id'] = $i['id'];
+            $dateObj = DateTime::createFromFormat('Y-m-d', $i['date']['date']);
+            $temp['date'] = $dateObj->format('l, d M Y');
+            if($i['time'] < 9) $temp['time'] = '0'.$i['time'].':00 - 0'.($i['time']+1).':00';
+            else if($i['time'] == 9) $temp['time'] = '0'.$i['time'].':00 - '.($i['time']+1).':00';
+            else $temp['time'] = $i['time'].':00 - '.($i['time']+1).':00';
+            // $temp['date'] = $temp['date'].' '.$temp['time'];
+            $temp['name'] = $i['applicant']['name'];
+            $temp['priorityDivision1'] = $i['applicant']['priority_division1']['name'];
+            $temp['priorityDivision2'] = $i['applicant']['priority_division2'] ? $i['applicant']['priority_division2']['name'] : '-';
+            $temp['type'] = $i['type'];
+            $temp['online'] = $i['online'];
+            $temp['link'] = route('admin.interview.start',$i['id']);
+            $temp['interviewer'] = $i['admin']['name'];
+            $data['interview'][] = $temp;
+        }
+        $data['interview'] = json_encode($data['interview']);
+
+        // Division
+        $division = $this->division->get()->toArray();
+        // dd($division);
+        foreach($division as $d){
+            $temp = [];
+            if($d['slug'] == 'open' || $d['slug'] == 'close' || $d['slug'] == 'bph') continue;
+            $temp['id'] = $d['id'];
+            $temp['name'] = $d['name'];
+            $data['division'][] = $temp;
+        }
+        // dd($data);
+        return view('admin.interview.all',$data);
+    }
+
+    public function scheduleDivision(Request $request)
+    {
+        $division = $request->division;
+        if($division == 'all'){
+            $interview = $this->model->where('status',2)->with(['applicant.priorityDivision1','applicant.priorityDivision2','date','admin'])->get()->toArray();
+        }else{
+            $interview = $this->model->whereHas('applicant',function($q) use ($division){
+                $q->where('priority_division1',$division)->orWhere('priority_division2',$division);
+            })->where('status',2)->with(['applicant.priorityDivision1','applicant.priorityDivision2','date','admin'])->get()->toArray();
+        }
+        $data = [];
+        foreach($interview as $i){
+            $temp = [];
+            $temp['id'] = $i['id'];
+            $dateObj = DateTime::createFromFormat('Y-m-d', $i['date']['date']);
+            $temp['date'] = $dateObj->format('l, d M Y');
+            if($i['time'] < 9) $temp['time'] = '0'.$i['time'].':00 - 0'.($i['time']+1).':00';
+            else if($i['time'] == 9) $temp['time'] = '0'.$i['time'].':00 - '.($i['time']+1).':00';
+            else $temp['time'] = $i['time'].':00 - '.($i['time']+1).':00';
+            // $temp['date'] = $temp['date'].' '.$temp['time'];
+            $temp['name'] = $i['applicant']['name'];
+            $temp['priorityDivision1'] = $i['applicant']['priority_division1']['name'];
+            $temp['priorityDivision2'] = $i['applicant']['priority_division2'] ? $i['applicant']['priority_division2']['name'] : '-';
+            $temp['type'] = $i['type'];
+            $temp['online'] = $i['online'];
+            $temp['link'] = route('admin.interview.start',$i['id']);
+            $temp['interviewer'] = $i['admin']['name'];
+            $data[] = $temp;
+        }
+        return response()->json(['success' => true, 'data' => $data],200);
     }
 }

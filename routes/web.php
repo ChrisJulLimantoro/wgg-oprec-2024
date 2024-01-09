@@ -74,7 +74,8 @@ Route::prefix('admin')->group(function () {
     });
 
     Route::prefix('interview')->group(function () {
-        Route::get('/', [ScheduleController::class, 'myInterview'])->name('admin.interview');
+        Route::get('/', [ScheduleController::class, 'divisionInterview'])->name('admin.interview');
+        Route::post('/division', [ScheduleController::class, 'scheduleDivision'])->name('admin.interview.division');
         Route::get('/my', [ScheduleController::class, 'myInterview'])->name('admin.interview.my');
         Route::get('/{schedule_id}', [AnswerController::class, 'getQuestion'])->name('admin.interview.start');
         Route::get('/{schedule_id}/page/{page}', [AnswerController::class, 'getQuestion'])->name('admin.interview.session');
