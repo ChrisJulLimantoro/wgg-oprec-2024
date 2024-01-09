@@ -44,6 +44,7 @@ class AuthController extends Controller
         $admin = Admin::where('email',$nrp."@john.petra.ac.id")->get();
         if($admin->count() > 0){
             $request->session()->put('admin_id',$admin->first()->id);
+            $request->session()->put('division_id',$admin->first()->division_id);
             $request->session()->put('isAdmin',true);
             return redirect()->to(route('admin.interview'));
         }else{
@@ -79,9 +80,11 @@ class AuthController extends Controller
                         $request->session()->put('nrp',substr($payload['email'],0,9));
                     }
                     // check if it is an admin
-                    $admin = Admin::where('email',strtolower($payload['email']))->get();
+                    $admin = Admin::where('email',strtolower($payload['email']))->with('division')->get();
                     if($admin->count() > 0){
                         $request->session()->put('admin_id',$admin->first()->id);
+                        $request->session()->put('division_id',$admin->first()->division_id);
+                        $request->session()->put('role',$admin->first()->division->slug);
                         $request->session()->put('isAdmin',true);
                         return redirect()->to(route('admin.interview'));
                     }else{

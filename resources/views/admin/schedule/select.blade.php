@@ -2,32 +2,42 @@
 @section("content")
     <div class="flex flex-col w-full h-full rounded-lg shadow-xl items-center justify-center mb-8 py-8">
         <h1 class="text-center uppercase font-bold text-3xl mb-5">Select Schedules</h1>
-        <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
-            <div class="grid grid-cols-2 gap-3 h-16">
+        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-2 mx-5">
+            <div class="grid grid-cols-3 h-full">
                 <div class="p-3 w-full h-full">
                     <div class="rounded-lg w-full h-full bg-red-500"> </div>
                 </div>
-                <div class="p-3 w-full h-full text-xl font-bold flex justify-center items-center">
+                <div class="p-3 col-span-2 w-full h-full text-lg font-bold flex justify-start items-center">
                     <div class="my-auto">
                         Tidak Bisa
                     </div>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-3 h-16">
+            <div class="grid grid-cols-3 h-full">
                 <div class="p-3 w-full h-full">
                     <div class="rounded-lg w-full h-full bg-green-500"> </div>
                 </div>
-                <div class="p-3 w-full h-full text-xl font-bold flex justify-center items-center">
+                <div class="p-3 col-span-2 w-full h-full text-lg font-bold flex justify-start items-center">
                     <div class="my-auto">
                         Bisa
                     </div>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-3 h-16">
+            <div class="grid grid-cols-3 h-full">
+                <div class="p-3 w-full h-full">
+                    <div class="rounded-lg w-full h-full bg-yellow-500"> </div>
+                </div>
+                <div class="p-3 col-span-2 w-full h-full text-lg font-bold flex justify-start items-center">
+                    <div class="my-auto">
+                        Bisa Online Saja
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-3 h-full">
                 <div class="p-3 w-full h-full">
                     <div class="rounded-lg w-full h-full bg-black"> </div>
                 </div>
-                <div class="p-3 w-full h-full text-xl font-bold flex justify-center items-center">
+                <div class="p-3 col-span-2 w-full h-full text-lg font-bold flex justify-start items-center">
                     <div class="my-auto">
                         Ada Interview
                     </div>
@@ -62,11 +72,16 @@
                                     @if ($schedule['time'] == $time)
                                         @php
                                             $stat = $schedule['status'];
+                                            $online = $schedule['online'];
                                         @endphp
                                     @endif
                                 @endforeach
                                 @if ($stat == 1)
-                                    <div class="bg-green-500 time" id="time:{{ $date['id'] }}:{{ $time }}:1"></div>
+                                    @if ($online == 1)
+                                        <div class="bg-yellow-500 time" id="time:{{ $date['id'] }}:{{ $time }}:1:1"></div>
+                                    @else
+                                        <div class="bg-green-500 time" id="time:{{ $date['id'] }}:{{ $time }}:1:0"></div>
+                                    @endif
                                 @elseif($stat == 2)
                                     <div class="bg-black time" id="time:{{ $date['id'] }}:{{ $time }}:2"></div>
                                 @else
@@ -85,11 +100,16 @@
                                     @if ($schedule['time'] == $time)
                                         @php
                                             $stat = $schedule['status'];
+                                            $online = $schedule['online'];
                                         @endphp
                                     @endif
                                 @endforeach
                                 @if ($stat == 1)
-                                    <div class="bg-green-500 time" id="time:{{ $date['id'] }}:{{ $time }}:1"></div>
+                                    @if ($online == 1)
+                                    <div class="bg-yellow-500 time" id="time:{{ $date['id'] }}:{{ $time }}:1:1"></div>
+                                @else
+                                    <div class="bg-green-500 time" id="time:{{ $date['id'] }}:{{ $time }}:1:0"></div>
+                                @endif
                                 @elseif($stat == 2)
                                     <div class="bg-black time" id="time:{{ $date['id'] }}:{{ $time }}:2"></div>
                                 @else
@@ -113,23 +133,114 @@
                 let num = id.split('-')[1];
                 $('#jamJadwal-'+num).slideToggle('slow');
             });
-            $(document).on('click','.time',function(){
+            $(document).on('click','.time', async function(){
                 let item = $(this);
                 let id = $(this).attr('id');
                 let date = id.split(':')[1];
                 let time = id.split(':')[2];
                 let status = id.split(':')[3];
+                let statusBaru = 0;
+                let online = 0;
+                let data = {};
+                // return;
                 if(status != 2){
+                    if(status == 1){
+                        online = id.split(':')[4];
+                        if(online == 0){
+                            await Swal.fire({
+                                title: "Are you sure?",
+                                showDenyButton: true,
+                                showCancelButton: true,
+                                confirmButtonText: "Change to Online",
+                                denyButtonText: "Deactivate",
+                            }).then((result) => {
+                                if(result.isConfirmed){
+                                    data = {
+                                        "_token" : "{{ csrf_token() }}",
+                                        "date_id" : date,
+                                        "time" : time,
+                                        "status" : status,
+                                        "online" : 1
+                                    };
+                                    online = 1;
+                                    statusBaru = 1;
+                                }else if(result.isDenied){
+                                    data = {
+                                        "_token" : "{{ csrf_token() }}",
+                                        "date_id" : date,
+                                        "time" : time,
+                                        "status" : 0,
+                                        "online" : 0
+                                    };
+                                    statusBaru = 0;
+                                }
+                            })
+                        }else{
+                            await Swal.fire({
+                                title: "Are you sure?",
+                                showDenyButton: true,
+                                showCancelButton: true,
+                                confirmButtonText: "Change to Onsite",
+                                denyButtonText: "Deactivate",
+                            }).then((result) => {
+                                if(result.isConfirmed){
+                                    data = {
+                                        "_token" : "{{ csrf_token() }}",
+                                        "date_id" : date,
+                                        "time" : time,
+                                        "status" : status,
+                                        "online" : 0
+                                    };
+                                    online = 0;
+                                    statusBaru = 1;
+                                }else if(result.isDenied){
+                                    data = {
+                                        "_token" : "{{ csrf_token() }}",
+                                        "date_id" : date,
+                                        "time" : time,
+                                        "status" : 0,
+                                        "online" : 1
+                                    };
+                                    statusBaru = 0;
+                                }
+                            })
+                        }
+                    }else{
+                        await Swal.fire({
+                                title: "Change for this ",
+                                showDenyButton: true,
+                                showCancelButton: true,
+                                confirmButtonText: "Onsite",
+                                denyButtonText: "Online",
+                            }).then((result) => {
+                                if(result.isConfirmed){
+                                    data = {
+                                        "_token" : "{{ csrf_token() }}",
+                                        "date_id" : date,
+                                        "time" : time,
+                                        "status" : 1,
+                                        "online" : 0
+                                    };
+                                    online = 0;
+                                    statusBaru = 1;
+                                }else if(result.isDenied){
+                                    data = {
+                                        "_token" : "{{ csrf_token() }}",
+                                        "date_id" : date,
+                                        "time" : time,
+                                        "status" : 1,
+                                        "online" : 1
+                                    };
+                                    online = 1;
+                                    statusBaru = 1;
+                                }
+                            })
+                    }
                     Swal.showLoading();
                     $.ajax({
                         url: "{{ route('admin.select.schedule.update') }}",
                         type: "POST",
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            "date_id": date,
-                            "time": time,
-                            "status": status
-                        },
+                        data: data,
                         success: function(e){
                             console.log(e)
                             Swal.hideLoading();
@@ -150,16 +261,22 @@
                                     timer: 1000
                                 })
                             }
-                            statusBaru = status == 1 ? 0 : 1;
-                            let idBaru = id.split(':')[0]+':'+id.split(':')[1]+':'+id.split(':')[2]+':'+statusBaru;
+                            let idBaru = id.split(':')[0]+':'+id.split(':')[1]+':'+id.split(':')[2]+':'+statusBaru+":"+online;
                             // console.log(d, id, idBaru);
-                            if(status == 0){
+                            if(statusBaru == 1){
                                 // console.log($("#time:" + date + ":" + time + ":" + status).attr('id'));
                                 item.removeClass('bg-red-500');
-                                item.addClass('bg-green-500');
+                                item.removeClass('bg-yellow-500');
+                                item.removeClass('bg-green-500');
+                                if(online == 1){
+                                    item.addClass('bg-yellow-500');
+                                }else{
+                                    item.addClass('bg-green-500');
+                                }
                                 item.attr('id',idBaru);
                             }else{
                                 // console.log($(this).attr('id'));
+                                item.removeClass('bg-yellow-500');
                                 item.removeClass('bg-green-500');
                                 item.addClass('bg-red-500');
                                 item.attr('id',idBaru);

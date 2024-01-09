@@ -1,15 +1,17 @@
 <?php
 
+use App\Models\Schedule;
 use App\Models\Applicant;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DateController;
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ApplicantController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +39,8 @@ Route::prefix('main')->group(function () {
         );
 
     Route::get('schedule-form', [ApplicantController::class, 'scheduleForm'])->name('applicant.schedule-form');
+    Route::get('schedule/{date}/{online}/{divsion}', [ApplicantController::class, 'getTimeSlot'])->name('applicant.get-schedule');
+    Route::post('pick-schedule', [ApplicantController::class, 'pickSchedule'])->name('applicant.pick-schedule');
 
     Route::get('interview-detail', [ApplicantController::class, 'interviewDetail'])->name('applicant.interview-detail');
     Route::get('download-cv', [ApplicantController::class, 'downloadCV'])->name('applicant.download-cv');
@@ -72,7 +76,9 @@ Route::prefix('admin')->group(function () {
     });
 
     Route::prefix('interview')->group(function () {
-        Route::get('/', [ScheduleController::class, 'myInterview'])->name('admin.interview');
+        Route::get('/', [ScheduleController::class, 'divisionInterview'])->name('admin.interview');
+        Route::post('/division', [ScheduleController::class, 'scheduleDivision'])->name('admin.interview.division');
+        Route::get('/my', [ScheduleController::class, 'myInterview'])->name('admin.interview.my');
         Route::get('/{schedule_id}', [AnswerController::class, 'getQuestion'])->name('admin.interview.start');
         Route::get('/{schedule_id}/page/{page}', [AnswerController::class, 'getQuestion'])->name('admin.interview.session');
         Route::post('/submit-answer', [AnswerController::class, 'submitAnswer'])->name('admin.interview.submit.answer');
@@ -92,6 +98,13 @@ Route::prefix('admin')->group(function () {
             Route::get('{division?}', 'index')->name('admin.project');
             Route::patch('{division}', 'storeProjectDescription')->name('admin.project.store');
         });
+});
+
+Route::get('interview-mail', function() {
+    $data['applicant'] = Applicant::with(['priorityDivision1', 'priorityDivision2'])->where('email', 'c14230006@john.petra.ac.id')->first()->toArray();
+    $data['schedules'] = Schedule::with(['admin', 'date'])->where('applicant_id', $data['applicant']['id'])->get()->toArray();
+
+    return view('mail.interview_schedule', ['data' => $data]);  
 });
 // login
 Route::get('/', [AuthController::class, 'loginView'])->name('login');

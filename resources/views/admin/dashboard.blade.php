@@ -82,7 +82,10 @@
 @section('content')
     <div class="w-full h-[90vh] flex flex-col lg:flex-row justify-center items-center justify-center">
         <div class="w-full h-3/4 lg:w-3/4 flex flex-col items-center justify-center mt-5 lg:mt-0 p-3 lg:p-10">
-            <p class="mb-10"><span id="count" class="font-bold text-xl">0</span> orang sudah mendaftar di divisi <span id="divisi">IT</span>!</p>
+            <div class="mb-10">
+                <span id="count" class="font-bold text-xl">0</span>
+                <span id="divisi"> orang sudah mendaftar!</p>
+            </div>
             <canvas id="chart-funnel-example"></canvas>
         </div>
 
@@ -208,7 +211,12 @@
                 let id = $(this).attr("value");
                 let division = $(this).children().text().trim();
 
-                $("#divisi").text(division)
+                if (division != "Semua") {
+                    $("#divisi").text("orang sudah mendaftar di divisi " + division + '!')
+                }
+                else {
+                    $("#divisi").text("orang sudah mendaftar!")
+                }
 
                 $(".changeDiv").each((e) => {
                     $(".changeDiv").eq(e).removeClass("active")
