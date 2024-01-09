@@ -336,7 +336,7 @@ class ApplicantController extends BaseController
         $timestamp = time();
 
         $path = 'public/uploads/' . $type;
-        $valuetoreName = sprintf('%s_%s_%d.%s', $nrp, $type, $timestamp, $file->extension());
+        $storeName = sprintf('%s_%s_%d.%s', $nrp, $type, $timestamp, $file->extension());
 
         $filePath = $file->storeAs($path, $storeName);
 
