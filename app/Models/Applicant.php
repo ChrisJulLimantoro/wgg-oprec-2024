@@ -149,7 +149,7 @@ class Applicant extends Model
             'tiktok.max' => 'TikTok must be less than 50 characters',
             'gpa.required' => 'GPA is required',
             'gpa.string' => 'GPA must be a string',
-            'gpa.regex' => 'GPA format is invalid',
+            'gpa.regex' => 'GPA format is invalid, valid format example: 3.78',
             'motivation.required' => 'Motivation is required',
             'motivation.string' => 'Motivation must be a string',
             'commitment.required' => 'Commitment is required',

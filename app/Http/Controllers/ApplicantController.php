@@ -36,12 +36,12 @@ class ApplicantController extends BaseController
         });
 
         $nrp = strtolower(session('nrp'));
-        $res = Http::get('https://john.petra.ac.id/~justin/finger.php?s=' . $nrp);
+        $res = Http::get('http://john.petra.ac.id/~justin/finger.php?s=' . $nrp);
 
         $data['form'] = [];
         try {
             $resJson = $res->json('hasil')[0];
-            $data['form']['name'] = ucwords($resJson['nama']);
+            $data['form']['name'] = ucwords(strtolower($resJson['nama']));
             $data['form']['email'] = $nrp . '@john.petra.ac.id';
             $data['form']['stage'] = 1;
         } catch (ErrorException $e) {
