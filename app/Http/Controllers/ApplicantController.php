@@ -292,7 +292,7 @@ class ApplicantController extends BaseController
         }
     }
 
-    public function downloadCV()
+    public function previewCV()
     {
         $nrp = strtolower(session('nrp'));
         $applicant = $this->model->findByNRP($nrp, relations: $this->model->relations());
@@ -300,9 +300,12 @@ class ApplicantController extends BaseController
         if (!$applicant) {
             return 'Pendaftar tidak ditemukan';
         }
+        if ($applicant->stage < 2) {
+            return 'Pastikan anda sudah mengisi form pendaftaran dan upload berkas terlebih dahulu';
+        }
         $pdf = $applicant->cv();
 
-        return $pdf->download('CV_' . $nrp . '.pdf');
+        return $pdf->stream('CV_' . $nrp . '.pdf');
     }
 
 

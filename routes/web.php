@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Models\Schedule;
 use App\Models\Applicant;
 use Illuminate\Support\Facades\Route;
@@ -43,7 +44,7 @@ Route::prefix('main')->group(function () {
     Route::post('pick-schedule', [ApplicantController::class, 'pickSchedule'])->name('applicant.pick-schedule');
 
     Route::get('interview-detail', [ApplicantController::class, 'interviewDetail'])->name('applicant.interview-detail');
-    Route::get('download-cv', [ApplicantController::class, 'downloadCV'])->name('applicant.download-cv');
+    Route::get('cv', [ApplicantController::class, 'previewCV'])->name('applicant.cv');
 
     Route::get('projects-form/{selected_priority?}', [ProjectController::class, 'projectsForm'])->name('applicant.projects-form')
         ->where('selected_priority', '[1-2]');
@@ -98,13 +99,15 @@ Route::prefix('admin')->group(function () {
             Route::get('{division?}', 'index')->name('admin.project');
             Route::patch('{division}', 'storeProjectDescription')->name('admin.project.store');
         });
+
+    Route::get('/applicant-cv/{applicant}', [AdminController::class, 'applicantCV'])->name('admin.applicant.cv');
 });
 
-Route::get('interview-mail', function() {
+Route::get('interview-mail', function () {
     $data['applicant'] = Applicant::with(['priorityDivision1', 'priorityDivision2'])->where('email', 'c14230006@john.petra.ac.id')->first()->toArray();
     $data['schedules'] = Schedule::with(['admin', 'date'])->where('applicant_id', $data['applicant']['id'])->get()->toArray();
 
-    return view('mail.interview_schedule', ['data' => $data]);  
+    return view('mail.interview_schedule', ['data' => $data]);
 });
 // login
 Route::get('/', [AuthController::class, 'loginView'])->name('login');
