@@ -22,7 +22,7 @@
                     {{ strtoupper($applicant['priority_division1']['slug']) . ($applicant['priority_division2'] && !$double_interview ? ' & ' . strtoupper($applicant['priority_division2']['slug']) : '') }}
                 </p>
 
-                <div class="grid sm:grid-cols-3 sm:gap-4 mb-4">
+                <div class="grid {{ $read_only && $reschedule[0] ? 'sm:grid-cols-4' : 'sm:grid-cols-3' }} sm:gap-4 mb-4">
                     <div data-te-validate="input" class="mb-4"
                         @error('date_id') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                         @error('date_id.0') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
@@ -77,6 +77,8 @@
 
                         <label data-te-select-label-ref>Jam</label>
                     </div>
+
+                    @includeWhen($read_only && $reschedule[0], 'main.reschedule_button', ['i' => 0])
                 </div>
 
                 {{-- Wawancara kedua --}}
@@ -85,7 +87,7 @@
                         {{ strtoupper($applicant['priority_division2']['slug']) }}
                     </p>
 
-                    <div class="grid sm:grid-cols-3 sm:gap-4 mb-4">
+                    <div class="grid {{ $read_only && $reschedule[1] ? 'sm:grid-cols-4' : 'sm:grid-cols-3' }} sm:gap-4 mb-4">
                         <div data-te-validate="input" class="mb-4"
                             @error('date_id') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                             @error('date_id.1') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
@@ -135,6 +137,8 @@
 
                             <label data-te-select-label-ref>Jam</label>
                         </div>
+
+                        @includeWhen($read_only && $reschedule[1], 'main.reschedule_button', ['i' => 1])
                     </div>
                 @endif
 
@@ -144,6 +148,13 @@
                     data-te-ripple-init data-te-ripple-color="light">
                     PILIH
                 </button>
+            </form>
+
+            <form action="{{ route('applicant.reschedule') }}" method="POST" id="reschedule-form0" class="reschedule-form">
+                @csrf
+            </form>
+            <form action="{{ route('applicant.reschedule') }}" method="POST" id="reschedule-form1" class="reschedule-form">
+                @csrf
             </form>
         </div>
     </section>
@@ -204,6 +215,31 @@
                 });
             }
 
+            //confirm reschedule
+            $('.btn-reschedule').click(function (e, params) {
+                var localParams = params || {};
+                
+                if (!localParams.send) {
+                    e.preventDefault();
+                }
+
+                Swal.fire({
+                    title: "Ganti Jadwal",
+                    text: "Apakah Anda yakin ingin mengganti jadwal?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Confirm",
+                    cancelButtonText: "Cancel",
+                }).then((result) => {
+                    if(result.isConfirmed){
+                        form = $(this).attr('form');
+                        $('#'+form).submit();
+                        // alert(id);
+                        // $(e.currentTarget).trigger(e.type, { 'send': true });
+                    }
+                });
+            });
+
             @if(Session::has('success'))
                 Swal.fire({
                     icon: 'success',
@@ -211,6 +247,15 @@
                     text: '{{ Session::get('success') }}',
                     showConfirmButton: false,
                     timer: 1700
+                });
+            @endif
+
+            @if(Session::has('success_confirm'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: '{{ Session::get('success_confirm') }}',
+                    showConfirmButton: true,
                 });
             @endif
 
