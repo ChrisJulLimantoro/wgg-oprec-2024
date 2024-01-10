@@ -93,7 +93,7 @@ class Applicant extends Model
             'allergy' => 'nullable|string|max:150',
             'astor' => 'required|boolean',
             'priority_division1' => ['required', 'uuid', 'exists:divisions,id', new AstorDivisionRule],
-            'priority_division2' => ['nullable', 'uuid', 'exists:divisions,id', new AstorDivisionRule],
+            'priority_division2' => ['nullable', 'uuid', 'exists:divisions,id', 'different:priority_division1', new AstorDivisionRule],
             'division_accepted' => 'nullable|uuid|exists:divisions,id',
             'documents' => 'nullable|array',
             'documents.*' => 'nullable|string|max:255',
@@ -149,7 +149,7 @@ class Applicant extends Model
             'tiktok.max' => 'TikTok must be less than 50 characters',
             'gpa.required' => 'GPA is required',
             'gpa.string' => 'GPA must be a string',
-            'gpa.regex' => 'GPA format is invalid',
+            'gpa.regex' => 'GPA format is invalid, valid format example: 3.78',
             'motivation.required' => 'Motivation is required',
             'motivation.string' => 'Motivation must be a string',
             'commitment.required' => 'Commitment is required',
@@ -171,6 +171,7 @@ class Applicant extends Model
             'division_priority1.exists' => 'Division priority1 must be exists',
             'division_priority2.uuid' => 'Division priority2 must be a uuid',
             'division_priority2.exists' => 'Division priority2 must be exists',
+            'division_priority2.different' => 'Please empty division priority2 if you choose the same division',
             'division_accepted.uuid' => 'Division accepted must be a uuid',
             'division_accepted.exists' => 'Division accepted must be exists',
             'documents.array' => 'Documents must be an array',
@@ -212,7 +213,7 @@ class Applicant extends Model
      */
     public function relations()
     {
-        return ['priorityDivision1', 'priorityDivision2', 'divisionAccepted', 'answers', 'schedule'];
+        return ['priorityDivision1', 'priorityDivision2', 'divisionAccepted', 'answers', 'schedules'];
     }
 
     /**
@@ -235,9 +236,9 @@ class Applicant extends Model
         return $this->belongsTo(Division::class, 'division_accepted');
     }
 
-    public function schedule()
+    public function schedules()
     {
-        return $this->belongsTo(Schedule::class);
+        return $this->hasMany(Schedule::class);
     }
     public function answers()
     {
@@ -257,6 +258,16 @@ class Applicant extends Model
         if (!$documents) $documents = [];
 
         $documents[$documentType] = $filename;
+        $this->documents = $documents;
+        $this->save();
+    }
+
+    public function addProject($project, $priority)
+    {
+        $documents = $this->documents;
+
+        if (!isset($documents['projects'])) $documents['projects'] = [];
+        $documents['projects'][$priority] = $project;
         $this->documents = $documents;
         $this->save();
     }

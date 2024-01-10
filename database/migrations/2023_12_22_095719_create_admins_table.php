@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name', 80)->nullable(false);
             $table->string('line', 20)->nullable(false);
             $table->string('meet')->nullable();
+            $table->string('spot')->nullable();
             $table->uuid('division_id')->nullable();
 
 

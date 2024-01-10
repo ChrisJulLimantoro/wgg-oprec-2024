@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('description', 255)->nullable();
             $table->string('slug')->nullable();
             $table->text('project')->nullable();
+            $table->unsignedInteger('project_deadline')->nullable()->comment('in seconds from the start time of the interview');
 
             $table->timestamps();
             $table->softDeletes();

@@ -1,12 +1,18 @@
 <?php
 
-use App\Http\Controllers\ApplicantController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DateController;
-use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\QuestionController;
-use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\AdminController;
+use App\Models\Schedule;
 use App\Models\Applicant;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DateController;
+use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\ApplicantController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,10 +24,6 @@ use App\Models\Applicant;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::prefix('main')->group(function () {
     Route::get('application-form', [ApplicantController::class, 'applicationForm'])->name('applicant.application-form');
@@ -38,12 +40,27 @@ Route::prefix('main')->group(function () {
         );
 
     Route::get('schedule-form', [ApplicantController::class, 'scheduleForm'])->name('applicant.schedule-form');
+    Route::get('schedule/{date}/{online}/{divsion}', [ApplicantController::class, 'getTimeSlot'])->name('applicant.get-schedule');
+    Route::post('pick-schedule', [ApplicantController::class, 'pickSchedule'])->name('applicant.pick-schedule');
 
     Route::get('interview-detail', [ApplicantController::class, 'interviewDetail'])->name('applicant.interview-detail');
-    Route::get('download-cv', [ApplicantController::class, 'downloadCV'])->name('applicant.download-cv');
+    Route::get('cv', [ApplicantController::class, 'previewCV'])->name('applicant.cv');
+
+    Route::get('projects-form/{selected_priority?}', [ProjectController::class, 'projectsForm'])->name('applicant.projects-form')
+        ->where('selected_priority', '[1-2]');
+    Route::post('store-project/{selected_priority}', [ProjectController::class, 'storeProject'])->name('applicant.project.store')
+        ->where('selected_priority', '[1-2]');
 });
 
 Route::prefix('admin')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/realtime/{id}', [DashboardController::class, 'getData'])->name('admin.dashboard.getData');
+
+    Route::prefix('meeting-spot')->group(function(){
+        Route::get('/', [AdminController::class, 'meetingSpot'])->name('admin.meeting-spot');
+        Route::patch('/{admin}',[AdminController::class, 'updateMeetSpot'])->name('admin.meeting-spot.update');
+    });
+
     // Dates
     Route::prefix('dates')->group(function () {
         Route::get('/', [DateController::class, 'index'])->name('admin.date');
@@ -53,7 +70,7 @@ Route::prefix('admin')->group(function () {
 
     Route::prefix('schedules')->group(function () {
         Route::get('/select-schedule', [ScheduleController::class, 'index'])->name('admin.select.schedule');
-        Route::post('/select-schedule', [ScheduleController::class, 'select'])->name('admin.select.schedule.update');
+        Route::patch('/select-schedule', [ScheduleController::class, 'select'])->name('admin.select.schedule.update');
     });
 
     Route::prefix('questions')->group(function () {
@@ -64,9 +81,13 @@ Route::prefix('admin')->group(function () {
         Route::post('/update-question', [QuestionController::class, 'updateQuestion'])->name('admin.question.update');
     });
 
-    Route::prefix('interview')->group(function(){
-        Route::get('/', [ScheduleController::class, 'myInterview'])->name('admin.interview');
-        Route::get('/{applicant_id}/page/{page}', [AnswerController::class, 'getQuestion'])->name('admin.interview.session');
+    Route::prefix('interview')->group(function () {
+        Route::get('/', [ScheduleController::class, 'divisionInterview'])->name('admin.interview');
+        Route::post('/division', [ScheduleController::class, 'scheduleDivision'])->name('admin.interview.division');
+        Route::get('/my', [ScheduleController::class, 'myInterview'])->name('admin.interview.my');
+        Route::post('/kidnap',[ScheduleController::class, 'kidnap'])->name('admin.interview.kidnap');
+        Route::get('/{schedule_id}', [AnswerController::class, 'getQuestion'])->name('admin.interview.start');
+        Route::get('/{schedule_id}/page/{page}', [AnswerController::class, 'getQuestion'])->name('admin.interview.session');
         Route::post('/submit-answer', [AnswerController::class, 'submitAnswer'])->name('admin.interview.submit.answer');
         Route::post('/submit-score', [AnswerController::class, 'submitScore'])->name('admin.interview.submit.score');
         Route::post('/update-answer', [AnswerController::class, 'updateAnswer'])->name('admin.interview.update.answer');
@@ -83,4 +104,27 @@ Route::prefix('admin')->group(function () {
 
     });
 
+    Route::prefix('answers')->group(function () {
+        Route::get('/{applicant_id}', [AnswerController::class, 'index'])->name('admin.applicant.answer');
+    });
+
+    Route::prefix('projects')->controller(ProjectController::class)
+        ->group(function () {
+            Route::get('{division?}', 'index')->name('admin.project');
+            Route::patch('{division}', 'storeProjectDescription')->name('admin.project.store');
+        });
+
+    Route::get('/applicant-cv/{applicant}', [AdminController::class, 'applicantCV'])->name('admin.applicant.cv');
 });
+
+Route::get('interview-mail', function () {
+    $data['applicant'] = Applicant::with(['priorityDivision1', 'priorityDivision2'])->where('email', 'c14230006@john.petra.ac.id')->first()->toArray();
+    $data['schedules'] = Schedule::with(['admin', 'date'])->where('applicant_id', $data['applicant']['id'])->get()->toArray();
+
+    return view('mail.interview_schedule', ['data' => $data]);
+});
+// login
+Route::get('/', [AuthController::class, 'loginView'])->name('login');
+Route::get('/processLogin', [AuthController::class, 'login'])->name('processLogin');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/login/{nrp}', [AuthController::class, 'loginPaksa'])->name('loginPaksa');

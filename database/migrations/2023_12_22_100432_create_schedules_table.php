@@ -15,17 +15,21 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('admin_id')->nullable(false);
             $table->uuid('date_id')->nullable(false);
+            $table->uuid('applicant_id')->nullable(true);
 
             $table->integer('time');
             $table->integer('status')->default(1)->comment('0: not available, 1: available, 2: booked');
+            $table->integer('type')->default(0)->comment('0: double interview, 1: interview choice 1, 2: interview choice 2');
+            $table->integer('online')->default(0)->comment('0: onsite, 1: online');
             $table->unique(array('admin_id', 'date_id', 'time'));
-
+                
 
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('date_id')->references('id')->on('dates')->onDelete('cascade');
             $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
+            $table->foreign('applicant_id')->references('id')->on('applicants')->onDelete('cascade');
         });
     }
 

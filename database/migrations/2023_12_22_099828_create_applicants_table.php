@@ -40,15 +40,15 @@ return new class extends Migration
             $table->string('allergy', 150)->nullable();
             $table->boolean('astor')->comment('0: tidak, 1: ya');
 
-            $table->unsignedTinyInteger('stage')->default(2)->comment('1:Biodata, 2:Berkas, 3:Pilih Jadwal, 4:Menunggu Interview');
-            $table->uuid('schedule_id')->nullable()->unique();
+            $table->unsignedTinyInteger('stage')->default(2)->comment('1:udh isi Biodata, 2:udh isi Berkas, 3:udh Pilih Jadwal, 4:udh Interview & kerja Proyek');
+            // $table->uuid('schedule_id')->nullable()->unique();
             $table->uuid('division_accepted')->nullable();
             $table->uuid('priority_division1');
             $table->uuid('priority_division2')->nullable();
             $table->unsignedTinyInteger('acceptance_stage')->default(1)->comment('1:tunggu-satu, 2:terima-satu, 3:tunggu-dua, 4:terima-dua, 5:tunggu-culik, 6:terima-culik');
 
 
-            $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
+            // $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
             $table->foreign('division_accepted')->references('id')->on('divisions')->onDelete('cascade');
             $table->foreign('priority_division1')->references('id')->on('divisions')->onDelete('cascade');
             $table->foreign('priority_division2')->references('id')->on('divisions')->onDelete('cascade');

@@ -3,7 +3,8 @@
     <input type="hidden" id="applicant" value="{{ $applicant }}"> 
     <div class="flex flex-col w-full py-8 rounded-lg shadow-xl items-center justify-center mb-8">
         <h1 class="text-center text-6xl uppercase font-bold mb-5">Interview applicant</h1>
-        <h3 class="text-center text-4xl uppercase font-bold">Section : {{ $part }}</h3>
+        <h3 class="text-center text-4xl uppercase font-bold mb-3">Section : {{ $part }}</h3>
+        <a href="{{ route('admin.applicant.cv',$applicant) }}" target="_blank" class="text-center text-2xl uppercase font-bold italic text-blue-500"> < Detail Applicant > </a>
     </div>
     <div class="flex flex-col w-full p-8 rounded-lg shadow-xl items-center justify-center mb-8">
         @php
@@ -54,7 +55,7 @@
         @endif
         <div class="w-full flex justify-center align-center gap-2">
             @if($prev)
-            <a href="{{ route('admin.interview',['applicant_id' => $applicant,'page'=> $now-1 ]) }}">
+            <a href="{{ route('admin.interview.session',['schedule_id' => $schedule,'page'=> $now-1 ]) }}">
                 <button
                 type="button"
                 data-te-ripple-init
@@ -65,7 +66,7 @@
             </a>
             @endif
             @if($next)
-                <a href="{{ route('admin.interview',['applicant_id' => $applicant,'page'=> $now+1 ]) }}">
+                <a href="{{ route('admin.interview.session',['schedule_id' => $schedule,'page'=> $now+1 ]) }}">
                     <button
                     type="button"
                     data-te-ripple-init
