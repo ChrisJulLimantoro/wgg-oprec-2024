@@ -62,7 +62,7 @@
                         <th>Divisi</th>
                         <th>Tanggal</th>
                         <th>Jam</th>
-                        <th>Tipe</th>
+                        <th>Lokasi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -86,7 +86,7 @@
                             @if ($s['online'] == 1)
                                 <td><a href="{{ $s['admin']['meet'] }}">Online</a></td>
                             @else
-                                <td>Onsite</td>
+                                <td>{{ $s['admin']['spot'] ?? '-' }}</td>
                             @endif
                         </tr>
                     @endforeach
