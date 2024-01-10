@@ -6,8 +6,10 @@ use App\Http\Controllers\BaseController;
 use App\Models\Schedule;
 use App\Models\Date;
 use App\Models\Admin;
+use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\DateController;
+use App\Models\Applicant;
 use Carbon\Carbon;
 use App\Models\Division;
 use DateTime;
@@ -227,5 +229,127 @@ class ScheduleController extends BaseController
             $this->updatePartial(['status' => 1,'applicant_id' => null, 'type' => 0],$schedule->id);
         }
         return response()->json(['success' => true, 'message' => 'Berhasil menculik jadwal interview','data' => $newData],200);
+    }
+
+    public function myReschedule(){
+        $data['title'] = 'My Reschedule';
+    
+        $interview = Schedule::with(['applicant.priorityDivision1','applicant.priorityDivision2','date'])
+                        ->where(['admin_id' => session('admin_id'),'status' => 2])
+                        ->whereHas('applicant', function ($query){
+                            $query->whereNot('reschedule', "00");           //find reschedule applicant
+                        })->get()->toArray();
+
+        $data['interview'] = [];
+        foreach($interview as $i){
+            $temp = [];
+            $temp['id'] = $i['id'];
+            $dateObj = DateTime::createFromFormat('Y-m-d', $i['date']['date']);
+            $temp['date'] = $dateObj->format('l, d M Y');
+            if($i['time'] < 9) $temp['time'] = '0'.$i['time'].':00 - 0'.($i['time']+1).':00';
+            else if($i['time'] == 9) $temp['time'] = '0'.$i['time'].':00 - '.($i['time']+1).':00';
+            else $temp['time'] = $i['time'].':00 - '.($i['time']+1).':00';
+            $temp['name'] = $i['applicant']['name'];
+            $temp['priorityDivision1'] = $i['applicant']['priority_division1']['name'];
+            $temp['priorityDivision2'] = $i['applicant']['priority_division2'] ? $i['applicant']['priority_division2']['name'] : '-';
+            $temp['type'] = $i['type'];
+            $temp['online'] = $i['online'];
+            $temp['reschedule'] = $i['applicant']['reschedule'][$i['type'] == 2 ? 1 : 0]; //index for reschedule status
+
+            $temp['date_id'] = $i['date']['id'];
+            $temp['time_id'] = $i['time'];
+
+            $data['interview'][] = $temp;
+        }
+        $data['interview'] = json_encode($data['interview']);
+
+        $data['dates'] = Date::select('id', 'date')->where('date', '>', Carbon::now())->get()->toArray();
+        $data['times'] = range(8, 19);
+        // dd($data);
+        return view('admin.interview.reschedule',$data);
+    }
+
+    public function reschedule(Request $request){
+        try{
+            $schedule = $this->model->findOrFail($request->schedule_id);
+            $applicant_id = $schedule->applicant_id;
+            // dd($applicant_id);
+            $type = $schedule->type;
+            $new_date_id = $request->date_id;
+            $new_online = $request->online;
+            $new_time = $request->time;
+            Date::findOrFail($new_date_id);
+            if (!in_array($new_online, range(0, 1))) throw new Exception();
+            if (!in_array($new_time, range(8, 19))) throw new Exception();
+
+            //check is it same with old schedule
+            if($schedule->date_id == $new_date_id && $schedule->online == $new_online && $schedule->time == $new_time){
+                return redirect()->back()->with('error', 'Jadwal baru sama dengan jadwal lama!');
+            }
+            
+            //change online onsite only
+            // if($schedule->date_id == $new_date_id && $schedule->online != $new_online && $schedule->time == $new_time){
+            //     $schedule->online = $new_online;
+            //     $schedule->save();
+            //     $this->updateRescheduleStatus($applicant_id, $type, 2);
+            //     return redirect()->back()->with('success', 'Jadwal berhasil diubah');
+            // }
+
+            // check not clash with applicant schedule
+            $applicant_schedule = $this->model->where(['applicant_id' => $applicant_id, 'date_id' => $new_date_id, 'time' => $new_time])->first();
+            if($applicant_schedule){
+                return redirect()->back()->with('error', 'Jadwal baru bertabrakan dengan jadwal interview lain Pendaftar!');
+            }
+            
+            //create or update new schedule
+            $new_schedule = $this->model->where(['admin_id' => session('admin_id'), 'date_id' => $new_date_id, 'time' => $new_time])->first();
+            
+            //update new schedule
+            if($new_schedule){         
+                //check is there any another interview at that time
+                if($new_schedule->applicant_id != null || $new_schedule->status != 1){
+                    return redirect()->back()->with('error', 'Jadwal baru bertabrakan dengan jadwal interview Anda yang lain!');
+                }
+                
+                $new_schedule->applicant_id = $applicant_id;
+                $new_schedule->status = 2;
+                $new_schedule->type = $type;
+                $new_schedule->online = $new_online;
+                $new_schedule->save();
+                
+            }else{
+                //create new schedule
+                $new_schedule = $schedule->replicate();
+                $new_schedule->date_id = $new_date_id;
+                $new_schedule->time = $new_time;
+                $new_schedule->online = $new_online;
+                $new_schedule->save();
+
+            }
+
+            //set available old schedule
+            $schedule->applicant_id = null;
+            $schedule->status = 1;
+            $schedule->type = 0;
+            $schedule->save();
+            
+            $this->updateRescheduleStatus($applicant_id, $type, 2);
+            return redirect()->back()->with('success', 'Jadwal berhasil diubah');
+
+        }catch(Exception $e){
+            return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
+        }
+        
+        return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
+    }
+
+    public function updateRescheduleStatus($applicant_id, $type, $status){
+        $applicant = Applicant::findOrFail($applicant_id);
+
+        $reschedule_status = $applicant->reschedule;
+        $index = $type == 2 ? 1 : 0;    //index for reschedule status to update
+        
+        $applicant->reschedule = $index == 0 ? $status . $reschedule_status[1] : $reschedule_status[0] . $status;
+        $applicant->save();
     }
 }

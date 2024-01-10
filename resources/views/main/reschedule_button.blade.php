@@ -58,6 +58,7 @@
 
                     <!--Modal body-->
                     <div class="relative p-4">
+                        <label class="p-1">ID Line</label>
                         <div class="relative mb-4 flex flex-wrap items-stretch">
                             <input
                                 type="text"
