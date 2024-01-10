@@ -155,11 +155,21 @@ class ApplicantController extends BaseController
 
         if ($applicant->stage >= 3) {
             $data['read_only'] = true;
-            $data['schedules'] = Schedule::with('date')
+            $data['schedules'] = Schedule::with('date')->with('admin')
                 ->where('applicant_id', $applicant->id)
                 ->orderBy('type')
                 ->get()
                 ->toArray();
+                
+            //reschedule
+            $reschedule = [];
+        
+            foreach ($data['schedules'] as $i => $schedule) {      
+                $reschedule[$i] = $this->canReschedule($schedule['date']['date'], $schedule['time']);
+            }
+    
+            $data['reschedule'] = $reschedule;
+
         } else
             $data['read_only'] = false;
 
@@ -221,7 +231,7 @@ class ApplicantController extends BaseController
                     'time' => $validated['time'][$i],
                     'status' => 1,
                 ])
-                ->whereIn('online', $validated['online'][$i] === 1 ? [0, 1] : [0])
+                ->whereIn('online', $validated['online'][$i] == 1 ? [0, 1] : [0])
                 ->get();
 
             // dd($schedules);
@@ -290,6 +300,54 @@ class ApplicantController extends BaseController
             DB::rollback();
             return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
         }
+    }
+
+    public function reschedule(Request $request)
+    {
+        $schedule_id = $request->schedule_id;
+        $email = session('email');
+
+        $applicant = $this->model->findByEmail($email);
+        $schedule = $applicant->schedules()->where('id', $schedule_id);
+        
+        if($schedule){
+            $schedule = $schedule->with('date')->first();
+            $reschedule_status = $applicant->reschedule;
+
+            //check current time
+            if(!$this->canReschedule($schedule->date->date, $schedule->time)){
+                return redirect()->back()->with('error', 'Tidak dapat mengganti jadwal karena telah melebihi batas waktu');
+            }
+
+            $index = $schedule->type == 2 ? 1 : 0;    //index for reschedule status to update
+
+            //check already request reschedule
+            if($reschedule_status[$index] > 0){
+                return redirect()->back()->with('success_confirm', 'Pengajuan ganti jadwal sudah diajukan. Silahkan menghubungi contact person untuk menentukan jadwal terbaru.');
+            }
+            
+            //update reschadule status
+            $applicant->reschedule = $index == 0 ? "1" . $reschedule_status[1] : $reschedule_status[0] . "1";
+            $applicant->save();
+            
+            return redirect()->back()->with('success_confirm', 'Pengajuan ganti jadwal sudah diajukan. Silahkan menghubungi contact person untuk menentukan jadwal terbaru.');
+
+        }
+        
+        return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
+    }
+
+    public function canReschedule($date, $time){
+        date_default_timezone_set('Asia/Jakarta');
+
+        //max date to reschedule
+        $tolerate = "-1 day +20 hours";                     //1 day before schedule and close at 20:00
+        // $tolerate = "-1 day +" . $time ." hours";       //exactly 24 hours before schedule
+        
+        $current_date = date('Y-m-d H:i:s');
+        $max_date = date("Y-m-d H:i:s", strtotime($tolerate, strtotime($date)));
+
+        return $current_date < $max_date;
     }
 
     public function previewCV()

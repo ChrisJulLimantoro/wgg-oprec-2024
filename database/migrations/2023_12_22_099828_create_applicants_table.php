@@ -54,6 +54,7 @@ return new class extends Migration
             $table->foreign('priority_division2')->references('id')->on('divisions')->onDelete('cascade');
 
             $table->json('documents')->nullable();
+            $table->string('reschedule')->default("00")->comment("0: tidak revisi, 1: revisi, 2: sudah direvisi (digit pertama interview pilihan pertama, digit kedua interview pilihan kedua)");
 
             $table->timestamps();
             $table->softDeletes();
