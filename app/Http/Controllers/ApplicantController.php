@@ -403,6 +403,301 @@ class ApplicantController extends BaseController
 
         return ($filePath) ? $storeName : false;
     }
+
+    // tolak-terima
+    public function tolakTerima(){
+        $data['title'] = 'Tolak Terima';
+        $schedule = Schedule::with(['applicant','applicant.priorityDivision1','applicant.priorityDivision2','applicant.divisionAccepted'])
+        ->where('status',2)
+        ->whereHas('applicant',function ($query)  
+        {
+            $query->where('stage','>',3);
+        })
+        ->get();
+        $data['applicant'] = [];
+        $i = 0;         
+        foreach($schedule as $b){
+            $a = $b->applicant;
+            if($a->priorityDivision1->id != session('division_id') && $a->priorityDivision2->id != session('division_id') && session('role') != "bph"){
+                continue;
+            }
+            $temp = [];
+            $temp['no'] = $i+1;
+            $temp['id'] = $a->id;
+            $temp['nrp'] = $a->getNRP();
+            $temp['name'] = $a->name;
+            $temp['prioritas1'] = $a->priorityDivision1->name;
+            $temp['prioritas1_id'] = $a->priorityDivision1->id;
+            $temp['prioritas2'] = $a->priorityDivision2->name;
+            $temp['prioritas2_id'] = $a->priorityDivision2->id;
+            $temp['divisi'] = $a->divisionAccepted;
+            $temp['email'] = $a->email;
+            $temp['gender'] = $a->gender == 0? 'Laki-laki' : 'Perempuan';
+            $temp['religion'] = $a->religion;
+            $temp['birth_place'] = $a->birthplace;
+            $temp['birth_date'] = $a->birthdate;
+            $temp['province'] = $a->province;
+            $temp['city'] = $a->city;
+            $temp['address'] = $a->address;
+            $temp['postal_code'] = $a->postal_code;
+            $temp['phone'] = $a->phone;
+            $temp['line'] = $a->line;
+            $temp['instagram'] = $a->instagram;
+            $temp['tiktok'] = $a->tiktok;
+            $temp['gpa'] = $a->gpa;
+            $temp['motivation'] = $a->motivation;
+            $temp['commitment'] = $a->commitment;
+            $temp['strength'] = $a->strength;
+            $temp['weakness'] = $a->weakness;
+            $temp['experience'] = $a->experience;
+            $temp['diet'] = $a->diet;
+            $temp['allergy'] = $a->allergy;
+
+            // button action atau acceptance status logic
+                $temp['action1'] =  "
+                <button
+                type='button'
+                class='btn-terima block mb-2 rounded bg-success px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(20,164,77,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)]'
+                data-te-index='$i' data-te-priority='1' 
+                >
+                Terima Pilihan1
+                </button>
+                
+                <button
+                type='button'
+                class='btn-tolak block rounded bg-danger px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(220,76,100,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)]'
+                data-te-index='$i'data-te-priority='1' 
+                >
+                Tolak Pilihan1
+                </button>
+                "; 
+
+                $temp['action2'] =  "
+                <button
+                type='button'
+                class='btn-terima block mb-2 rounded bg-success px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(20,164,77,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)]'
+                data-te-index='$i' data-te-priority='2'  
+                >
+                Terima Pilihan2
+                </button>
+                
+                <button
+                type='button'
+                class='btn-tolak block rounded bg-danger px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(220,76,100,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)]'
+                data-te-index='$i' data-te-priority='2'
+                >
+                Tolak Pilihan2
+                </button>
+                "; 
+            if($a->acceptance_stage == 2){
+                // diterima prioritas1
+                $temp['action1'] = "<div class='text-center w-full '> 
+                    <i class='fa-regular fa-circle-check fa-lg' style='color: #16a34a;'></i>        
+                </div>
+                <h1 class='text-green-600 font-bold text-center'>Accepted</h1>";
+            }
+            else if($a->acceptance_stage == 3){
+                // ditolak prioritas1
+                $temp['action1'] = "<div class='text-center w-full '> 
+                <i class=' fa-sharp fa-regular fa-circle-xmark fa-lg' style='color: #dc2626;'></i>
+                </div>
+                <h1 class='text-red-600 font-bold text-center'>Tertolak</h1>";
+            }
+            else if($a->acceptance_stage == 4){
+                // diterima prioritas 2
+                $temp['action1'] = "<div class='text-center w-full '> 
+                <i class=' fa-sharp fa-regular fa-circle-xmark fa-lg' style='color: #dc2626;'></i>
+                </div>
+                <h1 class='text-red-600 font-bold text-center'>Tertolak</h1>";
+
+                $temp['action2'] = "<div class='text-center w-full '> 
+                <i class='fa-regular fa-circle-check fa-lg' style='color: #16a34a;'></i>        
+            </div>
+            <h1 class='text-green-600 font-bold text-center'>Accepted</h1>";
+
+            }else if($a->acceptance_stage == 5){
+                // ditolak prioritas 2
+                $temp['action1'] = "<div class='text-center w-full '> 
+                <i class=' fa-sharp fa-regular fa-circle-xmark fa-lg' style='color: #dc2626;'></i>
+                </div>
+                <h1 class='text-red-600 font-bold text-center'>Tertolak</h1>";
+
+                $temp['action2'] = "<div class='text-center w-full '> 
+                <i class=' fa-sharp fa-regular fa-circle-xmark fa-lg' style='color: #dc2626;'></i>
+                </div>
+                <h1 class='text-red-600 font-bold text-center'>Tertolak</h1>";
+            }else if($a->acceptance_stage == 6){
+                // terculik
+                $temp['action1'] = "<div class='text-center w-full '> 
+                <i class='fa-solid fa-circle-info fa-lg' style='color: #fb923c;'></i>   
+                </div>
+                <h1 class='text-orange-500 font-bold text-center'>Terculik </h1>";
+
+                $temp['action2'] = $temp['action1'];
+            }
+            $data['applicant'][] = $temp;
+            $i++;
+
+        }
+        $data['applicant'] = json_encode($data['applicant']) ;
+
+        // dd($data['applicant']);
+
+        return view('admin.tolak_terima.tolakTerima', $data);
+    }
+
+    public function culikAnak(){
+        $data['title'] = 'Tolak Terima';
+        $schedule = Schedule::with(['applicant','applicant.priorityDivision1','applicant.priorityDivision2','applicant.divisionAccepted'])
+        ->where('status',2)
+        ->whereHas('applicant',function ($query)  
+        {
+            $query->where('stage','>',3)
+            ->where('acceptance_stage',5);
+
+        })
+        ->get();
+
+        $data['applicant'] = [];
+
+        $i = 0;         
+        foreach($schedule as $b){
+            $a = $b->applicant;
+            $temp = [];
+            $temp['no'] = $i+1;
+            $temp['id'] = $a->id;
+            $temp['nrp'] = $a->getNRP();
+            $temp['name'] = $a->name;
+            $temp['prioritas1'] = $a->priorityDivision1->name;
+            $temp['prioritas1_id'] = $a->priorityDivision1->id;
+            $temp['prioritas2'] = $a->priorityDivision2->name;
+            $temp['prioritas2_id'] = $a->priorityDivision2->id;
+            $temp['divisi'] = $a->divisionAccepted;
+            $temp['email'] = $a->email;
+            $temp['gender'] = $a->gender == 0? 'Laki-laki' : 'Perempuan';
+            $temp['religion'] = $a->religion;
+            $temp['birth_place'] = $a->birthplace;
+            $temp['birth_date'] = $a->birthdate;
+            $temp['province'] = $a->province;
+            $temp['city'] = $a->city;
+            $temp['address'] = $a->address;
+            $temp['postal_code'] = $a->postal_code;
+            $temp['phone'] = $a->phone;
+            $temp['line'] = $a->line;
+            $temp['instagram'] = $a->instagram;
+            $temp['tiktok'] = $a->tiktok;
+            $temp['gpa'] = $a->gpa;
+            $temp['motivation'] = $a->motivation;
+            $temp['commitment'] = $a->commitment;
+            $temp['strength'] = $a->strength;
+            $temp['weakness'] = $a->weakness;
+            $temp['experience'] = $a->experience;
+            $temp['diet'] = $a->diet;
+            $temp['allergy'] = $a->allergy;
+
+            $temp['action'] = "<button
+            type='button'
+            class='btn-culik block mb-2 rounded bg-success px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(20,164,77,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)]'
+            data-te-index='$i'   
+            >
+            Culik Anak 
+            </button>";
+            $data['applicant'][] = $temp;
+            $i++;
+
+        }
+        $data['applicant'] = json_encode($data['applicant']);
+        
+        return view('admin.tolak_terima.culikAnak', $data);
+
+    }
+
+    public function terima(Request $request){
+        $data = $request->only(['id','priority']);
+        $applicant = $this->getById($data['id']);
+        $admin_division = Division::where('id',session('division_id'))->first();
+    
+       // check acceptance stage
+        if($data['priority'] == 1){
+            // check apakah punya kuasa
+            if($admin_division->id != $applicant->priorityDivision1->id && $admin_division->slug != "bph"){
+                return response()->json(['success' => false, 'message' => 'Anda tidak memiliki kuasa untuk menerima pilihan 1']);
+            }
+
+            // terima prioritas 1
+            if($applicant->acceptance_stage == 1){
+                $this->updatePartial(['acceptance_stage' => 2, 'division_accepted' => $applicant->priorityDivision1->id ],$data['id']);
+                return response()->json(['success' => true, 'message' => 'Berhasil menerima anak di pilihan 1']);
+            }
+    
+        }
+        
+        if($data['priority'] == 2){
+            // check apakah punya kuasa
+            if($admin_division->id != $applicant->priorityDivision2->id && $admin_division->slug != "bph"){
+                return response()->json(['success' => false, 'message' => 'Anda tidak memiliki kuasa untuk menerima pilihan 2']);
+            }
+
+            if($applicant->acceptance_stage == 3){
+                $this->updatePartial(['acceptance_stage' => 4, 'division_accepted' => $applicant->priorityDivision2->id ],$data['id']);
+                return response()->json(['success' => true, 'message' => 'Berhasil menerima anak di pilihan 2']);
+            }
+        }
+
+        return response()->json(['success' => false, 'message' => 'Gagal menerima anak']);
+    }
+
+    public function tolak(Request $request){
+        $data = $request->only(['id','priority']);
+        $applicant = $this->getById($data['id']);
+        $admin_division = Division::where('id',session('division_id'))->first();
+        // check acceptance stage
+        if($data['priority'] == 1){
+            // check apakah punya kuasa
+            if($admin_division->id != $applicant->priorityDivision1->id && $admin_division->slug != "bph"){
+                return response()->json(['success' => false, 'message' => 'Anda tidak memiliki kuasa untuk menolak pilihan 1']);
+            }
+
+            // terima prioritas 1
+            if($applicant->acceptance_stage == 1){
+                $this->updatePartial(['acceptance_stage' => 3],$data['id']);
+                return response()->json(['success' => true, 'message' => 'Berhasil menolak anak di pilihan 1']);
+            }
+        }
+        
+        if($data['priority'] == 2){
+            // check apakah punya kuasa
+            if($admin_division->id != $applicant->priorityDivision2->id && $admin_division->slug != "bph"){
+                return response()->json(['success' => false, 'message' => 'Anda tidak memiliki kuasa untuk menolak pilihan 2']);
+            }
+
+            if($applicant->acceptance_stage == 3){
+                $this->updatePartial(['acceptance_stage' => 5],$data['id']);
+                return response()->json(['success' => true, 'message' => 'Berhasil menolak anak di pilihan 2']);
+            }
+        }
+
+        return response()->json(['success' => false, 'message' => 'Gagal menolak anak']);
+    }
+
+    public function culik(Request $request){
+        // dia di stage 5 dan yang accept bukan bph
+        $data = $request->only(['id']);
+        $applicant = $this->getById($data['id']);
+        if(session('role') == "bph"){
+            return response()->json(['success' => false, 'message' => 'BPH tidak bisa culik anak']);
+        }
+        
+        if($applicant->acceptance_stage == 5){
+            // lakukan culik
+            $role = session('role');
+            $this->updatePartial(['acceptance_stage' => 6, 'division_accepted' => session('division_id')],$data['id']);
+            return response()->json(['success' => true, 'message' => "Berhasil menculik ke $role"]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Gagal menculik anak']);
+
+    }
 }
 
 enum Religion

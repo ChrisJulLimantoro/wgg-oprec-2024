@@ -239,7 +239,7 @@
                     Swal.showLoading();
                     $.ajax({
                         url: "{{ route('admin.select.schedule.update') }}",
-                        type: "POST",
+                        type: "PATCH",
                         data: data,
                         success: function(e){
                             console.log(e)

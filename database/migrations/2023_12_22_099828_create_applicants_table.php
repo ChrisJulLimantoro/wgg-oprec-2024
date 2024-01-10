@@ -45,6 +45,8 @@ return new class extends Migration
             $table->uuid('division_accepted')->nullable();
             $table->uuid('priority_division1');
             $table->uuid('priority_division2')->nullable();
+            $table->unsignedTinyInteger('acceptance_stage')->default(1)->comment('1:tunggu-satu, 2:terima-satu, 3:tunggu-dua, 4:terima-dua, 5:tunggu-culik, 6:terima-culik');
+
 
             // $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
             $table->foreign('division_accepted')->references('id')->on('divisions')->onDelete('cascade');
