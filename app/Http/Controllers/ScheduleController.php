@@ -83,7 +83,7 @@ class ScheduleController extends BaseController
     public function myInterview(){
         $data['title'] = 'My Interview';
         // session(['admin_id' => Admin::get()->first()->id ]);
-        $interview = $this->getSelectedColumn(['*'], ['admin_id' => session('admin_id'),'status' => 2],['applicant.priorityDivision1','applicant.priorityDivision2','date'])->toArray();
+        $interview = $this->getSelectedColumn(['*'], ['admin_id' => session('admin_id'),'status' => 2],['applicant.priorityDivision1','applicant.priorityDivision2','date','admin'])->toArray();
         $data['interview'] = [];
         foreach($interview as $i){
             $temp = [];
@@ -100,6 +100,8 @@ class ScheduleController extends BaseController
             $temp['online'] = $i['online'];
             $temp['link'] = route('admin.interview.start',$i['id']);
             $temp['detail'] = route('admin.applicant.cv',$i['applicant_id']);
+            $temp['spot'] = $i['admin']['spot'];
+            $temp['meet'] = $i['admin']['meet'];
             $data['interview'][] = $temp;
         }
         $data['interview'] = json_encode($data['interview']);
@@ -136,6 +138,8 @@ class ScheduleController extends BaseController
             $temp['interviewer'] = $i['admin']['name'];
             $temp['inter_id'] = $i['admin_id'];
             $temp['detail'] = route('admin.applicant.cv',$i['applicant_id']);
+            $temp['spot'] = $i['admin']['spot'];
+            $temp['meet'] = $i['admin']['meet'];
             $data['interview'][] = $temp;
         }
         $data['interview'] = json_encode($data['interview']);
@@ -183,6 +187,8 @@ class ScheduleController extends BaseController
             $temp['interviewer'] = $i['admin']['name'];
             $temp['inter_id'] = $i['admin_id'];
             $temp['detail'] = route('admin.applicant.cv',$i['applicant_id']);
+            $temp['spot'] = $i['admin']['spot'];
+            $temp['meet'] = $i['admin']['meet'];
             $data[] = $temp;
         }
         return response()->json(['success' => true, 'data' => $data],200);
