@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Models\Schedule;
 use App\Models\Applicant;
 use Illuminate\Support\Facades\Route;
@@ -44,7 +45,7 @@ Route::prefix('main')->group(function () {
     Route::post('reschedule', [ApplicantController::class, 'reschedule'])->name('applicant.reschedule');
 
     Route::get('interview-detail', [ApplicantController::class, 'interviewDetail'])->name('applicant.interview-detail');
-    Route::get('download-cv', [ApplicantController::class, 'downloadCV'])->name('applicant.download-cv');
+    Route::get('cv', [ApplicantController::class, 'previewCV'])->name('applicant.cv');
 
     Route::get('projects-form/{selected_priority?}', [ProjectController::class, 'projectsForm'])->name('applicant.projects-form')
         ->where('selected_priority', '[1-2]');
@@ -56,6 +57,11 @@ Route::prefix('admin')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/realtime/{id}', [DashboardController::class, 'getData'])->name('admin.dashboard.getData');
 
+    Route::prefix('meeting-spot')->group(function(){
+        Route::get('/', [AdminController::class, 'meetingSpot'])->name('admin.meeting-spot');
+        Route::patch('/{admin}',[AdminController::class, 'updateMeetSpot'])->name('admin.meeting-spot.update');
+    });
+
     // Dates
     Route::prefix('dates')->group(function () {
         Route::get('/', [DateController::class, 'index'])->name('admin.date');
@@ -65,7 +71,7 @@ Route::prefix('admin')->group(function () {
 
     Route::prefix('schedules')->group(function () {
         Route::get('/select-schedule', [ScheduleController::class, 'index'])->name('admin.select.schedule');
-        Route::post('/select-schedule', [ScheduleController::class, 'select'])->name('admin.select.schedule.update');
+        Route::patch('/select-schedule', [ScheduleController::class, 'select'])->name('admin.select.schedule.update');
     });
 
     Route::prefix('questions')->group(function () {
@@ -80,6 +86,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/', [ScheduleController::class, 'divisionInterview'])->name('admin.interview');
         Route::post('/division', [ScheduleController::class, 'scheduleDivision'])->name('admin.interview.division');
         Route::get('/my', [ScheduleController::class, 'myInterview'])->name('admin.interview.my');
+        Route::post('/kidnap',[ScheduleController::class, 'kidnap'])->name('admin.interview.kidnap');
         Route::get('/{schedule_id}', [AnswerController::class, 'getQuestion'])->name('admin.interview.start');
         Route::get('/{schedule_id}/page/{page}', [AnswerController::class, 'getQuestion'])->name('admin.interview.session');
         Route::post('/submit-answer', [AnswerController::class, 'submitAnswer'])->name('admin.interview.submit.answer');
@@ -99,13 +106,15 @@ Route::prefix('admin')->group(function () {
             Route::get('{division?}', 'index')->name('admin.project');
             Route::patch('{division}', 'storeProjectDescription')->name('admin.project.store');
         });
+
+    Route::get('/applicant-cv/{applicant}', [AdminController::class, 'applicantCV'])->name('admin.applicant.cv');
 });
 
-Route::get('interview-mail', function() {
+Route::get('interview-mail', function () {
     $data['applicant'] = Applicant::with(['priorityDivision1', 'priorityDivision2'])->where('email', 'c14230006@john.petra.ac.id')->first()->toArray();
     $data['schedules'] = Schedule::with(['admin', 'date'])->where('applicant_id', $data['applicant']['id'])->get()->toArray();
 
-    return view('mail.interview_schedule', ['data' => $data]);  
+    return view('mail.interview_schedule', ['data' => $data]);
 });
 // login
 Route::get('/', [AuthController::class, 'loginView'])->name('login');

@@ -23,6 +23,7 @@ class Admin extends Model
         'name',
         'line',
         'meet',
+        'spot',
         'division_id'
     ]; 
 
@@ -49,6 +50,7 @@ class Admin extends Model
             'name' => 'required|string|max:50',
             'line' => 'required|string|max:20',
             'meet' => 'nullable|string|max:255',
+            'spot' => 'nullable|string|max:255', // 'nullable|string|max:255
             'division_id' => 'required|uuid|exists:divisions,id',
         ];
     }
@@ -72,6 +74,8 @@ class Admin extends Model
             'line.max' => 'line max 20 characters!',
             'meet.string' => 'meet must be string!',
             'meet.max' => 'meet max 255 characters!',
+            'spot.string' => 'spot must be string!',
+            'spot.max' => 'spot max 255 characters!',
             'division_id.required' => 'division_id is required!',
             'division_id.uuid' => 'division_id must be uuid!',
             'division_id.exists' => 'division_id must be exists!',
@@ -90,6 +94,7 @@ class Admin extends Model
             'name' => $request->name,
             'line' => $request->line,
             'meet' => $request->meet,
+            'spot' => $request->spot,
             'division_id' => $request->division_id,
         ]);
     }

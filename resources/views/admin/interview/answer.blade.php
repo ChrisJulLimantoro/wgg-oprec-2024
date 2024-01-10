@@ -3,6 +3,7 @@
 <div class="flex flex-col w-full py-8 rounded-lg shadow-xl items-center justify-center mb-8">
     <h1 class="text-center text-5xl uppercase font-bold mb-5">Applicant's Answers</h1>
     <h2 class="text-center text-3xl uppercase font-bold mb-5">{{ $nrp }} - {{ $name }}</h2>
+    <a href="{{ route('admin.applicant.cv',$applicant) }}" target="_blank" class="text-center text-2xl uppercase font-bold italic text-blue-500"> < Detail Applicant > </a>
 </div>
 @foreach($sections as $sec)
 <div class="flex flex-col w-full py-8 rounded-lg shadow-xl items-center justify-center mb-8 px-12">

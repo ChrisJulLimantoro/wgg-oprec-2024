@@ -99,6 +99,7 @@ class ScheduleController extends BaseController
             $temp['type'] = $i['type'];
             $temp['online'] = $i['online'];
             $temp['link'] = route('admin.interview.start',$i['id']);
+            $temp['detail'] = route('admin.applicant.cv',$i['applicant_id']);
             $data['interview'][] = $temp;
         }
         $data['interview'] = json_encode($data['interview']);
@@ -133,6 +134,8 @@ class ScheduleController extends BaseController
             $temp['online'] = $i['online'];
             $temp['link'] = route('admin.interview.start',$i['id']);
             $temp['interviewer'] = $i['admin']['name'];
+            $temp['inter_id'] = $i['admin_id'];
+            $temp['detail'] = route('admin.applicant.cv',$i['applicant_id']);
             $data['interview'][] = $temp;
         }
         $data['interview'] = json_encode($data['interview']);
@@ -178,8 +181,51 @@ class ScheduleController extends BaseController
             $temp['online'] = $i['online'];
             $temp['link'] = route('admin.interview.start',$i['id']);
             $temp['interviewer'] = $i['admin']['name'];
+            $temp['inter_id'] = $i['admin_id'];
+            $temp['detail'] = route('admin.applicant.cv',$i['applicant_id']);
             $data[] = $temp;
         }
         return response()->json(['success' => true, 'data' => $data],200);
+    }
+
+    public function kidnap(Request $request){
+        // dd($request->schedule_id);
+        $schedule = $this->getById($request->schedule_id);
+        // dd($schedule);
+        // check for yourself
+        if($schedule->admin_id == session('admin_id')){
+            return response()->json(['success' => false, 'message' => "It's already yours"],500);
+        }
+
+        // date time interviewe
+        $date = $schedule->date_id;
+        $time = $schedule->time;
+
+        $kidnapper = $this->model->where(['date_id' => $date, 'time' => $time, 'admin_id' => session('admin')])->get();
+
+        if($kidnapper->count() > 0){
+            if($kidnapper->first()->status == 2){
+                return response()->json(['success' => false, 'message' => "You already have an interview at that time and date"],500);
+            }
+            $new = $kidnapper->first()->id;
+            // update the new interview
+            $newData = $this->updatePartial(['status' => 2,'applicant_id' => $schedule->applicant_id, 'online' => $schedule->online, 'type' => $schedule->type],$new);
+            // update the old interview
+            $this->updatePartial(['status' => 1,'applicant_id' => null, 'type' => 0],$schedule->id);
+        }else{
+            // create new interview
+            $newData = $this->model->create([
+                'date_id' => $date,
+                'time' => $time,
+                'admin_id' => session('admin_id'),
+                'status' => 2,
+                'applicant_id' => $schedule->applicant_id,
+                'online' => $schedule->online,
+                'type' => $schedule->type
+            ]);
+            // update the old interview
+            $this->updatePartial(['status' => 1,'applicant_id' => null, 'type' => 0],$schedule->id);
+        }
+        return response()->json(['success' => true, 'message' => 'Berhasil menculik jadwal interview','data' => $newData],200);
     }
 }

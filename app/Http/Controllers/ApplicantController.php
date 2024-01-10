@@ -54,7 +54,7 @@ class ApplicantController extends BaseController
             Log::warning('NRP {nrp} not found in john API.', ['nrp' => $nrp]);
         }
 
-        $applicantData = $this->model->findByNRP($nrp, relations: $this->model->relations());
+        $applicantData = $this->model->findByNRP($nrp);
         if ($applicantData) {
             $data['form'] = $applicantData->toArray();
         }
@@ -87,7 +87,7 @@ class ApplicantController extends BaseController
         );
 
         $data['title'] = 'Upload Berkas';
-        $data['documentTypes'] = self::documentTypes();
+        $data['documentTypes'] = self::documentTypes($applicant->astor);
 
         $applicant = Applicant::select('id', 'stage', 'documents')
             ->where('email', $nrp . '@john.petra.ac.id')->first();
@@ -350,7 +350,7 @@ class ApplicantController extends BaseController
         return $current_date < $max_date;
     }
 
-    public function downloadCV()
+    public function previewCV()
     {
         $nrp = strtolower(session('nrp'));
         $applicant = $this->model->findByNRP($nrp, relations: $this->model->relations());
@@ -358,9 +358,12 @@ class ApplicantController extends BaseController
         if (!$applicant) {
             return 'Pendaftar tidak ditemukan';
         }
+        if ($applicant->stage < 2) {
+            return 'Pastikan anda sudah mengisi form pendaftaran dan upload berkas terlebih dahulu';
+        }
         $pdf = $applicant->cv();
 
-        return $pdf->download('CV_' . $nrp . '.pdf');
+        return $pdf->stream('CV_' . $nrp . '.pdf');
     }
 
 
