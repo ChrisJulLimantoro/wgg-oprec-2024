@@ -349,27 +349,20 @@ class ApplicantController extends BaseController
     // tolak-terima
     public function tolakTerima(){
         $data['title'] = 'Tolak Terima';
-        // ambil dari schedule dan phase anak yang sudah selesai interview 
-        $applicant =  $this->model->with(['schedule','schedule.admin','schedule.date', 'priorityDivision1','priorityDivision2','divisionAccepted'])
-        ->where('stage','>',3)
-        ->whereHas('schedule',function ($query)  
+        $schedule = Schedule::with(['applicant','applicant.priorityDivision1','applicant.priorityDivision2','applicant.divisionAccepted'])
+        ->where('status',2)
+        ->whereHas('applicant',function ($query)  
         {
-            $query->where('status',2);
+            $query->where('stage','>',3);
         })
         ->get();
-        
-        // $test2 = Applicant::with(['schedule','schedule.admin','prioritydivision1','prioritydivision2'])->get();
-        // dd($test2[0]->schedule->date->date);
-        // dd($test);
-
-
-        // ambil jawaban interview merkea
-        // foreach($applicant as $a){
-        //     $ans[$a->id]=Answer::with('question')->where('applicant_id',$a->id)->get();
-        // }
-
-        $i = 0;        
-        foreach($applicant as $a){
+        $data['applicant'] = [];
+        $i = 0;         
+        foreach($schedule as $b){
+            $a = $b->applicant;
+            if($a->priorityDivision1->id != session('division_id') && $a->priorityDivision2->id != session('division_id') && session('role') != "bph"){
+                continue;
+            }
             $temp = [];
             $temp['no'] = $i+1;
             $temp['id'] = $a->id;
@@ -488,22 +481,85 @@ class ApplicantController extends BaseController
             $i++;
 
         }
-        $data['applicant'] = json_encode($data['applicant']);
-        
+        $data['applicant'] = json_encode($data['applicant']) ;
+
+        // dd($data['applicant']);
 
         return view('admin.tolak_terima.tolakTerima', $data);
+    }
+
+    public function culikAnak(){
+        $data['title'] = 'Tolak Terima';
+        $schedule = Schedule::with(['applicant','applicant.priorityDivision1','applicant.priorityDivision2','applicant.divisionAccepted'])
+        ->where('status',2)
+        ->whereHas('applicant',function ($query)  
+        {
+            $query->where('stage','>',3)
+            ->where('acceptance_stage',5);
+
+        })
+        ->get();
+
+        $data['applicant'] = [];
+
+        $i = 0;         
+        foreach($schedule as $b){
+            $a = $b->applicant;
+            $temp = [];
+            $temp['no'] = $i+1;
+            $temp['id'] = $a->id;
+            $temp['nrp'] = $a->getNRP();
+            $temp['name'] = $a->name;
+            $temp['prioritas1'] = $a->priorityDivision1->name;
+            $temp['prioritas1_id'] = $a->priorityDivision1->id;
+            $temp['prioritas2'] = $a->priorityDivision2->name;
+            $temp['prioritas2_id'] = $a->priorityDivision2->id;
+            $temp['divisi'] = $a->divisionAccepted;
+            $temp['email'] = $a->email;
+            $temp['gender'] = $a->gender == 0? 'Laki-laki' : 'Perempuan';
+            $temp['religion'] = $a->religion;
+            $temp['birth_place'] = $a->birthplace;
+            $temp['birth_date'] = $a->birthdate;
+            $temp['province'] = $a->province;
+            $temp['city'] = $a->city;
+            $temp['address'] = $a->address;
+            $temp['postal_code'] = $a->postal_code;
+            $temp['phone'] = $a->phone;
+            $temp['line'] = $a->line;
+            $temp['instagram'] = $a->instagram;
+            $temp['tiktok'] = $a->tiktok;
+            $temp['gpa'] = $a->gpa;
+            $temp['motivation'] = $a->motivation;
+            $temp['commitment'] = $a->commitment;
+            $temp['strength'] = $a->strength;
+            $temp['weakness'] = $a->weakness;
+            $temp['experience'] = $a->experience;
+            $temp['diet'] = $a->diet;
+            $temp['allergy'] = $a->allergy;
+
+            $temp['action'] = "<button
+            type='button'
+            class='btn-culik block mb-2 rounded bg-success px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(20,164,77,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)]'
+            data-te-index='$i'   
+            >
+            Culik Anak 
+            </button>";
+            $data['applicant'][] = $temp;
+            $i++;
+
+        }
+        $data['applicant'] = json_encode($data['applicant']);
+        
+        return view('admin.tolak_terima.culikAnak', $data);
+
     }
 
     public function terima(Request $request){
         $data = $request->only(['id','priority']);
         $applicant = $this->getById($data['id']);
-        // $admin_division = Division::where('id',session('division_id'))->first();
-        // $admin_division = Division::where('id',"9b09ab7b-aa6c-4867-8312-7c900bd215ea")->first(); //acara
-        $admin_division = Division::where('id',"9b09ab7b-ad23-426e-9776-82e196c13581")->first(); //infor
-        // $admin_division = Division::where('id',"9b09ab7b-a979-4581-a4c5-b5d7ae3b0b2a")->first(); //bph
-
-        
-        // check acceptance stage
+        $admin_division = Division::where('id',session('division_id'))->first();
+    
+       // check acceptance stage
         if($data['priority'] == 1){
             // check apakah punya kuasa
             if($admin_division->id != $applicant->priorityDivision1->id && $admin_division->slug != "bph"){
@@ -536,11 +592,7 @@ class ApplicantController extends BaseController
     public function tolak(Request $request){
         $data = $request->only(['id','priority']);
         $applicant = $this->getById($data['id']);
-        // $admin_division = Division::where('id',session('division_id'))->first();
-        // $admin_division = Division::where('id',"9b09ab7b-aa6c-4867-8312-7c900bd215ea")->first(); //acara
-        $admin_division = Division::where('id',"9b09ab7b-ad23-426e-9776-82e196c13581")->first(); //infor
-        // $admin_division = Division::where('id',"9b09ab7b-a979-4581-a4c5-b5d7ae3b0b2a")->first(); //bph
-
+        $admin_division = Division::where('id',session('division_id'))->first();
         // check acceptance stage
         if($data['priority'] == 1){
             // check apakah punya kuasa
@@ -568,6 +620,25 @@ class ApplicantController extends BaseController
         }
 
         return response()->json(['success' => false, 'message' => 'Gagal menolak anak']);
+    }
+
+    public function culik(Request $request){
+        // dia di stage 5 dan yang accept bukan bph
+        $data = $request->only(['id']);
+        $applicant = $this->getById($data['id']);
+        if(session('role') == "bph"){
+            return response()->json(['success' => false, 'message' => 'BPH tidak bisa culik anak']);
+        }
+        
+        if($applicant->acceptance_stage == 5){
+            // lakukan culik
+            $role = session('role');
+            $this->updatePartial(['acceptance_stage' => 6, 'division_accepted' => session('division_id')],$data['id']);
+            return response()->json(['success' => true, 'message' => "Berhasil menculik ke $role"]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Gagal menculik anak']);
+
     }
 }
 

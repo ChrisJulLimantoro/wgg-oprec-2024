@@ -38,23 +38,23 @@
                 { label: "Detail", field: "detail", sort: false },
                 ],
                 rows: data
-                .map((row,i) => {
+                .map((item,i) => {
                 return {
-                    ...row,
+                    ...item,
                     detail:`
-                    <button
+                    <a href="{{ route('admin.applicant.cv', '') }}/${item.id}" target="_blank"
                         type="button"
                         class="btn-detail block mb-2 rounded bg-success px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(20,164,77,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)]"
                         data-te-index="${i}"
                         >
                         Detail
-                        </button>
+                        </a>
 
-                        <button
+                        <a href="{{ route('admin.applicant.answer', '') }}/${item.id}" target="_blank"
                         type="button"
                         class="btn-answer block rounded bg-danger px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(220,76,100,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)]">
                         Answer
-                        </button>
+                        </a>
                     `,
 
                 };
@@ -62,56 +62,6 @@
             },
             { hover: true }
             );
-
-            $(document).on("click", ".btn-detail", function () {
-                const index = $(this).data("te-index");
-
-                dataRow = data[index];
-                console.log(dataRow)
-                Swal.fire({
-                title: 'Candidate Detail',
-                width: 700,
-                html: 
-                '<div class = "text-start w-full"> <div class = "grid grid-cols-2"><p> NRP: ' + dataRow['nrp'] + '</p>' +
-                '<p>Nama Lengkap: ' + dataRow["name"] + '</p>' +
-                '<p>Jenis Kelamin: ' + dataRow['gender'] + '</p>' +
-                '<p>Agama: ' + dataRow['religion'] + '</p>' +
-                '<p>Tanggal lahir: ' + dataRow['birth_date'] + '</p>' +
-                '<p>Tempat lahir: ' + dataRow['birth_place'] + '</p>' +
-                // '<p>Program Studi: ' + dataRow["candidate"]["major"]["name"] + '</p>' +
-                '<p>IPK: ' + dataRow['gpa'] + '</p>' +
-                '<p>No HP: ' + dataRow['phone'] + '</p>' +
-                '<p>Line_ID: ' + dataRow['line'] + '</p>' +
-                '<p>Instagram: ' + dataRow['instagram'] + '</p>' +
-                '<p>Email: ' + dataRow['email'] + '</p>' +
-                '<p>Kelebihan: ' + dataRow['strength'] + '</p>' +
-                '<p>Kekurangan: ' + dataRow['weakness'] + '</p>' +
-                '<p>Pengalaman: ' + dataRow['experience'] + '</p>' +
-                // '<p>Pengalaman Organisasi: ' + dataRow['candidate']['organization_experience'] + '</p>' +
-                // '<p>Portofolio: ' + dataRow['portfolio'] + '</p>' +
-                '<p>Motivasi: ' + dataRow['motivation'] + '</p>' +
-                '<p>Pilihan 1: ' + dataRow['prioritas1'] + '</p>' +
-                '<p>Pilihan 2: ' + dataRow['prioritas2'] + '</p>' +
-                // '<p>Esai Diskustik: ' + '<a href="'+dataRow['candidate']['diskustik']+ '" target="_blank" class="mb-4 text-start text-blue-600 underline hover:text-blue-700 hover:underline-offset-2">Esai Diskustik</a>' + '</p>' +
-                // '<p>Hasil Tes DISC: ' + '<a href="'+dataRow['candidate']['disc']+ '" target="_blank" class="mb-4 text-start text-blue-600 underline hover:text-blue-700 hover:underline-offset-2">Hasil tes DISC</a>' + '</p>' +
-                // '<p>Hasil Tes MBTI: ' + '<a href="'+dataRow['candidate']['mbti']+ '" target="_blank" class="mb-4 text-start text-blue-600 underline hover:text-blue-700 hover:underline-offset-2">Hasil tes MBTI</a>' + '</p>' +
-                '</div><br>' 
-                // + 
-                // '<p>KTM: ' + '</p>' +
-                // "<div> <img src= '" + dataRow['candidate']['ktm'] + "'></div> <br>" +
-                // '<p>Transkrip Kurikulum: ' + '</p>' +
-                // "<div> <img src= '" + dataRow['candidate']['grade'] + "'  ></div><br>" +
-                // '<p>Transkrip SKKK: ' + '</p>' +
-                // "<div> <img src= '" + dataRow['candidate']['skkk'] + "'  ></div><br>" +
-                // '<p>Screenshot Bukti Kecurangan: ' + '</p>' +
-                // "<div> <img src= '" + dataRow['candidate']['wrong'] + "'  ></div><br>" +
-                // '</div>',
-                // imageUrl: '' + dataRow["candidate"]["photo"],
-                // imageWidth: 200,
-                // imageHeight: 250,
-                // imageAlt: 'Custom image'
-                })
-            })
 
             $(document).on("click",".btn-terima",function(){
                 const index = $(this).data("te-index");
