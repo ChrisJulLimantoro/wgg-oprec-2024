@@ -74,4 +74,13 @@ Route::prefix('admin')->group(function () {
         Route::post('/add-project', [AnswerController::class, 'addProject'])->name('admin.interview.add.project');
         Route::post('/finish', [AnswerController::class, 'finish'])->name('admin.interview.finish');
     });
+
+    // tolak terima
+    Route::prefix('tolak-terima')->group(function(){
+        Route::get('/', [ApplicantController::class, 'tolakTerima'])->name('admin.tolak-terima');
+        Route::post('/tolak', [ApplicantController::class, 'tolak'])->name('admin.tolak-terima.tolak');
+        Route::post('/terima', [ApplicantController::class, 'terima'])->name('admin.tolak-terima.terima');
+
+    });
+
 });
