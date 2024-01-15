@@ -83,17 +83,15 @@ class ApplicantController extends BaseController
         $nrp = strtolower(session('nrp'));
         $applicant = $this->model->findByEmail(
             $nrp . '@john.petra.ac.id',
-            ['id', 'documents', 'astor']
+            ['id', 'documents', 'astor', 'stage']
         );
+
+        if (!$applicant)
+            return 'Silahkan isi form pendaftaran terlebih dahulu di <a href="' . route('applicant.application-form') . '">sini</a>!';
 
         $data['title'] = 'Upload Berkas';
         $data['documentTypes'] = self::documentTypes($applicant->astor);
 
-        $applicant = Applicant::select('id', 'stage', 'documents')
-            ->where('email', $nrp . '@john.petra.ac.id')->first();
-
-        if (!$applicant)
-            return 'Silahkan isi form pendaftaran terlebih dahulu di <a href="' . route('applicant.application-form') . '">sini</a>!';
 
         $data['applicant'] = $applicant->toArray();
         return view('main.documents_form', $data);
@@ -118,8 +116,12 @@ class ApplicantController extends BaseController
             self::documentTypes($applicant->astor)
         );
 
+        $applicant->refresh();
+
         return response()
-            ->json(['message' => 'File uploaded successfully!', 'type' => $type])
+            ->json(['message' => 'File uploaded successfully!',
+                    'type' => $type, 
+                    'stageCompleted' => $applicant->stage > 1])
             ->setStatusCode(201);
     }
 

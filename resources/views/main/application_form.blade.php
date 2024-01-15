@@ -440,8 +440,9 @@
                     icon: 'success',
                     title: 'Success',
                     text: '{{ Session::get('success') }}',
-                    showConfirmButton: false,
-                    timer: 1700
+                    didClose: () => {
+                        window.location.href = '{{ route('applicant.documents-form') }}';
+                    }
                 });
             @endif
         });

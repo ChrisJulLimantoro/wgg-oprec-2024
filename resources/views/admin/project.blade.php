@@ -92,6 +92,15 @@
 
                 window.location.href = '{{ route('admin.project') }}/' + divisionId;
             });
+            @if (Session::has('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: '{{ Session::get('success') }}',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            @endif
         });
     </script>
     <script>
