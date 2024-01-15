@@ -58,8 +58,8 @@
                     <div class="mb-7">
                         <label for="deadline">Waktu Pengerjaan (dalam <span class="text-warning">jam</span>, dihitung mulai
                             dari
-                            <span class="text-warning">jam mulai
-                                interview</span> peserta)</label>
+                            <span class="text-warning">jam selesai
+                                interview</span> peserta, asumsi lama interview 1 jam)</label>
                         <div class="relative" data-te-input-wrapper-init>
                             <input type="number" min="1" name="project_deadline" id="deadline"
                                 @if ($division['project_deadline']) value="{{ $division['project_deadline'] / 3600 }}" @endif

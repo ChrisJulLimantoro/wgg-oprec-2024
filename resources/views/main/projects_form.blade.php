@@ -23,6 +23,8 @@
 @endsection
 
 @section('content')
+    @include('main.stepper', ['applicant' => $applicant])
+
     <div class="mb-4 pt-5">
         <div class="flex justify-center mb-5">
             <h1
