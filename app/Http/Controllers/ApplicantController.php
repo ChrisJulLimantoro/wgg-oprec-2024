@@ -273,22 +273,22 @@ class ApplicantController extends BaseController
             $this->updatePartial(['stage' => 3], $applicant->id);
 
             foreach ($pickedSchedule as $key => $value) {
-                // dd($value);
+                $schedule = Schedule::where('id', $value->id)->lockForUpdate()->first();
+
                 $type = 0;
                 if (!$applicant->priority_division2) $type = 1;
                 else if ($isPeran) $type = $key + 1;
 
-                $value->status = 2;
-                $value->type = $type;
-                $value->online = $validated['online'][$key];
-                $value->applicant_id = $applicant->id;
-                $value->save();
+                $schedule->status = 2;
+                $schedule->type = $type;
+                $schedule->online = $validated['online'][$key];
+                $schedule->applicant_id = $applicant->id;
+                $schedule->save();
+
+                $data['schedules'][] = $schedule->load(['admin', 'date'])->toArray();
             }
 
             $data['applicant'] = $applicant->load(['priorityDivision1', 'priorityDivision2'])->toArray();
-            foreach ($pickedSchedule as $s) {
-                $data['schedules'][] = $s->load(['admin', 'date'])->toArray();
-            }
 
             $mailer = new MailController();
             $emailed = $mailer->sendInterviewSchedule($data);
