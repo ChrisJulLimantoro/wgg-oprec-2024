@@ -36,6 +36,10 @@ class AuthController extends Controller
     }
 
     public function loginPaksa($nrp,Request $request){
+        if (parse_url(url()->current(), PHP_URL_HOST) == 'wgg.petra.ac.id') {
+            abort(404);
+        }
+        
         $nrp = strtolower($nrp);
         $request->session()->put('email', $nrp."@john.petra.ac.id");
         $request->session()->put('nrp',$nrp);
