@@ -88,7 +88,7 @@ class ApplicantController extends BaseController
 
         if (!$applicant)
             return 'Silahkan isi form pendaftaran terlebih dahulu di <a href="' . route('applicant.application-form') . '">sini</a>!';
-        
+
         $data['title'] = 'Upload Berkas';
         $data['documentTypes'] = self::documentTypes($applicant->astor);
 
@@ -116,8 +116,12 @@ class ApplicantController extends BaseController
             self::documentTypes($applicant->astor)
         );
 
+        $applicant->refresh();
+
         return response()
-            ->json(['message' => 'File uploaded successfully!', 'type' => $type])
+            ->json(['message' => 'File uploaded successfully!',
+                    'type' => $type, 
+                    'stageCompleted' => $applicant->stage > 1])
             ->setStatusCode(201);
     }
 

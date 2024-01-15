@@ -3,7 +3,12 @@
 @section('content')
     @include('main.stepper', ['applicant' => $applicant])
 
-    <h1 class="text-3xl font-bold text-center">Berkas Pendaftar</h1>
+    <div class="text-center">
+        <h1 class="text-3xl font-bold mb-2">Berkas Pendaftar</h1>
+        <div class="text-danger">
+            Hanya bisa mengupload satu kali. Pastikan berkas sudah benar sebelum menekan tombol UPLOAD
+        </div>
+    </div>
     <section class="max-w-[940px] mx-auto pt-3 pb-16">
         <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->
         <div
@@ -42,8 +47,13 @@
                         </div>
                     </div>
                     <div class="preview mt-2">
-                        <img src="{{ asset('storage/uploads/' . strtolower($type) . '/' . data_get($applicant['documents'], strtolower($type))) }}"
-                            alt="KTM"
+                        @php
+                            $imgSrc = '';
+                            if ($applicant['documents'] && array_key_exists(strtolower($type), $applicant['documents'])) {
+                                $imgSrc = asset('storage/uploads/' . strtolower($type) . '/' . data_get($applicant['documents'], strtolower($type)));
+                            }
+                        @endphp
+                        <img src="{{ $imgSrc }}" alt="KTM"
                             class="{{ $applicant['documents'] && array_key_exists(strtolower($type), $applicant['documents']) ? '' : 'hidden' }} max-h-[400px]">
                     </div>
                 </div>
@@ -98,13 +108,22 @@
                         return xhr;
                     },
                 }).done((e) => {
-                    Swal.fire({
+                    const config = {
                         icon: 'success',
                         title: 'Success',
                         text: e.message,
-                        showConfirmButton: false,
-                        timer: 1700
-                    });
+                    };
+
+                    if (e.stageCompleted) {
+                        config.didClose = () => {
+                            window.location.href = '{{ route('applicant.schedule-form') }}'
+                        }
+                    } else {
+                        config.timer = 1700;
+                        config.showConfirmButton = false;
+                    }
+
+                    Swal.fire(config);
                 }).fail((e) => {
                     const errors = e.responseJSON.errors;
                     if (Object.keys(errors).length > 1) {
