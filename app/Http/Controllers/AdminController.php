@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseController;
 use App\Models\Admin;
 use App\Models\Applicant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends BaseController
 {
@@ -42,6 +43,19 @@ class AdminController extends BaseController
         $update = [];
         if($request->meet){
             $update['meet'] = $request->meet;
+            $valid = Validator::make($request->only(['meet']),[
+                'meet' => 'required|url:https,http'
+            ],[
+                'meet.required' => 'Meeting Link is required',
+                'meet.url' => 'Meeting Link must be a valid URL'
+            ]);
+            if($valid->fails()){
+                // dd($valid->errors()->first());
+                return response()->json([
+                    'success' => false,
+                    'message' => $valid->errors()->first()
+                ],200);
+            }
         }
         if($request->spot){
             $update['spot'] = $request->spot;

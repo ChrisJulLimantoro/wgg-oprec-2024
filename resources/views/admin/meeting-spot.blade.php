@@ -80,62 +80,74 @@
 <script>
     $(document).ready(function(){
         let id = @json($admin['id']);
-        $('#meet-submit').on('click',async function(){
-            let success = await ajaxUpdate($('#meet').val(),null);
-            if(!success) {
+        $('#meet-submit').on('click', async function () {
+            try {
+                let success = await ajaxUpdate($('#meet').val(), null);
+                if (!success) {
+                    $('#meet').val('');
+                }
+            } catch (error) {
+                console.error(error);
                 $('#meet').val('');
             }
-        })
-        $('#spot-submit').on('click',async function(){
-            let success = await ajaxUpdate(null,$('#spot').val());
-            if(!success) {
+        });
+
+        $('#spot-submit').on('click', async function () {
+            try {
+                let success = await ajaxUpdate(null, $('#spot').val());
+                if (!success) {
+                    $('#spot').val('');
+                }
+            } catch (error) {
+                console.error(error);
                 $('#spot').val('');
             }
-        })
-        async function ajaxUpdate(meet,spot){
+        });
+
+        async function ajaxUpdate(meet, spot) {
             let data = {
                 _token: '{{ csrf_token() }}'
             };
-            if(meet) data.meet = meet;
-            if(spot) data.spot = spot;
-            let success = await $.ajax({
-                url: '{{ route('admin.meeting-spot.update',['admin' => $admin['id']]) }}',
-                type: 'PATCH',
-                data: data,
-                success: async function(data){
-                    if(data.success){
-                        await Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Meeting spot updated',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        return true;
-                    }else{
-                        await Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Something went wrong!',
-                        })
-                        return false;
-                    }
-                },
-                error: async function(data){
+            if (meet) data.meet = meet;
+            if (spot) data.spot = spot;
+
+            try {
+                let response = await $.ajax({
+                    url: '{{ route('admin.meeting-spot.update',['admin' => $admin['id']]) }}',
+                    type: 'PATCH',
+                    data: data,
+                });
+
+                console.log(response);
+
+                if (response.success) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Meeting spot updated',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    return true;
+                } else {
                     await Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Something went wrong!',
-                    })
+                        text: response.message,
+                    });
                     return false;
                 }
-            })
-            if(success){
-                return true
-            }else{
-                return false
+            } catch (error) {
+                console.error(error);
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                });
+                return false;
             }
         }
+
     })
 </script>
 @endSection()
