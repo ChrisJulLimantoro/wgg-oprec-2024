@@ -25,7 +25,7 @@ use App\Http\Controllers\MailController;
 |
 */
 
-Route::prefix('main')->group(function () {
+Route::prefix('main')->middleware(['session'])->group(function () {
     Route::get('application-form', [ApplicantController::class, 'applicationForm'])->name('applicant.application-form');
     Route::post('store-application', [ApplicantController::class, 'storeApplication'])->name('applicant.application.store');
     Route::patch('update-application/{id}', [ApplicantController::class, 'updateApplication'])->name('applicant.application.update');
@@ -53,7 +53,7 @@ Route::prefix('main')->group(function () {
         ->where('selected_priority', '[1-2]');
 });
 
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware(['session','admin'])->group( function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/realtime/{id}', [DashboardController::class, 'getData'])->name('admin.dashboard.getData');
 
