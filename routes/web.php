@@ -40,7 +40,7 @@ Route::prefix('main')->group(function () {
         );
 
     Route::get('schedule-form', [ApplicantController::class, 'scheduleForm'])->name('applicant.schedule-form');
-    Route::get('schedule/{date}/{online}/{divsion}', [ApplicantController::class, 'getTimeSlot'])->name('applicant.get-schedule');
+    Route::post('get-schedule', [ApplicantController::class, 'getTimeSlot'])->name('applicant.get-schedule');
     Route::post('pick-schedule', [ApplicantController::class, 'pickSchedule'])->name('applicant.pick-schedule');
     Route::post('reschedule', [ApplicantController::class, 'reschedule'])->name('applicant.reschedule');
 

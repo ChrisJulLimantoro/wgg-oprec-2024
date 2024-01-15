@@ -195,13 +195,19 @@
                 }
             })
 
-            function getData(date, online, divisi) {
-                $.ajax({
-                    url: "/main/schedule/" + date + "/" + parseInt(online) + "/" + divisi,
-                    type: "GET",
+            async function getData(date, online, divisi) {
+                Swal.showLoading();
+                await $.ajax({
+                    url: "{{ route('applicant.get-schedule') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        date: date,
+                        online: parseInt(online),
+                        division: divisi
+                    },
                     success: function(response) {
                         $("#time_" + order).empty()
-
                         if (response.data.length == 0) {
                             $("#time_" + order).append(
                                 `<option value=''>` +
@@ -219,6 +225,14 @@
                             )
                         })
                     }
+                });
+                Swal.hideLoading();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Jadwal berhasil diambil',
+                    showConfirmButton: false,
+                    timer: 800
                 });
             }
 

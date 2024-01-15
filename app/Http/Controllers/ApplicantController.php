@@ -181,8 +181,11 @@ class ApplicantController extends BaseController
         return view('main.schedule_form', $data);
     }
 
-    public function getTimeSlot(string $date, int $online, string $division)
+    public function getTimeSlot(Request $request)
     {
+        $date = $request->date;
+        $online = intval($request->online);
+        $division = $request->division;
         $interviewers = Admin::where('division_id', $division)->get();
 
         $schedules = Schedule::select('time')
