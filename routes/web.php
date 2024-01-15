@@ -95,7 +95,6 @@ Route::prefix('admin')->middleware(['session','admin'])->group( function () {
         Route::post('/submit-score', [AnswerController::class, 'submitScore'])->name('admin.interview.submit.score');
         Route::post('/update-answer', [AnswerController::class, 'updateAnswer'])->name('admin.interview.update.answer');
         Route::post('/update-score', [AnswerController::class, 'updateScore'])->name('admin.interview.update.score');
-        Route::post('/add-project', [AnswerController::class, 'addProject'])->name('admin.interview.add.project');
         Route::post('/finish', [AnswerController::class, 'finish'])->name('admin.interview.finish');
     });
 

@@ -172,16 +172,38 @@ class AnswerController extends BaseController
         return response()->json(['success' => true, 'message' => 'Score Updated Successfully!!']);
     }
 
-    // not done project
-    public function addProject(Request $request)
-    {
-        return response()->json(['success' => false, 'message' => 'Project Not Done Yet!!']);
-    }
 
     // not done interview
     public function finish(Request $request)
     {
-        return response()->json(['success' => false, 'message' => 'Interview Not Finished Yet!!']);
+        $schedule = Schedule::where(['id' => $request->schedule_id])->first();
+        $questions = [];
+        if($schedule->type == 0){
+            $applicant = Applicant::with(['priorityDivision1.questions','priorityDivision2.questions','answers'])->where(['id' => $request->applicant_id])->first();
+            $questions = array_merge($applicant->priorityDivision1->questions->pluck('id')->toArray(),$applicant->priorityDivision2->questions->pluck('id')->toArray());
+            $open = Question::where(['division_id' => Division::where(['slug' => 'open'])->first()->id])->orderBy('number','asc')->get()->pluck('id')->toArray();
+            $close = Question::where(['division_id' => Division::where(['slug' => 'close'])->first()->id])->orderBy('number','asc')->get()->pluck('id')->toArray();
+            $questions = array_merge($open,$questions,$close);
+        }else if($schedule->type == 1){
+            $applicant = Applicant::with(['priorityDivision1.questions','answers'])->where(['id' => $request->applicant_id])->first();
+            $questions = $applicant->priorityDivision1->questions->pluck('id');
+            $open = Question::where(['division_id' => Division::where(['slug' => 'open'])->first()->id])->orderBy('number','asc')->get()->pluck('id')->toArray();
+            $close = Question::where(['division_id' => Division::where(['slug' => 'close'])->first()->id])->orderBy('number','asc')->get()->pluck('id')->toArray();
+            $questions = array_merge($open,$questions,$close);
+        }else{
+            $applicant = Applicant::with(['priorityDivision2.questions','answers'])->where(['id' => $request->applicant_id])->first();
+            $questions = $applicant->priorityDivision2->questions->pluck('id')->toArray();
+        }
+        $answers = $applicant->answers->pluck('question_id')->toArray();
+        // Check if all questions answered
+        $containsAll = empty(array_diff($questions, $answers));
+        if($containsAll){
+            $applicant->stage = 4;
+            $applicant->save();
+            return response()->json(['success' => true, 'message' => 'Interview Finished Successfully!!']);
+        }else{
+            return response()->json(['success' => false, 'message' => 'There are Questions left unanswered!!']);
+        }
     }
 
     public function index($applicant_id)

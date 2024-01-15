@@ -1,6 +1,7 @@
 @extends('admin.layout')
 @section('content')
-    <input type="hidden" id="applicant" value="{{ $applicant }}"> 
+    <input type="hidden" id="applicant" value="{{ $applicant }}">
+    <input type="hidden" id="schedule" value="{{ $schedule }}">
     <div class="flex flex-col w-full py-8 rounded-lg shadow-xl items-center justify-center mb-8">
         <h1 class="text-center text-6xl uppercase font-bold mb-5">Interview applicant</h1>
         <h3 class="text-center text-4xl uppercase font-bold mb-3">Section : {{ $part }}</h3>
@@ -76,14 +77,6 @@
                     </button>
                 </a>
             @else
-                <button
-                type="button"
-                data-te-ripple-init
-                data-te-ripple-color="light"
-                id="add-project"
-                class="inline-block rounded bg-warning px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-warning-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-warning-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-warning-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
-                    Add Project
-                </button>
                 <button
                 type="button"
                 data-te-ripple-init
@@ -237,42 +230,9 @@
                     }
                 });
             });
-            $('#add-project').on('click',function(){
-                var applicant = $('#applicant').val();
-                Swal.fire({
-                title: 'Saving...',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading()
-                    $.ajax({
-                    url:  "{{ route('admin.interview.add.project') }}",
-                    method: "POST",
-                    dataType: 'json', 
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        "applicant_id": applicant,
-                    } ,
-                    success: function(res){
-                        console.log(res);
-                        if(res.success){
-                            Swal.close();
-                            Swal.fire('Success', 'Berhasil Add Project', 'success');
-                        }else{
-                            Swal.fire('Error','Gagal Add Project','error')
-                        }
-                        
-                    },
-                    error: function(err){
-                        Swal.close();
-                        Swal.fire('Error', 'Error Selama Pengiriman Data', 'error');
-                    }
-                    })
-                    }
-                });
-            })
             $('#finish').on('click',function(){
                 var applicant = $('#applicant').val();
+                var schedule = $('#schedule').val();
                 Swal.fire({
                 title: 'Saving...',
                 allowOutsideClick: false,
@@ -286,16 +246,27 @@
                     data: {
                         "_token": "{{ csrf_token() }}",
                         "applicant_id": applicant,
+                        "schedule_id": schedule,
                     } ,
                     success: function(res){
-                        console.log(res);
+                        // console.log(res);
                         if(res.success){
                             Swal.close();
-                            Swal.fire('Success', 'Interview Finished', 'success').then((result)=>{
+                            Swal.fire({
+                                title: 'Success',
+                                text: res.message,
+                                icon: 'success',
+                                confirmButtonText: 'Ok'
+                            }).then((result)=>{
                                 window.location.href = "{{ route('admin.select.schedule') }}"
                             });
                         }else{
-                            Swal.fire('Error','Finished Failed','error')
+                            Swal.fire({
+                                title: 'Error',
+                                text: res.message,
+                                icon: 'error',
+                                confirmButtonText: 'Ok'
+                            })
                         }
                         
                     },
