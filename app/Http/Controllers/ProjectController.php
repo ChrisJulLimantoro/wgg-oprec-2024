@@ -42,7 +42,7 @@ class ProjectController extends BaseController
         $data['title'] = 'Projects Form';
         $applicant = $this->model->findByNrp(
             $nrp,
-            ['id', 'priority_division1', 'priority_division2', 'documents'],
+            ['id', 'priority_division1', 'priority_division2', 'documents', 'stage'],
             ['priorityDivision1', 'priorityDivision2']
         )->toArray();
 
@@ -78,18 +78,19 @@ class ProjectController extends BaseController
         $interviews = Schedule::with('date')->where('applicant_id', $applicant['id'])
             ->get()->toArray();
 
-        $selectedInterview = array_filter($interviews, function ($interview) use ($selectedPriority) {
+        $selectedInterviews = array_filter($interviews, function ($interview) use ($selectedPriority) {
             return $interview['type'] == $selectedPriority || $interview['type'] == 0;
         });
 
-        if (count($selectedInterview) > 1) {
+        if (count($selectedInterviews) > 1) {
             Log::warning('Expected 1 interview, but more than 1 interview found for applicant {nrp} when selecting priority {}', [
                 'nrp' => $nrp,
                 'priority' => $selectedPriority,
             ]);
         }
-        $interviewTime = ((int) $selectedInterview[0]['time']) * 3600;
-        $interviewDate = strtotime($selectedInterview[0]['date']['date']);
+        $selectedInterview = reset($selectedInterviews);
+        $interviewTime = ((int) $selectedInterview['time']) * 3600;
+        $interviewDate = strtotime($selectedInterview['date']['date']);
 
         return $interviewTime + $interviewDate;
     }
@@ -99,7 +100,8 @@ class ProjectController extends BaseController
         $interviewStartTimestamp = self::getInterviewStartTimestamp($applicant, $nrp, $selectedPriority);
         $interval = $applicant['priority_division' . $selectedPriority]['project_deadline'];
         $projectDeadline = $interviewStartTimestamp + $interval;
+        $hour = 3600;
 
-        return $projectDeadline;
+        return $projectDeadline + $hour;
     }
 }

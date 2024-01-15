@@ -17,13 +17,13 @@ class StoreProjectRequest extends FormRequest
     {
         $selectedPriority = $this->route('selected_priority');
 
-        if ($selectedPriority == 1) return true;
-
         $nrp = strtolower(session('nrp'));
-        $applicant = Applicant::select(['priority_division2'])
-            ->where('email', $nrp . '@john.petra.ac.id')->first();
+        $applicant = Applicant::with(['priorityDivision1', 'priorityDivision2'])
+            ->select(['id', 'priority_division1', 'priority_division2'])
+            ->where('email', $nrp . '@john.petra.ac.id')
+            ->first()->toArray();
 
-        if (!$applicant->priority_division2) return false;
+        if (!$applicant['priority_division2']) return false;
 
         $deadline = ProjectController::getProjectDeadline($applicant, $nrp, $selectedPriority);
         $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
@@ -42,7 +42,7 @@ class StoreProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'project' => 'required|string',
+            'project' => 'nullable|string',
         ];
     }
 }
