@@ -115,7 +115,7 @@ Route::prefix('admin')->middleware(['session','admin'])->group( function () {
 
     Route::prefix('projects')->controller(ProjectController::class)
         ->group(function () {
-            Route::get('{division?}', 'index')->name('admin.project');
+            Route::get('{division?}', 'index')->name('admin.project')->middleware('admin.project');
             Route::patch('{division}', 'storeProjectDescription')->name('admin.project.store');
         });
 

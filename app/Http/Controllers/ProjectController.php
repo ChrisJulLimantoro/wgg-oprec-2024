@@ -21,7 +21,16 @@ class ProjectController extends BaseController
     public function index(?Division $division = null)
     {
         $data['title'] = 'Projects';
-        $data['divisions'] = Division::all();
+
+        $userDivision = Division::where('id', session('division_id'))
+            ->first();
+        $divisionsSlugWithFullAccess = ['bph', 'it'];
+
+        if (in_array($userDivision->slug, $divisionsSlugWithFullAccess)) {
+            $data['divisions'] = Division::all();
+        } else {
+            $data['divisions'] = [$userDivision];
+        }
         $data['division'] = $division;
 
         return view('admin.project', $data);
