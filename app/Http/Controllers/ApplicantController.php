@@ -6,6 +6,7 @@ use Exception;
 use ErrorException;
 use App\Models\Date;
 use App\Models\Admin;
+use App\Models\Setting;
 use App\Models\Division;
 use App\Models\Schedule;
 use App\Models\Applicant;
@@ -176,6 +177,8 @@ class ApplicantController extends BaseController
             $data['read_only'] = false;
 
         $data['applicant'] = $applicant->toArray();
+
+        // dd(Carbon::now()->addDays(1)->format('Y-m-d'));
         $data['dates'] = Date::select('id', 'date')->where('date', '>', Carbon::now())->get()->toArray();
 
         // dd($data);
@@ -290,18 +293,27 @@ class ApplicantController extends BaseController
 
             $data['applicant'] = $applicant->load(['priorityDivision1', 'priorityDivision2'])->toArray();
 
-            $mailer = new MailController();
-            $emailed = $mailer->sendInterviewSchedule($data);
+            $emailSettings = Setting::where('key', 'Email')->first();
 
-            if ($emailed) {
-                DB::commit();
-                return redirect()->back()->with('success', 'Jadwal interview berhasil dipilih!');
-            } else {
-                DB::rollback();
-                return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
+            // dd($emailSettings);
+
+            if ($emailSettings->value === 1) {
+                $mailer = new MailController();
+                $emailed = $mailer->sendInterviewSchedule($data);
+
+                if ($emailed) {
+                    DB::commit();
+                    return redirect()->back()->with('success', 'Jadwal interview berhasil dipilih!');
+                } else {
+                    DB::rollback();
+                    return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
+                }
             }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Jadwal interview berhasil dipilih!');
         } catch (Exception $e) {
-            // dd($e);
+            dd($e);
             DB::rollback();
             return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
         }

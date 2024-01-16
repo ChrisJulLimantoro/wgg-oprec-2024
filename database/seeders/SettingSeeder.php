@@ -20,6 +20,11 @@ class SettingSeeder extends Seeder
                 'key' => 'Active',
                 'value' => 1,
                 'description' => 'Settings to activate or deactivate the Applicant Registration feature'
+            ],
+            [
+                'key' => 'Email',
+                'value' => 1,
+                'description' => 'This will send an email to the applicant after they have successfully registered'
             ]
         ];
         foreach($settings as $setting){

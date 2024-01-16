@@ -277,6 +277,7 @@ class AnswerController extends BaseController
             }
         }
         
+        $data['applicant'] = $applicant;
         $data['sections'] = $sections;
         return view('admin.interview.answer',$data);
     }
