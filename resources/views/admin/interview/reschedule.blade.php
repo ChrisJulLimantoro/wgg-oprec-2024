@@ -154,7 +154,8 @@
             columns: [
             { label: "Date", field: "date" },
             { label: "Time", field: "time" },
-            { label: "Name", field: "name" },
+            { label: "NRP", field: "nrp", sort: true},
+            { label: "Name", field: "name", sort: true },
             { label: "Type", field: "type" },
             { label: "Online", field: "online" },
             { label: "Division 1", field: "priorityDivision1" },
@@ -243,9 +244,7 @@
             });
 
         advancedSearchInput.addEventListener("keydown", (e) => {
-            if (e.keyCode === 13) {
             search(e.target.value);
-            }
         });
 
         $(document).ready(function(){

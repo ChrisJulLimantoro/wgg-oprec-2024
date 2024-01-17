@@ -21,15 +21,21 @@ class ScheduleSeeder extends Seeder
         Schema::disableForeignKeyConstraints();
         DB::table('schedules')->truncate();
         Schema::enableForeignKeyConstraints();
-        $schedules = [
-            'date_id' => Date::get()->first()->id,
-            'time' => 8,
-            'status' => 2,
-            'admin_id' => Admin::get()->first()->id,
-            'applicant_id' => Applicant::get()->first()->id,
-            'type' => 0,
-            'online' => 0
-        ];
-        Schedule::create($schedules);
+        $applicant = Applicant::all()->toArray();
+        $time = 8;
+        foreach($applicant as $a){
+            $schedules[] = [
+                'date_id' => Date::get()->first()->id,
+                'time' => $time++,
+                'status' => 2,
+                'admin_id' => Admin::get()->first()->id,
+                'applicant_id' => $a['id'],
+                'type' => 0,
+                'online' => 0
+            ];
+        }
+        foreach($schedules as $s){
+            Schedule::create($s);
+        }
     }
 }
