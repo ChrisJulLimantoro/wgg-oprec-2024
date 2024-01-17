@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(DateSeeder::class);
         $this->call(DivisionSeeder::class);
+        $this->call(FacultySeeder::class);
+        $this->call(MajorSeeder::class);
         $this->call(AdminSeeder::class);
         $this->call(QuestionSeeder::class);
         $this->call(ApplicantSeeder::class);

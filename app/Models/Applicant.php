@@ -18,6 +18,7 @@ class Applicant extends Model
     protected $fillable = [
         'name',
         'email',
+        'major_id',
         'gender',
         'religion',
         'birthplace',
@@ -71,6 +72,7 @@ class Applicant extends Model
         return [
             'name' => 'required|string|max:100',
             'email' => 'required|string|email|max:50',
+            'major_id' => 'required|uuid|exists:majors,id',
             'gender' => 'required|boolean',
             'religion' => 'required|string|max:30',
             'birthplace' => 'required|string|max:50',
@@ -117,6 +119,9 @@ class Applicant extends Model
             'email.string' => 'Email must be a string',
             'email.email' => 'Email must be a valid email address',
             'email.max' => 'Email must be less than 50 characters',
+            'major_id.required' => 'Major is required',
+            'major_id.uuid' => 'Major must be a uuid',
+            'major_id.exists' => 'Major must be exists',
             'gender.required' => 'Gender is required',
             'gender.boolean' => 'Gender must be a boolean',
             'religion.required' => 'Religion is required',
@@ -213,7 +218,7 @@ class Applicant extends Model
      */
     public function relations()
     {
-        return ['priorityDivision1', 'priorityDivision2', 'divisionAccepted', 'answers', 'schedules'];
+        return ['major', 'priorityDivision1', 'priorityDivision2', 'divisionAccepted', 'answers', 'schedules'];
     }
 
     /**
@@ -221,6 +226,11 @@ class Applicant extends Model
      *
      *
      */
+    public function major()
+    {
+        return $this->belongsTo(Major::class);
+    }
+
     public function priorityDivision1()
     {
         return $this->belongsTo(Division::class, 'priority_division1');

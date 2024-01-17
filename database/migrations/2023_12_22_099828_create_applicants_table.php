@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('applicants', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('email', 50)->unique();
+            $table->uuid('major_id');
             $table->string('name', 100);
             $table->boolean('gender')->comment('0: male, 1: female');
             $table->string('religion', 30);
@@ -49,6 +50,7 @@ return new class extends Migration
 
 
             // $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
+            $table->foreign('major_id')->references('id')->on('majors')->onDelete('cascade');
             $table->foreign('division_accepted')->references('id')->on('divisions')->onDelete('cascade');
             $table->foreign('priority_division1')->references('id')->on('divisions')->onDelete('cascade');
             $table->foreign('priority_division2')->references('id')->on('divisions')->onDelete('cascade');
