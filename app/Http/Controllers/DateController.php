@@ -26,12 +26,14 @@ class DateController extends BaseController
     {
         $date = $this->getOrderedDates()->toArray();
         $data['title'] = 'Dates';
+        $data['dates'] = [];
         foreach($date as $d){
             $arr['id'] = $d['id'];
             $arr['date'] = $d['date'];
             $arr['day'] = Carbon::createFromFormat('Y-m-d', $d['date'])->format('l');
             $data['dates'][] = $arr;
         }
+
         // dd($data);
         return view('admin.schedule.date',$data);
     }
