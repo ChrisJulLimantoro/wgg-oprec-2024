@@ -84,8 +84,7 @@ class ScheduleController extends BaseController
 
     public function myInterview(){
         $data['title'] = 'My Interview';
-        // session(['admin_id' => Admin::get()->first()->id ]);
-        $interview = $this->getSelectedColumn(['*'], ['admin_id' => session('admin_id'),'status' => 2],['applicant.priorityDivision1','applicant.priorityDivision2','date','admin'])->toArray();
+        $interview = $this->getSelectedColumn(['*'], ['admin_id' => session('admin_id'),'status' => 2],['applicant.priorityDivision1','applicant.priorityDivision2','applicant.major','date','admin'])->toArray();
         $data['interview'] = [];
         foreach($interview as $i){
             $temp = [];
@@ -97,6 +96,7 @@ class ScheduleController extends BaseController
             else $temp['time'] = $i['time'].':00 - '.($i['time']+1).':00';
             $temp['name'] = $i['applicant']['name'];
             $temp['nrp'] = substr($i['applicant']['email'],0,9);
+            $temp['major'] = $i['applicant']['major']['english_name'];
             $temp['priorityDivision1'] = $i['applicant']['priority_division1']['name'];
             $temp['priorityDivision2'] = $i['applicant']['priority_division2'] ? $i['applicant']['priority_division2']['name'] : '-';
             $temp['type'] = $i['type'];
@@ -120,7 +120,7 @@ class ScheduleController extends BaseController
         }else{
             $interview = $this->model->whereHas('applicant',function($q){
                 $q->where('priority_division1',session('division_id'))->orWhere('priority_division2',session('division_id'));
-            })->where('status',2)->with(['applicant.priorityDivision1','applicant.priorityDivision2','date','admin'])->get()->toArray();
+            })->where('status',2)->with(['applicant.priorityDivision1','applicant.priorityDivision2','date','admin','applicant.major'])->get()->toArray();
         }
         // Query
         $data['interview'] = [];
@@ -135,6 +135,7 @@ class ScheduleController extends BaseController
             // $temp['date'] = $temp['date'].' '.$temp['time'];
             $temp['nrp'] = substr($i['applicant']['email'],0,9);
             $temp['name'] = $i['applicant']['name'];
+            $temp['major'] = $i['applicant']['major']['english_name'];
             $temp['priorityDivision1'] = $i['applicant']['priority_division1']['name'];
             $temp['priorityDivision2'] = $i['applicant']['priority_division2'] ? $i['applicant']['priority_division2']['name'] : '-';
             $temp['type'] = $i['type'];
@@ -171,7 +172,7 @@ class ScheduleController extends BaseController
         }else{
             $interview = $this->model->whereHas('applicant',function($q) use ($division){
                 $q->where('priority_division1',$division)->orWhere('priority_division2',$division);
-            })->where('status',2)->with(['applicant.priorityDivision1','applicant.priorityDivision2','date','admin'])->get()->toArray();
+            })->where('status',2)->with(['applicant.priorityDivision1','applicant.priorityDivision2','date','admin','applicant.major'])->get()->toArray();
         }
         $data = [];
         foreach($interview as $i){
@@ -185,6 +186,7 @@ class ScheduleController extends BaseController
             // $temp['date'] = $temp['date'].' '.$temp['time'];
             $temp['nrp'] = substr($i['applicant']['email'],0,9);
             $temp['name'] = $i['applicant']['name'];
+            $temp['major'] = $i['applicant']['major']['english_name'];
             $temp['priorityDivision1'] = $i['applicant']['priority_division1']['name'];
             $temp['priorityDivision2'] = $i['applicant']['priority_division2'] ? $i['applicant']['priority_division2']['name'] : '-';
             $temp['type'] = $i['type'];
@@ -244,7 +246,7 @@ class ScheduleController extends BaseController
     public function myReschedule(){
         $data['title'] = 'My Reschedule';
     
-        $interview = Schedule::with(['applicant.priorityDivision1','applicant.priorityDivision2','date'])
+        $interview = Schedule::with(['applicant.priorityDivision1','applicant.priorityDivision2','date', 'applicant.major'])
                         ->where(['admin_id' => session('admin_id'),'status' => 2])
                         ->whereHas('applicant', function ($query){
                             $query->whereNot('reschedule', "00");           //find reschedule applicant
@@ -261,6 +263,7 @@ class ScheduleController extends BaseController
             else $temp['time'] = $i['time'].':00 - '.($i['time']+1).':00';
             $temp['name'] = $i['applicant']['name'];
             $temp['nrp'] = substr($i['applicant']['email'],0,9);
+            $temp['major'] = $i['applicant']['major']['english_name'];
             $temp['priorityDivision1'] = $i['applicant']['priority_division1']['name'];
             $temp['priorityDivision2'] = $i['applicant']['priority_division2'] ? $i['applicant']['priority_division2']['name'] : '-';
             $temp['type'] = $i['type'];

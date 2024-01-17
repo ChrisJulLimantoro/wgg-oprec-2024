@@ -26,7 +26,7 @@ class Major extends Model
      * @var array
      */
 
-    protected $hidden;
+    protected $hidden = ['created_at', 'updated_at'];
 
     /**
      * Rules that applied in this model
@@ -77,7 +77,7 @@ class Major extends Model
      */
     public function relations()
     {
-        return ['faculty'];
+        return ['applicants','faculty'];
     }
 
     /**
@@ -89,5 +89,10 @@ class Major extends Model
     public function faculty()
     {
         return $this->belongsTo(Faculty::class);
+    }
+
+    public function applicants()
+    {
+        return $this->hasMany(Applicant::class, 'major_id', 'id');
     }
 }

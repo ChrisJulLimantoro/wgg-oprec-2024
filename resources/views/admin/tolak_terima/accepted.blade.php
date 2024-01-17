@@ -502,7 +502,7 @@
                 columns: [
                     { label: "NRP", field: "nrp", fixed : true, sort: true },
                     { label: "Name", field: "name", fixed : true, sort: true },
-                    // { label: "Major", field: "major", sort : false},
+                    { label: "Major", field: "major", sort : false},
                     { label: "gpa", field: "gpa", sort : true },
                     { label: "Address", field: "address", sort: false},
                     { label: "Type", field: "type", sort: false},
@@ -541,7 +541,7 @@
                 columns: [
                     { label: "NRP", field: "nrp", fixed : true, sort: true },
                     { label: "Name", field: "name", fixed : true, sort: true },
-                    // { label: "Major", field: "major", sort : false},
+                    { label: "Major", field: "major", sort : false},
                     { label: "gpa", field: "gpa", sort : true },
                     { label: "Address", field: "address", sort: false},
                     { label: "Type", field: "type", sort: false},
@@ -580,7 +580,7 @@
                 columns: [
                     { label: "NRP", field: "nrp", fixed : true, sort: true },
                     { label: "Name", field: "name", fixed : true, sort: true },
-                    // { label: "Major", field: "major", sort : false},
+                    { label: "Major", field: "major", sort : false},
                     { label: "gpa", field: "gpa", sort : true },
                     { label: "Address", field: "address", sort: false},
                     { label: "Type", field: "type", sort: false},
@@ -619,7 +619,7 @@
                 columns: [
                     { label: "NRP", field: "nrp", fixed : true, sort: true },
                     { label: "Name", field: "name", fixed : true, sort: true },
-                    // { label: "Major", field: "major", sort : false},
+                    { label: "Major", field: "major", sort : false},
                     { label: "gpa", field: "gpa", sort : true },
                     { label: "Address", field: "address", sort: false},
                     { label: "Type", field: "type", sort: false},
@@ -658,7 +658,7 @@
                 columns: [
                     { label: "NRP", field: "nrp", fixed : true, sort: true },
                     { label: "Name", field: "name", fixed : true, sort: true },
-                    // { label: "Major", field: "major", sort : false},
+                    { label: "Major", field: "major", sort : false},
                     { label: "gpa", field: "gpa", sort : true },
                     { label: "Address", field: "address", sort: false},
                     { label: "Type", field: "type", sort: false},
@@ -697,7 +697,7 @@
                 columns: [
                     { label: "NRP", field: "nrp", fixed : true, sort: true },
                     { label: "Name", field: "name", fixed : true, sort: true },
-                    // { label: "Major", field: "major", sort : false},
+                    { label: "Major", field: "major", sort : false},
                     { label: "gpa", field: "gpa", sort : true },
                     { label: "Address", field: "address", sort: false},
                     { label: "Type", field: "type", sort: false},
@@ -736,7 +736,7 @@
                 columns: [
                     { label: "NRP", field: "nrp", fixed : true, sort: true },
                     { label: "Name", field: "name", fixed : true, sort: true },
-                    // { label: "Major", field: "major", sort : false},
+                    { label: "Major", field: "major", sort : false},
                     { label: "gpa", field: "gpa", sort : true },
                     { label: "Address", field: "address", sort: false},
                     { label: "Type", field: "type", sort: false},
@@ -775,7 +775,7 @@
                 columns: [
                     { label: "NRP", field: "nrp", fixed : true, sort: true },
                     { label: "Name", field: "name", fixed : true, sort: true },
-                    // { label: "Major", field: "major", sort : false},
+                    { label: "Major", field: "major", sort : false},
                     { label: "gpa", field: "gpa", sort : true },
                     { label: "Address", field: "address", sort: false},
                     { label: "Type", field: "type", sort: false},
@@ -814,7 +814,7 @@
                 columns: [
                     { label: "NRP", field: "nrp", fixed : true, sort: true },
                     { label: "Name", field: "name", fixed : true, sort: true },
-                    // { label: "Major", field: "major", sort : false},
+                    { label: "Major", field: "major", sort : false},
                     { label: "gpa", field: "gpa", sort : true },
                     { label: "Address", field: "address", sort: false},
                     { label: "Type", field: "type", sort: false},

@@ -722,7 +722,7 @@ class ApplicantController extends BaseController
     }
 
     public function getAccepted(){
-        $accepted = Applicant::with(['divisionAccepted'])->where('division_accepted','!=',null)->get()->toArray();
+        $accepted = Applicant::with(['divisionAccepted','major'])->where('division_accepted','!=',null)->get()->toArray();
         $data['title'] = 'Accepted';
         $temp = [
             'it' => [],
@@ -743,6 +743,7 @@ class ApplicantController extends BaseController
                 'type' => $a['acceptance_stage'],
                 'stage' => $a['stage'],
                 'gpa' => $a['gpa'],
+                'major' => $a['major']['english_name'],
                 'link' => route('admin.applicant.cv',$a['id']),
             ];
         }

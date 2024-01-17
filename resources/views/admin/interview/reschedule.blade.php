@@ -156,6 +156,7 @@
             { label: "Time", field: "time" },
             { label: "NRP", field: "nrp", sort: true},
             { label: "Name", field: "name", sort: true },
+            { label: "Major", field: "major", sort: true},
             { label: "Type", field: "type" },
             { label: "Online", field: "online" },
             { label: "Division 1", field: "priorityDivision1" },

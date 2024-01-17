@@ -78,14 +78,15 @@
         customDatatable,
         {
             columns: [
-            { label: "Date", field: "date", fixed : true },
-            { label: "Time", field: "time", fixed : true },
+            { label: "Date", field: "date",  sort: true},
+            { label: "Time", field: "time", sort: true },
             { label: "NRP", field: "nrp", sort: true },
             { label: "Name", field: "name", sort: true },
-            { label: "Place", field: "place" },
-            { label: "Type", field: "type" },
-            { label: "Division 1", field: "priorityDivision1" },
-            { label: "Division 2", field: "priorityDivision2" },
+            { label: "Major", field: "major", sort: true},
+            { label: "Place", field: "place", sort: false },
+            { label: "Type", field: "type", sort: false },
+            { label: "Division 1", field: "priorityDivision1", sort:true },
+            { label: "Division 2", field: "priorityDivision2", sort: true },
             { label: "Action", field: "action"},
             ],
             rows: data.map((item) => {
