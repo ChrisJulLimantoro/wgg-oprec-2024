@@ -56,7 +56,7 @@ Route::prefix('main')->middleware(['session','applicant'])->group(function () {
 
 Route::prefix('admin')->middleware(['session','admin'])->group( function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
-    Route::get('/realtime/{id}', [DashboardController::class, 'getData'])->name('admin.dashboard.getData');
+    Route::post('/realtime', [DashboardController::class, 'getData'])->name('admin.dashboard.getData');
 
     Route::prefix('meeting-spot')->group(function(){
         Route::get('/', [AdminController::class, 'meetingSpot'])->name('admin.meeting-spot');

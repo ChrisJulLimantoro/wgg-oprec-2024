@@ -231,8 +231,12 @@
 
             function getData(id) {
                 $.ajax({
-                    url: "/admin/realtime/" + id,
-                    type: "GET",
+                    url: "{{ route('admin.dashboard.getData') }}",
+                    type: "POST",
+                    data : {
+                        id : id,
+                        _token : "{{ csrf_token() }}"
+                    },
                     success: function(message) {
                         chart.data.datasets[0].data = message.data
                         chart.update()
