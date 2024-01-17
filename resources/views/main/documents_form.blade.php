@@ -124,6 +124,9 @@
                     }
 
                     Swal.fire(config);
+
+                    $(this).children('input').attr('disabled', true);
+                    $(this).children('button').attr('disabled', true);
                 }).fail((e) => {
                     const errors = e.responseJSON.errors;
                     if (Object.keys(errors).length > 1) {
