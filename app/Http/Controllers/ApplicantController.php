@@ -427,7 +427,7 @@ class ApplicantController extends BaseController
         $path = 'public/uploads/' . $type;
         $storeName = sprintf('%s_%s_%d.%s', $nrp, $type, $timestamp, $file->extension());
 
-        $filePath = $file->storeAs($path, $storeName);
+        $filePath = $file->storePubliclyAs($path, $storeName);
 
         return ($filePath) ? $storeName : false;
     }
