@@ -51,6 +51,11 @@ class AuthController extends Controller
             $request->session()->put('division_id',$admin->first()->division_id);
             $request->session()->put('role',$admin->first()->division->slug);
             $request->session()->put('isAdmin',true);
+            // Check applicant too
+            $applicant = Applicant::where('email',$nrp."@john.petra.ac.id")->get();
+            if($applicant->count() > 0){
+                $request->session()->put('applicant_id',$applicant->first()->id);
+            }
             return redirect()->to(route('admin.dashboard'));
         }else{
             $request->session()->put('isAdmin',false);
@@ -91,6 +96,11 @@ class AuthController extends Controller
                         $request->session()->put('division_id',$admin->first()->division_id);
                         $request->session()->put('role',$admin->first()->division->slug);
                         $request->session()->put('isAdmin',true);
+                        // Check applicant too
+                        $applicant = Applicant::where('email',strtolower($payload['email']))->get();
+                        if($applicant->count() > 0){
+                            $request->session()->put('applicant_id',$applicant->first()->id);
+                        }
                         return redirect()->to(route('admin.dashboard'));
                     }else{
                         $request->session()->put('isAdmin',false);
