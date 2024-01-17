@@ -9,6 +9,7 @@ use App\Models\Answer;
 use App\Models\Division;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
+use Illuminate\Queue\NullQueue;
 
 class AnswerController extends BaseController
 {
@@ -284,14 +285,14 @@ class AnswerController extends BaseController
         // get all data
         $project = [];
         if($applicant->priorityDivision1->project == null){
-            $project[] = ['name' => $applicant->priorityDivision1->name,'project' => 'No Project'];
+            $project[] = ['name' => $applicant->priorityDivision1->name,'project' => null];
         }else{
             $project[] = ['name' => $applicant->priorityDivision1->name,'project' => $applicant->priorityDivision1->project, 'result' => data_get($applicant->documents,'project.1')];
         }
 
         if($applicant->priorityDivision2 != null){
             if($applicant->priorityDivision2->project == null){
-                $project[] = ['name' => $applicant->priorityDivision2->name,'project' => 'No Project'];
+                $project[] = ['name' => $applicant->priorityDivision2->name,'project' => null];
             }else{
                 $project[] = ['name' => $applicant->priorityDivision2->name,'project' => $applicant->priorityDivision2->project, 'result' => data_get($applicant->documents,'project.2')];
             }
