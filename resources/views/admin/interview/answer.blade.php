@@ -26,6 +26,17 @@
     @endif
 </div>
 @endforeach
-
+<div class="flex flex-col w-full py-8 rounded-lg shadow-xl items-center justify-center mb-8 px-12">
+    <h1 class="text-center text-3xl uppercase font-bold mb-5">Project</h1>
+    @foreach($project as $pro)
+        <h1 class="text-center text-2xl uppercase font-bold">Divisi : {{ $pro['name'] }}</h1>
+        <h4 class="text-center text-lg uppercase font-bold mb-3">Project : {!! $pro['project'] !!}</h4>
+        @if($pro['result'] != null)
+        <a href="{{ $pro['result'] }}" target="_blank" class="text-center text-2xl uppercase font-bold italic text-blue-500 mb-8"> < Result Project > </a>
+        @else
+        <h4 class="text-center text-md uppercase font-bold mb-3 text-rose-500">Status : Not Submitted</h4>
+        @endif
+    @endforeach
+</div>
 
 @endsection

@@ -232,6 +232,7 @@ class AnswerController extends BaseController
                 $divisions = [$applicant->priorityDivision1];
             }
         }
+        $project = [];
         foreach($divisions as $division){
             $questions = Question::where(['division_id' => $division->id])->orderBy('number','asc')->get()->toArray();
             $sections[] = ['name' => $division->name,'questions' => $questions];
@@ -280,8 +281,25 @@ class AnswerController extends BaseController
             }
         }
         
+        // get all data
+        $project = [];
+        if($applicant->priorityDivision1->project == null){
+            $project[] = ['name' => $applicant->priorityDivision1->name,'project' => 'No Project'];
+        }else{
+            $project[] = ['name' => $applicant->priorityDivision1->name,'project' => $applicant->priorityDivision1->project, 'result' => data_get($applicant->documents,'project.1')];
+        }
+
+        if($applicant->priorityDivision2 != null){
+            if($applicant->priorityDivision2->project == null){
+                $project[] = ['name' => $applicant->priorityDivision2->name,'project' => 'No Project'];
+            }else{
+                $project[] = ['name' => $applicant->priorityDivision2->name,'project' => $applicant->priorityDivision2->project, 'result' => data_get($applicant->documents,'project.2')];
+            }
+        }
+
         $data['applicant'] = $applicant;
         $data['sections'] = $sections;
+        $data['project'] = $project;
         return view('admin.interview.answer',$data);
     }
 }
