@@ -28,6 +28,7 @@
 @section("content")
 <div class="flex flex-col w-full py-8 rounded-lg shadow-xl items-center justify-center mb-8">
     <h1 class="text-center uppercase font-bold text-5xl mb-5">Questions</h1>
+    @if(session('role') == 'it' || session('role') == 'bph')
     <div class="select w-1/2 mx-auto">
         <select id="division" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
         <option value="none" selected>Choose Division</option>
@@ -40,6 +41,7 @@
             @endforeach
         </select>
     </div>
+    @endif
 </div>
 <div class="flex flex-col w-full py-8 rounded-lg shadow-xl items-center justify-center mb-8 invisible" id="canvas">
     <div class="container-input px-8 w-full">
@@ -85,7 +87,6 @@
                 }, 200);
 
                 $("#question"+i).focus();
-                // console.log("go " +i);
 
                 //disabled and hide add button
                     $("#add").attr("disabled", true);
@@ -98,65 +99,63 @@
         add();
 
         function changeNomer(){
-                var index = 1;
-                i = 0;
-                $(".field-input").each(function(){
-                    // console.log("jalan" +index)
-                    $(this).find("label").eq(0).text("Pertanyaan "+index+": ");
-                    i=index;
-                    index++;
-                    
-                });
-            }  
+            var index = 1;
+            i = 0;
+            $(".field-input").each(function(){
+                $(this).find("label").eq(0).text("Pertanyaan "+index+": ");
+                i=index;
+                index++;
+                
+            });
+        }  
 
-        function getQuestionByDivision(){
+        function getQuestionByDivision(division){
             $.ajax({
-            url:  "{{ route('admin.question.get') }}",
-            method: "POST",
-            data: {
-                "_token": "{{ csrf_token() }}",
-                "division_id": $('#division').val(),
-            } ,
-            success: function(res){
-                // console.log(res);
-                i=0;
-                $(".field-input").remove();
-                for(var j = 0; j < res.length; j++){
-                    i++;
-                    $(".container-input").append(`
-                    <div id="`+res[j].id+`" class="show list field-input w-full pb-4 pt-2 rounded-2xl mx-auto mt-3 mb-5">
-                        <div class="close-button flex justify-end mb-5 ">
-                            <strong class="text-4xl px-2 mr-2 hover:text-[2.5rem] absolute cursor-pointer alert-del">&times;</strong>
-                        </div>
-                        <div class="box-pertanyaan w-[80%] mx-auto ">
-                            <label for="question`+i+`" class="text-xl mb-3">Pertanyaan `+i+`: </label>
-                            <textarea name="" id="question`+i+`" rows="10" class="border-2 py-2 pl-4 w-full rounded-lg shadow-xl mb-5"></textarea>
-                            <label for="deskirpsi`+i+`" class="text-xl mb-3">Deskripsi: </label>
-                            <textarea name="" id="deskirpsi`+i+`" rows="5" class="border-2 py-2 pl-4 w-full mb-5 rounded-lg"></textarea>
-                        </div>
-                    </div>`);
-                    $("#question"+i).val(res[j].question);
-                    $("#deskirpsi"+i).val(res[j].description);
-                }
-                add();
-                deleteForm();
-                updateForm();
-                //restore kondisi awal supaya tombol add nya ada
-                $("#add").attr("disabled", false);
-                $('#add').removeClass("invisible");
+                url:  "{{ route('admin.question.get') }}",
+                method: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "division_id": division,
+                } ,
+                success: function(res){
+                    i=0;
+                    $(".field-input").remove();
+                    for(var j = 0; j < res.length; j++){
+                        i++;
+                        $(".container-input").append(`
+                        <div id="`+res[j].id+`" class="show list field-input w-full pb-4 pt-2 rounded-2xl mx-auto mt-3 mb-5">
+                            <div class="close-button flex justify-end mb-5 ">
+                                <strong class="text-4xl px-2 mr-2 hover:text-[2.5rem] absolute cursor-pointer alert-del">&times;</strong>
+                            </div>
+                            <div class="box-pertanyaan w-[80%] mx-auto ">
+                                <label for="question`+i+`" class="text-xl mb-3">Pertanyaan `+i+`: </label>
+                                <textarea name="" id="question`+i+`" rows="10" class="border-2 py-2 pl-4 w-full rounded-lg shadow-xl mb-5"></textarea>
+                                <label for="deskirpsi`+i+`" class="text-xl mb-3">Deskripsi: </label>
+                                <textarea name="" id="deskirpsi`+i+`" rows="5" class="border-2 py-2 pl-4 w-full mb-5 rounded-lg"></textarea>
+                            </div>
+                        </div>`);
+                        $("#question"+i).val(res[j].question);
+                        $("#deskirpsi"+i).val(res[j].description);
+                    }
+                    add();
+                    deleteForm();
+                    updateForm();
+                    //restore kondisi awal supaya tombol add nya ada
+                    $("#add").attr("disabled", false);
+                    $('#add').removeClass("invisible");
 
-            },
-            error: function(err){
-                $(".field-input").remove();
-                $("#add").attr("disabled", true);
-                $('#add').addClass("invisible");
-                Swal.fire('Error', 'Gagal Pengambilan Data', 'error');
-            }
-        })
+                },
+                error: function(err){
+                    $(".field-input").remove();
+                    $("#add").attr("disabled", true);
+                    $('#add').addClass("invisible");
+                    Swal.fire('Error', 'Gagal Pengambilan Data', 'error');
+                }
+            })
         }
 
+        
         $("#division").on('change',function(){
-            console.log($(this).val());
             if($(this).val() == "none"){
                 $(".field-input").remove();
                 $("#add").attr("disabled", true);
@@ -165,7 +164,7 @@
                 return;
             }
             $('#canvas').removeClass("invisible");
-            getQuestionByDivision();
+            getQuestionByDivision($(this).val());
         })
 
         function submitForm(){
@@ -196,7 +195,6 @@
                             "division_id": division_id,
                         } ,
                         success: function(res){
-                            // console.log(res);
                             if(res.success){
                                 $this.parent().parent().parent().attr("id", res.id);
                                 $this.remove();
@@ -252,7 +250,6 @@
                                     "question_id": id ,
                                 } ,
                                 success: function(res){
-                                    // console.log(res);
                                     Swal.fire('Success', 'Berhasil Hapus Pertanyaan', 'success');
 
                                     field.removeClass("show pb-4 pt-2");
@@ -293,8 +290,8 @@
                     didOpen: () => {
                         Swal.showLoading()
                         $.ajax({
-                        url:  "{{ route('admin.question.update') }}",
-                        method: "POST",
+                            url:  "{{ route('admin.question.update') }}",
+                            method: "POST",
                         dataType: 'json', 
                         data: {
                             "_token": "{{ csrf_token() }}",
@@ -325,16 +322,15 @@
                         }
                         })
                     }
-
+                    
                 });
             })
         }
         
-
+        @if(session('role') != 'bph')
+            $('#canvas').removeClass("invisible");
+            getQuestionByDivision('{{ session('division_id') }}')
+        @endif
     })
 </script>
-
-
-
-
 @endsection
