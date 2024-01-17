@@ -59,11 +59,13 @@ class ApplicantController extends BaseController
 
         $classOf = (int) substr($nrp, 3, 2);
         $facultyCode = strtoupper(substr($nrp, 0, 1));
+        $majorCode = substr($nrp, 2, 1);
         $facultiesId = $classOf < 23
             ? Faculty::select('id')->where('code', $facultyCode)
             : Faculty::select('id')->whereNotNull('english_name')->where('code', $facultyCode);
         $data['majors'] = Major::select('id', 'name')
             ->whereIn('faculty_id', $facultiesId)
+            ->where('code', $majorCode)
             ->get();
 
         $applicantData = $this->model->findByNRP($nrp);
