@@ -58,9 +58,10 @@ class ApplicantController extends BaseController
         }
 
         $classOf = (int) substr($nrp, 3, 2);
+        $facultyCode = strtoupper(substr($nrp, 0, 1));
         $facultiesId = $classOf < 23
-            ? Faculty::select('id')
-            : Faculty::select('id')->whereNotNull('english_name');
+            ? Faculty::select('id')->where('code', $facultyCode)
+            : Faculty::select('id')->whereNotNull('english_name')->where('code', $facultyCode);
         $data['majors'] = Major::select('id', 'name')
             ->whereIn('faculty_id', $facultiesId)
             ->get();
@@ -721,8 +722,9 @@ class ApplicantController extends BaseController
         return response()->json(['success' => false, 'message' => 'Gagal menculik anak']);
     }
 
-    public function getAccepted(){
-        $accepted = Applicant::with(['divisionAccepted','major'])->where('division_accepted','!=',null)->get()->toArray();
+    public function getAccepted()
+    {
+        $accepted = Applicant::with(['divisionAccepted', 'major'])->where('division_accepted', '!=', null)->get()->toArray();
         $data['title'] = 'Accepted';
         $temp = [
             'it' => [],
@@ -735,20 +737,20 @@ class ApplicantController extends BaseController
             'konsum' => [],
             'kesehatan' => [],
         ];
-        foreach($accepted as $a){
+        foreach ($accepted as $a) {
             $temp[$a['division_accepted']['slug']][] = [
-                'nrp' => substr($a['email'],0,9),
+                'nrp' => substr($a['email'], 0, 9),
                 'name' => $a['name'],
                 'address' => $a['address'],
                 'type' => $a['acceptance_stage'],
                 'stage' => $a['stage'],
                 'gpa' => $a['gpa'],
                 'major' => $a['major']['english_name'],
-                'link' => route('admin.applicant.cv',$a['id']),
+                'link' => route('admin.applicant.cv', $a['id']),
             ];
         }
         $data['accepted'] = json_encode($temp);
-        return view('admin.tolak_terima.accepted',$data);
+        return view('admin.tolak_terima.accepted', $data);
     }
 }
 
