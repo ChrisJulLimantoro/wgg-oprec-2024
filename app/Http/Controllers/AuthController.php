@@ -51,7 +51,7 @@ class AuthController extends Controller
             $request->session()->put('division_id',$admin->first()->division_id);
             $request->session()->put('role',$admin->first()->division->slug);
             $request->session()->put('isAdmin',true);
-            return redirect()->to(route('admin.interview'));
+            return redirect()->to(route('admin.dashboard'));
         }else{
             $request->session()->put('isAdmin',false);
             // check if it is a applicant
@@ -91,7 +91,7 @@ class AuthController extends Controller
                         $request->session()->put('division_id',$admin->first()->division_id);
                         $request->session()->put('role',$admin->first()->division->slug);
                         $request->session()->put('isAdmin',true);
-                        return redirect()->to(route('admin.interview'));
+                        return redirect()->to(route('admin.dashboard'));
                     }else{
                         $request->session()->put('isAdmin',false);
                         // check if it is a applicant

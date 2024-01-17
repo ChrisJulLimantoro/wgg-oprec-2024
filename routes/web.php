@@ -103,6 +103,7 @@ Route::prefix('admin')->middleware(['session','admin'])->group( function () {
     Route::prefix('tolak-terima')->group(function(){
         Route::get('/', [ApplicantController::class, 'tolakTerima'])->name('admin.tolak-terima');
         Route::get('/culikAnak', [ApplicantController::class, 'culikAnak'])->name('admin.tolak-terima.culikAnak');
+        Route::get('/accepted', [ApplicantController::class, 'getAccepted'])->name('admin.tolak-terima.accepted');
         Route::post('/tolak', [ApplicantController::class, 'tolak'])->name('admin.tolak-terima.tolak');
         Route::post('/terima', [ApplicantController::class, 'terima'])->name('admin.tolak-terima.terima');
         Route::post('/culik', [ApplicantController::class, 'culik'])->name('admin.tolak-terima.culik');

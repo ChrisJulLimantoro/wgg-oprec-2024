@@ -720,6 +720,35 @@ class ApplicantController extends BaseController
 
         return response()->json(['success' => false, 'message' => 'Gagal menculik anak']);
     }
+
+    public function getAccepted(){
+        $accepted = Applicant::with(['divisionAccepted'])->where('division_accepted','!=',null)->get()->toArray();
+        $data['title'] = 'Accepted';
+        $temp = [
+            'it' => [],
+            'sekret' => [],
+            'peran' => [],
+            'acara' => [],
+            'creative' => [],
+            'perkap' => [],
+            'regul' => [],
+            'konsum' => [],
+            'kesehatan' => [],
+        ];
+        foreach($accepted as $a){
+            $temp[$a['division_accepted']['slug']][] = [
+                'nrp' => substr($a['email'],0,9),
+                'name' => $a['name'],
+                'address' => $a['address'],
+                'type' => $a['acceptance_stage'],
+                'stage' => $a['stage'],
+                'gpa' => $a['gpa'],
+                'link' => route('admin.applicant.cv',$a['id']),
+            ];
+        }
+        $data['accepted'] = json_encode($temp);
+        return view('admin.tolak_terima.accepted',$data);
+    }
 }
 
 enum Religion

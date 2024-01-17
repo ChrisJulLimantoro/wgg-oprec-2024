@@ -93,7 +93,8 @@
             columns: [
             { label: "Date", field: "date", fixed : true },
             { label: "Time", field: "time", fixed : true },
-            { label: "Name", field: "name", fixed : true },
+            { label: "NRP", field: "nrp", sort : true},
+            { label: "Name", field: "name", sort : true },
             { label: "Place", field: "place" },
             { label: "Type", field: "type" },
             { label: "Division 1", field: "priorityDivision1" },
@@ -159,9 +160,7 @@
             });
 
         advancedSearchInput.addEventListener("keydown", (e) => {
-            if (e.keyCode === 13) {
             search(e.target.value);
-            }
         });
 
         $(document).ready(function(){
@@ -189,7 +188,8 @@
                         columns: [
                             { label: "Date", field: "date", fixed : true },
                             { label: "Time", field: "time", fixed : true },
-                            { label: "Name", field: "name", fixed : true },
+                            { label: "NRP", field: "nrp", sort : true},
+                            { label: "Name", field: "name", sort : true },
                             { label: "Type", field: "type" },
                             { label: "Place", field: "place" },
                             { label: "Division 1", field: "priorityDivision1" },

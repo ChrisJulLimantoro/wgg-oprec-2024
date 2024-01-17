@@ -96,6 +96,7 @@ class ScheduleController extends BaseController
             else if($i['time'] == 9) $temp['time'] = '0'.$i['time'].':00 - '.($i['time']+1).':00';
             else $temp['time'] = $i['time'].':00 - '.($i['time']+1).':00';
             $temp['name'] = $i['applicant']['name'];
+            $temp['nrp'] = substr($i['applicant']['email'],0,9);
             $temp['priorityDivision1'] = $i['applicant']['priority_division1']['name'];
             $temp['priorityDivision2'] = $i['applicant']['priority_division2'] ? $i['applicant']['priority_division2']['name'] : '-';
             $temp['type'] = $i['type'];
@@ -107,6 +108,7 @@ class ScheduleController extends BaseController
             $data['interview'][] = $temp;
         }
         $data['interview'] = json_encode($data['interview']);
+
         // dd($data);
         return view('admin.interview.my',$data);
     }
@@ -131,6 +133,7 @@ class ScheduleController extends BaseController
             else if($i['time'] == 9) $temp['time'] = '0'.$i['time'].':00 - '.($i['time']+1).':00';
             else $temp['time'] = $i['time'].':00 - '.($i['time']+1).':00';
             // $temp['date'] = $temp['date'].' '.$temp['time'];
+            $temp['nrp'] = substr($i['applicant']['email'],0,9);
             $temp['name'] = $i['applicant']['name'];
             $temp['priorityDivision1'] = $i['applicant']['priority_division1']['name'];
             $temp['priorityDivision2'] = $i['applicant']['priority_division2'] ? $i['applicant']['priority_division2']['name'] : '-';
@@ -180,6 +183,7 @@ class ScheduleController extends BaseController
             else if($i['time'] == 9) $temp['time'] = '0'.$i['time'].':00 - '.($i['time']+1).':00';
             else $temp['time'] = $i['time'].':00 - '.($i['time']+1).':00';
             // $temp['date'] = $temp['date'].' '.$temp['time'];
+            $temp['nrp'] = substr($i['applicant']['email'],0,9);
             $temp['name'] = $i['applicant']['name'];
             $temp['priorityDivision1'] = $i['applicant']['priority_division1']['name'];
             $temp['priorityDivision2'] = $i['applicant']['priority_division2'] ? $i['applicant']['priority_division2']['name'] : '-';
@@ -256,6 +260,7 @@ class ScheduleController extends BaseController
             else if($i['time'] == 9) $temp['time'] = '0'.$i['time'].':00 - '.($i['time']+1).':00';
             else $temp['time'] = $i['time'].':00 - '.($i['time']+1).':00';
             $temp['name'] = $i['applicant']['name'];
+            $temp['nrp'] = substr($i['applicant']['email'],0,9);
             $temp['priorityDivision1'] = $i['applicant']['priority_division1']['name'];
             $temp['priorityDivision2'] = $i['applicant']['priority_division2'] ? $i['applicant']['priority_division2']['name'] : '-';
             $temp['type'] = $i['type'];
