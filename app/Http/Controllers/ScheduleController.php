@@ -222,10 +222,13 @@ class ScheduleController extends BaseController
                 return response()->json(['success' => false, 'message' => "You already have an interview at that time and date"],500);
             }
             $new = $kidnapper->first()->id;
-            // update the new interview
-            $newData = $this->updatePartial(['status' => 2,'applicant_id' => $schedule->applicant_id, 'online' => $schedule->online, 'type' => $schedule->type],$new);
+            $applicant = $schedule->applicant_id;
+            $online = $schedule->online;
+            $type = $schedule->type;
             // update the old interview
             $this->updatePartial(['status' => 1,'applicant_id' => null, 'type' => 0],$schedule->id);
+            // update the new interview
+            $newData = $this->updatePartial(['status' => 2,'applicant_id' => $applicant, 'online' => $online, 'type' => $type],$new);
         }else{
             // create new interview
             $newData = $this->model->create([
