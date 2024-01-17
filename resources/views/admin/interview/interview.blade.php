@@ -49,7 +49,7 @@
             @isset($project)
             @foreach($project as $p)
                 <h3 class="text-2xl uppercase font-bold">Project Department {{ $p['name'] }}:</h3>
-                <p class="text-md mb-3">{{ $p['project'] }}</p>
+                <p class="text-md mb-3">{!! $p['project'] !!}</p>
             @endforeach
             @endisset
         </div>
