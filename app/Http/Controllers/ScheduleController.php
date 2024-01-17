@@ -215,11 +215,10 @@ class ScheduleController extends BaseController
         $date = $schedule->date_id;
         $time = $schedule->time;
 
-        $kidnapper = $this->model->where(['date_id' => $date, 'time' => $time, 'admin_id' => session('admin')])->get();
-
+        $kidnapper = $this->model->where(['date_id' => $date, 'time' => $time, 'admin_id' => session('admin_id')])->get();
         if($kidnapper->count() > 0){
             if($kidnapper->first()->status == 2){
-                return response()->json(['success' => false, 'message' => "You already have an interview at that time and date"],500);
+                return response()->json(['success' => false, 'message' => "You already have an interview at that time and date"],203);
             }
             $new = $kidnapper->first()->id;
             $applicant = $schedule->applicant_id;
