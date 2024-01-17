@@ -53,7 +53,7 @@
                                 $imgSrc = asset('storage/uploads/' . strtolower($type) . '/' . data_get($applicant['documents'], strtolower($type)));
                             }
                         @endphp
-                        <img src="{{ $imgSrc }}" alt="KTM"
+                        <img src="{{ $imgSrc }}" alt="{{ $label }}"
                             class="{{ $applicant['documents'] && array_key_exists(strtolower($type), $applicant['documents']) ? '' : 'hidden' }} max-h-[400px]">
                     </div>
                 </div>
