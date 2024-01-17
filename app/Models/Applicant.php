@@ -299,7 +299,7 @@ class Applicant extends Model
     {
         return Pdf::loadView(
             'pdf.applicant_cv',
-            ['applicant' => $this->toArray()]
+            ['applicant' => $this]
         );
     }
 }

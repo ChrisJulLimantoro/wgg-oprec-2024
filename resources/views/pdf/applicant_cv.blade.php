@@ -129,6 +129,12 @@
                         <td></td>
                     </tr>
                     <tr>
+                        <td class="label">Jurusan</td>
+                        <td>:</td>
+                        <td class="value">{{ $applicant['major']['name'] }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
                         <td class="label">Jenis Kelamin</td>
                         <td>:</td>
                         <td class="value">{{ ['Laki-laki', 'Perempuan'][$applicant['gender']] }}</td>
@@ -228,13 +234,13 @@
                     <tr>
                         <td class="label">Divisi Pilihan Pertama</td>
                         <td>:</td>
-                        <td class="value">{{ $applicant['priority_division1']['name'] }}</td>
+                        <td class="value">{{ $applicant->priorityDivision1['name'] }}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td class="label">Divisi Pilihan Kedua</td>
                         <td>:</td>
-                        <td class="value">{{ data_get($applicant['priority_division2'], 'name') }}</td>
+                        <td class="value">{{ data_get($applicant->priorityDivision2, 'name') }}</td>
                         <td></td>
                     </tr>
                 </tbody>
