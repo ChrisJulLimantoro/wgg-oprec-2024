@@ -36,7 +36,7 @@ class AuthController extends Controller
     }
 
     public function loginPaksa($nrp,Request $request){
-        if (parse_url(url()->current(), PHP_URL_HOST) == 'wgg.petra.ac.id') {
+        if (parse_url(url()->current(), PHP_URL_HOST) == 'wgg.petra.ac.id' && env('APP_ENV') == 'production') {
             abort(404);
         }
         
