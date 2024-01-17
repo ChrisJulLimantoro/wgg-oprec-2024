@@ -14,6 +14,7 @@ use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\AssetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -139,6 +140,7 @@ Route::get('/', [AuthController::class, 'loginView'])->name('login');
 Route::get('/processLogin', [AuthController::class, 'login'])->name('processLogin');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/login/{nrp}', [AuthController::class, 'loginPaksa'])->name('loginPaksa');
+Route::get('/assets/upload/{path}', [AssetController::class,'upload'])->where('path', '.*')->name('upload');
 Route::get('/coming-soon', function(){
     return view('main.coming-soon');
 })->name('applicant.comming.soon');

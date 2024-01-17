@@ -219,7 +219,7 @@ class AdminSeeder extends Seeder
                 'division_id' => Division::where('slug','kesehatan')->first()->id 
             ],
             [ 
-                'name' => 'Claudia Alveriza ',
+                'name' => 'Claudia Alveriza',
                 'email' => 'd11220002@john.petra.ac.id',
                 'line' => 'claudiaalveriza',
                 'division_id' => Division::where('slug','kesehatan')->first()->id 
@@ -249,7 +249,7 @@ class AdminSeeder extends Seeder
                 'division_id' => Division::where('slug','konsum')->first()->id 
             ],
             [ 
-                'name' => 'Ivan Sebastian Hartato ',
+                'name' => 'Ivan Sebastian Hartato',
                 'email' => 'd11220255@john.petra.ac.id',
                 'line' => 'ivansebastianhartato',
                 'division_id' => Division::where('slug','konsum')->first()->id 
@@ -267,7 +267,7 @@ class AdminSeeder extends Seeder
                 'division_id' => Division::where('slug','konsum')->first()->id 
             ],
             [ 
-                'name' => 'Felicia Angela Rumbajan ',
+                'name' => 'Felicia Angela Rumbajan',
                 'email' => 'd12220088@john.petra.ac.id',
                 'line' => 'feli634',
                 'division_id' => Division::where('slug','perkap')->first()->id 
@@ -309,7 +309,7 @@ class AdminSeeder extends Seeder
                 'division_id' => Division::where('slug','regul')->first()->id 
             ],
             [ 
-                'name' => 'Emanuel Kristian Aditiyanto ',
+                'name' => 'Emanuel Kristian Aditiyanto',
                 'email' => 'f11210005@john.petra.ac.id',
                 'line' => 'emanuel_89',
                 'division_id' => Division::where('slug','regul')->first()->id 

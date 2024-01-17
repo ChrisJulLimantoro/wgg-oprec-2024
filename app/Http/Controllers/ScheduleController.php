@@ -77,7 +77,7 @@ class ScheduleController extends BaseController
             $request->merge(['status' => $status]);
             $request->merge(['online' => $data['online']]);
             $store = $this->store($request);
-            if(isset($store['error'])) return response()->json(['success' => false, 'message' => 'Gagal mengubah jadwal'],500);
+            if(isset($store['error'])) return response()->json(['success' => false, 'message' => $store['message']],203);
             return response()->json(['success' => true, 'message' => 'Berhasil mengubah jadwal'],200);
         }
     }
@@ -215,17 +215,19 @@ class ScheduleController extends BaseController
         $date = $schedule->date_id;
         $time = $schedule->time;
 
-        $kidnapper = $this->model->where(['date_id' => $date, 'time' => $time, 'admin_id' => session('admin')])->get();
-
+        $kidnapper = $this->model->where(['date_id' => $date, 'time' => $time, 'admin_id' => session('admin_id')])->get();
         if($kidnapper->count() > 0){
             if($kidnapper->first()->status == 2){
-                return response()->json(['success' => false, 'message' => "You already have an interview at that time and date"],500);
+                return response()->json(['success' => false, 'message' => "You already have an interview at that time and date"],203);
             }
             $new = $kidnapper->first()->id;
-            // update the new interview
-            $newData = $this->updatePartial(['status' => 2,'applicant_id' => $schedule->applicant_id, 'online' => $schedule->online, 'type' => $schedule->type],$new);
+            $applicant = $schedule->applicant_id;
+            $online = $schedule->online;
+            $type = $schedule->type;
             // update the old interview
             $this->updatePartial(['status' => 1,'applicant_id' => null, 'type' => 0],$schedule->id);
+            // update the new interview
+            $newData = $this->updatePartial(['status' => 2,'applicant_id' => $applicant, 'online' => $online, 'type' => $type],$new);
         }else{
             // create new interview
             $newData = $this->model->create([

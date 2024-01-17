@@ -70,7 +70,7 @@
                             @if ($read_only)
                                 <option value="{{ $schedules[0]['time'] }}" selected>
                                     {{ str_pad(strval($schedules[0]['time']), 2, '0', STR_PAD_LEFT) }}:00 -
-                                    {{ str_pad(strval($schedules[0]['time'] + 1), 2, '0', STR_PAD_LEFT) }}:00
+                                    {{ str_pad(strval(intval($schedules[0]['time']) + 1), 2, '0', STR_PAD_LEFT) }}:00
                                 </option>
                             @endif
                         </select>
@@ -133,7 +133,7 @@
                                 @if ($read_only)
                                     <option value="{{ $schedules[1]['time'] }}" selected>
                                         {{ str_pad(strval($schedules[1]['time']), 2, '0', STR_PAD_LEFT) }}:00 -
-                                        {{ str_pad(strval($schedules[1]['time'] + 1), 2, '0', STR_PAD_LEFT) }}:00
+                                        {{ str_pad(strval(intval($schedules[1]['time']) + 1), 2, '0', STR_PAD_LEFT) }}:00
                                     </option>
                                 @endif
                             </select>
@@ -169,11 +169,16 @@
 
 @section('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(async function() {
             $('form[data-te-validation-init]').attr('data-te-validated', true);
             $('select[data-te-input-state-active] ~ div').attr('data-te-input-state-active', true);
 
             let order = 0
+            order = 1
+            await getData($("#date_1").val(), $("#online_1").val(), $("#division_1").val())
+            order = 2
+            await getData($("#date_2").val(), $("#online_2").val(), $("#division_2").val())
+            order = 0
 
             $("#date_1, #date_2").on("change", function() {
                 order = $(this).attr("id") === "date_1" ? 1 : 2
@@ -219,21 +224,14 @@
                         response.data.map((t) => {
                             $("#time_" + order).append(
                                 `<option value='` + t + `'>` +
-                                t.toString().padStart(2, '0') + ':00 - ' + (t + 1)
+                                t.toString().padStart(2, '0') + ':00 - ' +  (parseInt(t) + 1)
                                 .toString().padStart(2, '0') + ':00' +
                                 "</option>"
                             )
                         })
                     }
                 });
-                Swal.hideLoading();
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: 'Jadwal berhasil diambil',
-                    showConfirmButton: false,
-                    timer: 800
-                });
+                Swal.close();
             }
 
             //confirm reschedule

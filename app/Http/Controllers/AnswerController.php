@@ -97,6 +97,7 @@ class AnswerController extends BaseController
             $answers = $applicant['answers'];
             
             $data['part'] = $part[$page];
+            $data['questions'] = [];
             foreach($questions[$page] as $q){
                 $q['answered'] = false;
                 foreach($answers as $answer){

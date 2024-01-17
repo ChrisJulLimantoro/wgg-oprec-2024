@@ -252,6 +252,26 @@
                                     showConfirmButton: false,
                                     timer: 500
                                 })
+                                let idBaru = id.split(':')[0]+':'+id.split(':')[1]+':'+id.split(':')[2]+':'+statusBaru+":"+online;
+                                // console.log(d, id, idBaru);
+                                if(statusBaru == 1){
+                                    // console.log($("#time:" + date + ":" + time + ":" + status).attr('id'));
+                                    item.removeClass('bg-red-500');
+                                    item.removeClass('bg-yellow-500');
+                                    item.removeClass('bg-green-500');
+                                    if(online == 1){
+                                        item.addClass('bg-yellow-500');
+                                    }else{
+                                        item.addClass('bg-green-500');
+                                    }
+                                    item.attr('id',idBaru);
+                                }else{
+                                    // console.log($(this).attr('id'));
+                                    item.removeClass('bg-yellow-500');
+                                    item.removeClass('bg-green-500');
+                                    item.addClass('bg-red-500');
+                                    item.attr('id',idBaru);
+                                }
                             }else{
                                 Swal.fire({
                                     icon: 'error',
@@ -260,26 +280,6 @@
                                     showConfirmButton: false,
                                     timer: 1000
                                 })
-                            }
-                            let idBaru = id.split(':')[0]+':'+id.split(':')[1]+':'+id.split(':')[2]+':'+statusBaru+":"+online;
-                            // console.log(d, id, idBaru);
-                            if(statusBaru == 1){
-                                // console.log($("#time:" + date + ":" + time + ":" + status).attr('id'));
-                                item.removeClass('bg-red-500');
-                                item.removeClass('bg-yellow-500');
-                                item.removeClass('bg-green-500');
-                                if(online == 1){
-                                    item.addClass('bg-yellow-500');
-                                }else{
-                                    item.addClass('bg-green-500');
-                                }
-                                item.attr('id',idBaru);
-                            }else{
-                                // console.log($(this).attr('id'));
-                                item.removeClass('bg-yellow-500');
-                                item.removeClass('bg-green-500');
-                                item.addClass('bg-red-500');
-                                item.attr('id',idBaru);
                             }
                         }
                     });

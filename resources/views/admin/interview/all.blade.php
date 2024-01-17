@@ -266,40 +266,34 @@
                     })
                     return;
                 }else{
-                    let success = await $.ajax({
+                    await $.ajax({
                         url : "{{ route('admin.interview.kidnap') }}",
                         method : "POST",
                         data : {
                             schedule_id : schedule_id,
                             _token : "{{ csrf_token() }}"
                         },
-                        success : function(data){
-                            console.log(data);
+                        success : async function(data){
                             if(data.success){
-                                return true;
+                                await Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'Interview kidnapped',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                location.reload();
                             }else{
-                                return false;
+                                await Swal.fire({
+                                    icon: 'error',
+                                    title: 'Failed',
+                                    text: data.message ? data.message : 'Something went wrong',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
                             }
                         }
                     });
-                    if(success){
-                        await Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Interview kidnapped',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        location.reload();
-                    }else{
-                        await Swal.fire({
-                            icon: 'error',
-                            title: 'Failed',
-                            text: 'Interview kidnap failed',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                    }
                 }
             })
         })

@@ -77,7 +77,7 @@ class BaseController extends Controller
 
         $valid = Validator::make($requestFillable, $this->model->validationRules(), $this->model->validationMessages());
         if($valid->fails()){
-            return ['error' => $valid->errors()];
+            return ['error' => $valid->errors(), 'message' => $valid->errors()->first()];
         }
 
         return $this->model->create($requestFillable);

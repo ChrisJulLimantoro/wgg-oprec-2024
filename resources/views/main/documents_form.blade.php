@@ -51,7 +51,7 @@
                         @php
                             $imgSrc = '';
                             if ($applicant['documents'] && array_key_exists(strtolower($type), $applicant['documents'])) {
-                                $imgSrc = asset('storage/uploads/' . strtolower($type) . '/' . data_get($applicant['documents'], strtolower($type)));
+                                $imgSrc = route('upload', ['path' => strtolower($type) . '/' . data_get($applicant['documents'], strtolower($type))]);
                             }
                         @endphp
                         <img src="{{ $imgSrc }}" alt="{{ $label }}"
