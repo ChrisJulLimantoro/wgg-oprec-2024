@@ -13,6 +13,8 @@ class ApplicationRequest extends FormRequest
     private const NON_UPDATABLE_FIELDS = [
         'name',
         'email',
+        'major_id',
+        'gpa',
         'motivation',
         'commitment',
         'strength',

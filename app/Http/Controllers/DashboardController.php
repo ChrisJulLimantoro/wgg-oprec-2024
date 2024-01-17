@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Division;
 use App\Models\Applicant;
 use App\Models\Answer;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -18,8 +19,9 @@ class DashboardController extends Controller
         return view('admin.dashboard', $data);
     }
 
-    public function getData(string $id)
+    public function getData(Request $request)
     {
+        $id = $request->id;
         if ($id == 'all') {
             for ($i = 1; $i < 4; $i++) {
                 $data[] = Applicant::where('stage', '>=', $i)->get()->count();

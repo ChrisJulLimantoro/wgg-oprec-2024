@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Applicant;
 use App\Models\Division;
+use App\Models\Major;
 
 class ApplicantSeeder extends Seeder
 {
@@ -23,6 +24,7 @@ class ApplicantSeeder extends Seeder
             [
                 'name' => 'Leonardo Nickholas',
                 'email' => 'c14210206@john.petra.ac.id',
+                'major_id' => Major::where('name', 'SISTEM INFORMASI BISNIS')->first()->id,
                 'gender' => 0,
                 'religion' => 'Kristen',
                 'birthplace' => 'Surabaya',
@@ -44,14 +46,15 @@ class ApplicantSeeder extends Seeder
                 'diet' => 'Tidak ada',
                 'allergy' => 'Tidak ada',
                 'astor' => 0,
-                'priority_division1' => Division::where('slug','it')->first()->id,
-                'priority_division2' => Division::where('slug','acara')->first()->id,
+                'priority_division1' => Division::where('slug', 'it')->first()->id,
+                'priority_division2' => Division::where('slug', 'acara')->first()->id,
                 'division_accepted' => null,
                 'stage' => 4,
             ],
             [
                 'name' => 'Nicholas Gunawan',
                 'email' => 'c14210098@john.petra.ac.id',
+                'major_id' => Major::where('name', 'DATA SCIENCE AND ANALYTICS')->first()->id,
                 'gender' => 0,
                 'religion' => 'Kristen',
                 'birthplace' => 'Surabaya',
@@ -81,6 +84,7 @@ class ApplicantSeeder extends Seeder
             [
                 'name' => 'Ella Arminta',
                 'email' => 'c14210109@john.petra.ac.id',
+                'major_id' => Major::where('name', 'SISTEM INFORMASI BISNIS')->first()->id,
                 'gender' => 0,
                 'religion' => 'Kristen',
                 'birthplace' => 'Surabaya',
@@ -102,13 +106,13 @@ class ApplicantSeeder extends Seeder
                 'diet' => 'Tidak ada',
                 'allergy' => 'Tidak ada',
                 'astor' => 0,
-                'priority_division1' => Division::where('slug','perkap')->first()->id,
-                'priority_division2' => Division::where('slug','acara')->first()->id,
+                'priority_division1' => Division::where('slug','acara')->first()->id,
+                'priority_division2' => Division::where('slug','konsum')->first()->id,
                 'division_accepted' => null,
                 'stage' => 4
             ],
         ];
-        foreach($applicants as $applicant){
+        foreach ($applicants as $applicant) {
             Applicant::create($applicant);
         }
     }

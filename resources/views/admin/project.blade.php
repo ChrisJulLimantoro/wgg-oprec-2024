@@ -104,19 +104,24 @@
         });
     </script>
     <script>
-        const cke = ClassicEditor
-            .create(document.querySelector('#editor'), {
-                removePlugins: ['BlockQuote', 'EasyImage',
-                    'ImageUpload', 'MediaEmbed', 'TableToolbar', 'Table', 'Indent', 'Heading'
-                ],
-            })
-            .catch(error => {
-                console.error(error);
-            });
-        @if ($division)
-            cke.then(editor => {
-                editor.setData(`{!! $division['project'] !!}`);
-            });
-        @endif
+        function initializeCKE(el) {
+            if (!el) return;
+            const cke = ClassicEditor
+                .create(el, {
+                    removePlugins: ['BlockQuote', 'EasyImage',
+                        'ImageUpload', 'MediaEmbed', 'TableToolbar', 'Table', 'Indent', 'Heading'
+                    ],
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+            @if ($division)
+                cke.then(editor => {
+                    editor.setData(`{!! $division['project'] !!}`);
+                });
+            @endif
+        }
+
+        initializeCKE(document.querySelector('#editor'));
     </script>
 @endsection
