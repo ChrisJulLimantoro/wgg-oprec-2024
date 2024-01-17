@@ -39,13 +39,21 @@
         <div class="flex w-full flex-wrap items-center justify-between px-2 md:px-5">
 
             <!-- Collapsible navigation container -->
-            <div class="flex-grow items-center lg:!flex lg:basis-auto" id="navbarSupportedContent1"
+            <div class="flex-grow items-center lg:!flex lg:basis-auto gap-5" id="navbarSupportedContent1"
                 data-te-collapse-item>
                 <!-- Logo -->
                 <a class="mb-2 ml-2 mr-5 mt-1 flex items-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:mb-0 lg:mt-0"
                     href="#">
                     <img src="{{ asset('assets/wgg.png') }}" style="height: 36px" alt="WGG Logo" loading="lazy" />
                 </a>
+                @if (Session::has('isAdmin') && session('isAdmin'))
+                    <ul class="list-style-none mr-auto flex flex-col pl-0 lg:flex-row" data-te-navbar-nav-ref>
+                        <li class="mb-4 lg:mb-0 lg:pr-2" data-te-nav-item-ref>
+                            <a class="text-neutral-600 transition duration-200 hover:text-neutral-800 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
+                                href="{{ route('admin.dashboard') }}" data-te-nav-link-ref>Admin Page</a>
+                        </li>
+                    </ul>
+                @endif
             </div>
 
             <!-- Right elements -->
