@@ -122,6 +122,8 @@ class AnswerController extends BaseController
             foreach($divisions as $d){
                 if($d['project'] == null){
                     $data['project'][] = ['name' => $d['name'],'project' => 'No Project'];
+                }else{
+                    $data['project'][] = ['name' => $d['name'],'project' => $d['project']];
                 }
             }
             
