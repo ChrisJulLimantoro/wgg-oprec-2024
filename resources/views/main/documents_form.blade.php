@@ -6,8 +6,9 @@
     <div class="text-center">
         <h1 class="text-3xl font-bold mb-2">Berkas Pendaftar</h1>
         <div class="text-danger">
-            Hanya bisa mengupload satu kali. Pastikan berkas sudah benar sebelum menekan tombol UPLOAD
+            Hanya bisa mengupload satu kali. Pastikan berkas sudah benar sebelum menekan tombol UPLOAD.
         </div>
+        <div class="text-danger">Besar file maksimal 5mb.</div>
     </div>
     <section class="max-w-[940px] mx-auto pt-3 pb-16">
         <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->
@@ -53,7 +54,7 @@
                                 $imgSrc = route('upload', ['path' => strtolower($type) . '/' . data_get($applicant['documents'], strtolower($type))]);
                             }
                         @endphp
-                        <img src="{{ $imgSrc }}" alt="KTM"
+                        <img src="{{ $imgSrc }}" alt="{{ $label }}"
                             class="{{ $applicant['documents'] && array_key_exists(strtolower($type), $applicant['documents']) ? '' : 'hidden' }} max-h-[400px]">
                     </div>
                 </div>
@@ -124,6 +125,9 @@
                     }
 
                     Swal.fire(config);
+
+                    $(this).children('input').attr('disabled', true);
+                    $(this).children('button').attr('disabled', true);
                 }).fail((e) => {
                     const errors = e.responseJSON.errors;
                     if (Object.keys(errors).length > 1) {

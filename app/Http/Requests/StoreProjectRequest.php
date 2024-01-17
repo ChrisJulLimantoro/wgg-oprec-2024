@@ -42,7 +42,7 @@ class StoreProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'project' => 'nullable|string',
+            'project' => 'nullable|string|url:https,http',
         ];
     }
 }
