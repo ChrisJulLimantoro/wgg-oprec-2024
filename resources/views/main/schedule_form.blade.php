@@ -22,7 +22,8 @@
                     {{ strtoupper($applicant['priority_division1']['slug']) . ($applicant['priority_division2'] && !$double_interview ? ' & ' . strtoupper($applicant['priority_division2']['slug']) : '') }}
                 </p>
 
-                <div class="grid {{ $read_only && $reschedule[0] ? 'sm:grid-cols-5' : ($read_only ? 'sm:grid-cols-4' : 'sm:grid-cols-3') }} sm:gap-4 mb-4">
+                <div
+                    class="grid {{ $read_only && $reschedule[0] ? 'sm:grid-cols-5' : ($read_only ? 'sm:grid-cols-4' : 'sm:grid-cols-3') }} sm:gap-4 mb-4">
                     <div data-te-validate="input" class="mb-4"
                         @error('date_id') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                         @error('date_id.0') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
@@ -173,12 +174,14 @@
             $('form[data-te-validation-init]').attr('data-te-validated', true);
             $('select[data-te-input-state-active] ~ div').attr('data-te-input-state-active', true);
 
-            let order = 0
-            order = 1
-            await getData($("#date_1").val(), $("#online_1").val(), $("#division_1").val())
-            order = 2
-            await getData($("#date_2").val(), $("#online_2").val(), $("#division_2").val())
-            order = 0
+            @if (!$read_only)
+                let order = 0
+                order = 1
+                await getData($("#date_1").val(), $("#online_1").val(), $("#division_1").val())
+                order = 2
+                await getData($("#date_2").val(), $("#online_2").val(), $("#division_2").val())
+                order = 0
+            @endif
 
             $("#date_1, #date_2").on("change", function() {
                 order = $(this).attr("id") === "date_1" ? 1 : 2
@@ -224,7 +227,8 @@
                         response.data.map((t) => {
                             $("#time_" + order).append(
                                 `<option value='` + t + `'>` +
-                                t.toString().padStart(2, '0') + ':00 - ' +  (parseInt(t) + 1)
+                                t.toString().padStart(2, '0') + ':00 - ' + (
+                                    parseInt(t) + 1)
                                 .toString().padStart(2, '0') + ':00' +
                                 "</option>"
                             )

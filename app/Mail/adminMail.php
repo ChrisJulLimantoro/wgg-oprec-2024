@@ -3,12 +3,13 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class scheduleMail extends Mailable
+class adminMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -28,7 +29,7 @@ class scheduleMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Interview Schedule - Open Recruitment WGG 2024',
+            subject: 'New Interview Scheduled - Oprec WGG 2024',
         );
     }
 
@@ -38,7 +39,7 @@ class scheduleMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.interview_schedule',
+            markdown: 'mail.admin_notification',
         );
     }
 

@@ -56,7 +56,7 @@ class AuthController extends Controller
             if($applicant->count() > 0){
                 $request->session()->put('applicant_id',$applicant->first()->id);
             }
-            return redirect()->to(route('admin.dashboard'));
+            return redirect()->intended(route('admin.dashboard'));
         }else{
             $request->session()->put('isAdmin',false);
             // check if it is a applicant
@@ -101,7 +101,7 @@ class AuthController extends Controller
                         if($applicant->count() > 0){
                             $request->session()->put('applicant_id',$applicant->first()->id);
                         }
-                        return redirect()->to(route('admin.dashboard'));
+                        return redirect()->intended(route('admin.dashboard'));  
                     }else{
                         $request->session()->put('isAdmin',false);
                         // check if it is a applicant

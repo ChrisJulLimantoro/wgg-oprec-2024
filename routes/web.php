@@ -129,12 +129,15 @@ Route::prefix('admin')->middleware(['session', 'admin'])->group(function () {
     });
 });
 
-Route::get('interview-mail', function () {
-    $data['applicant'] = Applicant::with(['priorityDivision1', 'priorityDivision2'])->where('email', 'c14230006@john.petra.ac.id')->first()->toArray();
-    $data['schedules'] = Schedule::with(['admin', 'date'])->where('applicant_id', $data['applicant']['id'])->get()->toArray();
+// Route::get('interview-mail', function () {
+//     $data['applicant'] = Applicant::with(['priorityDivision1', 'priorityDivision2'])->where('email', 'c14230001@john.petra.ac.id')->first();
+//     $data['schedules'] = Schedule::with(['admin', 'date'])->where('applicant_id', $data['applicant']['id'])->first();
 
-    return view('mail.interview_schedule', ['data' => $data]);
-});
+//     // dd($data);
+
+//     return view('mail.reschedule_notification', ['data' => $data]);
+// });
+
 // login
 Route::get('/login', [AuthController::class, 'loginView'])->name('login');
 Route::get('/processLogin', [AuthController::class, 'login'])->name('processLogin');
