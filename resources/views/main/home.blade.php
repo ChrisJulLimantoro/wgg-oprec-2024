@@ -418,7 +418,9 @@
 
 </head>
 
-<body class="p-0 m-0 overflow-x-hidden bg-[#171838] h-screen font-asap select-none ">
+<body class="p-0 m-0 overflow-x-hidden bg-[#171838] h-screen font-asap select-none relative">
+    {{-- Baymax --}}
+    <img class="baymax absolute" id="baymax" src="{{ asset('assets/baymax.png') }}" alt="" style="z-index:1000; width:100px;">
 
     <!-- Landing -->
     <div class="w-full h-full"></div>
@@ -675,7 +677,7 @@
 
     <!-- Background -->
     <script>
-        console.clear();
+        // console.clear();
 
         function perlin() {
             return `
@@ -1503,6 +1505,66 @@
         window.addEventListener('resize', handleResize);
     </script>
 
+    {{-- Baymax Follow Mouse --}}
+    <script>
+        var follow = 0;
+        function startBaymaxFollow(){
+            if(follow == 0){
+                setInterval(followMouse, 30);
+                follow = 1;
+            }else{
+                return;
+            }
+
+        }
+        var baymax = document.querySelector("#baymax");
+        document.addEventListener("mousemove", async function(e){
+            await getMouse(e);
+            // console.log(mouse.x,mouse.y,e.pageX,e.pageY,window.innerHeight)
+        }); 
+        
+        baymax.style.position = "absolute"; //css		
+        var baymaxpos = {x:0, y:0};
+        
+        var mouse = {x:0, y:0}; //mouse.x, mouse.y
+        
+        var dir = "right";
+        function getMouse(e){
+            mouse.x = e.pageX;
+            mouse.y = e.pageY;
+            //Checking directional change
+            if(mouse.x > baymaxpos.x){
+                dir = "right";
+            } else {
+            dir = "left";
+            }
+        }
+
+        function followMouse(){
+            //1. find distance X , distance Y
+            var distX = mouse.x - baymaxpos.x;
+            var distY = mouse.y - baymaxpos.y;
+            //Easing motion 
+            //Progressive reduction of distance 
+            baymaxpos.x += distX/5;
+            baymaxpos.y += distY/2;
+            
+            // baymax.style.left = baymaxpos.x + "px";
+            // baymax.style.top = baymaxpos.y + "px";
+
+            baymax.style.left = mouse.x + "px";
+            baymax.style.top = mouse.y + "px";
+            
+            //Apply css class 
+            if (dir == "right"){
+                baymax.setAttribute("class", "right");
+            } else {
+                baymax.setAttribute("class", "left");        
+            }
+            
+        }
+        startBaymaxFollow();
+        </script>
 </body>
 
 </html>
