@@ -27,7 +27,7 @@
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
     <!-- Vanilla tilt -->
-    <script type="text/javascript" src="../src/js/vanilla-tilt.js"></script>
+    <script type="text/javascript" src="{{ asset('assets/vanilla-tilt.js') }}"></script>
 
     <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
@@ -624,19 +624,19 @@
                 <ul>
                     <li>
                         <span class="timeline-point"></span>
-                        <p class="text-lg sm:text-xl">Isi Data Diri</p>
+                        <p class="font-semibold text-lg sm:text-xl">Isi Data Diri</p>
                     </li>
                     <li>
                         <span class="timeline-point"></span>
-                        <p class="text-lg sm:text-xl">Upload Berkas</p>
+                        <p class="font-semibold text-lg sm:text-xl">Upload Berkas</p>
                     </li>
                     <li>
                         <span class="timeline-point"></span>
-                        <p class="text-lg sm:text-xl">Melakukan Interview</p>
+                        <p class="font-semibold text-lg sm:text-xl">Melakukan Interview</p>
                     </li>
                     <li>
                         <span class="timeline-point"></span>
-                        <p class="text-lg sm:text-xl">Submit Project</p>
+                        <p class="font-semibold text-lg sm:text-xl">Submit Project</p>
                     </li>
                 </ul>
             </div>
@@ -645,9 +645,12 @@
 
     <div class="w-screen flex relative z-10 p-6 mt-18 2xl:mt-10">
         <div class="mx-auto text-center ">
-            <a href="{{ route('login') }}"
-                class="button text-white shadow-xl rounded-full bg-indigo-600 py-4 px-8 text-md hover:bg-violet-600 gs_reveal gs_reveal_fromBottom">Join
-                Now!</a>
+            <a href="{{ route('login') }}">
+                <button
+                    class="uppercase text-white bg-indigo-600 hover:bg-pink-600 py-4 px-16 xl:px-32 text-lg xl:text-2xl font-bold rounded-full transform transition-all duration-500 ease-in-out hover:scale-110">
+                    JOIN NOW!
+                </button>
+            </a>
         </div>
     </div>
 
