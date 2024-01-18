@@ -73,7 +73,10 @@
 
 </head>
 
-<body class="p-0 m-0 overflow-hidden h-screen font-asap ">
+<body class="p-0 m-0 overflow-hidden h-screen font-asap relative">
+    
+    {{-- Baymax --}}
+    <img class="baymax absolute" id="baymax" src="{{ asset('assets/baymax-touch.png') }}" alt="" style="z-index:1000; width:125px;">
     <div class="w-full h-full"></div>
     <div class="w-full h-1/4"></div>
     <div class="container absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mx-auto text-center flex flex-col justify-center"
@@ -587,7 +590,88 @@
 
         update();
     </script>
+    {{-- Script for Baymax --}}
+    <script>
+        var follow = 0;
+        function startBaymaxFollow(){
+            if(follow == 0){
+                setInterval(followMouse, 30);
+                follow = 1;
+            }else{
+                return;
+            }
 
+        }
+        var baymax = document.querySelector("#baymax");
+        document.addEventListener("mousemove", async function(e){
+            await getMouse(e);
+        }); 
+        document.addEventListener("touchmove", async function(e){
+            await getMouse(e);
+        });
+
+        document.addEventListener('click', function(){
+            changeBaymaxSrc()
+        })
+        
+        baymax.style.position = "absolute"; //css		
+        var baymaxpos = {x:0, y:0};
+        
+        var mouse = {x:0, y:0}; //mouse.x, mouse.y
+        
+        var dir = "right";
+        function getMouse(e){
+            mouse.x = e.pageX;
+            mouse.y = e.pageY;
+            //Checking directional change
+            if(mouse.x > baymaxpos.x){
+                dir = "right";
+            } else {
+                dir = "left";
+            }
+        }
+
+        function followMouse(){
+            //1. find distance X , distance Y
+            var distX = mouse.x - baymaxpos.x;
+            var distY = mouse.y - baymaxpos.y;
+            //Easing motion 
+            //Progressive reduction of distance 
+            baymaxpos.x += distX/5;
+            baymaxpos.y += distY/2;
+            
+            // baymax.style.left = baymaxpos.x + "px";
+            // baymax.style.top = baymaxpos.y + "px";
+
+            baymax.style.left = (mouse.x + 10) + "px";
+            baymax.style.top = (mouse.y + 10) + "px";
+            
+            //Apply css class 
+            if (dir == "right"){
+                baymax.setAttribute("class", "right");
+                // changeBaymaxSrc(0)
+            } else {
+                baymax.setAttribute("class", "left");     
+                // changeBaymaxSrc(1)   
+            }
+            
+        }
+
+        var source = {
+            0 : "{{ asset('assets/baymax.png') }}",
+            1 : "{{ asset('assets/baymax-touch.png') }}",
+        }
+        let now = 1
+        function changeBaymaxSrc(){
+            if(now == 0){
+                now = 1
+            }else{
+                now = 0
+            }
+            baymax.src = source[now]
+        }
+        startBaymaxFollow();
+        </script>
     @yield('script')
 
 </body>
