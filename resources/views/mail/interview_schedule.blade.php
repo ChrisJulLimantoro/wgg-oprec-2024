@@ -97,7 +97,7 @@
 
         <div class="closing">
             <p>Good luck!</p>
-            <p>If you have any questions, you may contact <b>@wgg.pcu</b> on IG</p>
+            <p>If you have any questions, you may contact our LINE Official Acount <b>@328readn</b></p>
             <p>Best Regards, WGG 2024 Committee</p>
         </div>
     </div>
