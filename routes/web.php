@@ -27,7 +27,7 @@ use App\Http\Controllers\AssetController;
 |
 */
 
-Route::prefix('main')->middleware(['session','applicant'])->group(function () {
+Route::prefix('main')->middleware(['session', 'applicant'])->group(function () {
     Route::get('application-form', [ApplicantController::class, 'applicationForm'])->name('applicant.application-form');
     Route::post('store-application', [ApplicantController::class, 'storeApplication'])->name('applicant.application.store');
     Route::patch('update-application/{id}', [ApplicantController::class, 'updateApplication'])->name('applicant.application.update');
@@ -55,13 +55,13 @@ Route::prefix('main')->middleware(['session','applicant'])->group(function () {
         ->where('selected_priority', '[1-2]');
 });
 
-Route::prefix('admin')->middleware(['session','admin'])->group( function () {
+Route::prefix('admin')->middleware(['session', 'admin'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::post('/realtime', [DashboardController::class, 'getData'])->name('admin.dashboard.getData');
 
-    Route::prefix('meeting-spot')->group(function(){
+    Route::prefix('meeting-spot')->group(function () {
         Route::get('/', [AdminController::class, 'meetingSpot'])->name('admin.meeting-spot');
-        Route::patch('/{admin}',[AdminController::class, 'updateMeetSpot'])->name('admin.meeting-spot.update');
+        Route::patch('/{admin}', [AdminController::class, 'updateMeetSpot'])->name('admin.meeting-spot.update');
     });
 
     // Dates
@@ -88,7 +88,7 @@ Route::prefix('admin')->middleware(['session','admin'])->group( function () {
         Route::get('/', [ScheduleController::class, 'divisionInterview'])->name('admin.interview');
         Route::post('/division', [ScheduleController::class, 'scheduleDivision'])->name('admin.interview.division');
         Route::get('/my', [ScheduleController::class, 'myInterview'])->name('admin.interview.my');
-        Route::post('/kidnap',[ScheduleController::class, 'kidnap'])->name('admin.interview.kidnap');
+        Route::post('/kidnap', [ScheduleController::class, 'kidnap'])->name('admin.interview.kidnap');
         Route::get('/reschedule', [ScheduleController::class, 'myReschedule'])->name('admin.interview.my-reschedule');
         Route::post('/reschedule', [ScheduleController::class, 'reschedule'])->name('admin.interview.reschedule');
         Route::get('/{schedule_id}', [AnswerController::class, 'getQuestion'])->name('admin.interview.start');
@@ -101,7 +101,7 @@ Route::prefix('admin')->middleware(['session','admin'])->group( function () {
     });
 
     // tolak terima
-    Route::prefix('tolak-terima')->group(function(){
+    Route::prefix('tolak-terima')->group(function () {
         Route::get('/', [ApplicantController::class, 'tolakTerima'])->name('admin.tolak-terima');
         Route::get('/culikAnak', [ApplicantController::class, 'culikAnak'])->name('admin.tolak-terima.culikAnak');
         Route::get('/accepted', [ApplicantController::class, 'getAccepted'])->name('admin.tolak-terima.accepted');
@@ -109,7 +109,6 @@ Route::prefix('admin')->middleware(['session','admin'])->group( function () {
         Route::post('/terima', [ApplicantController::class, 'terima'])->name('admin.tolak-terima.terima');
         Route::post('/culik', [ApplicantController::class, 'culik'])->name('admin.tolak-terima.culik');
         Route::post('/cancel', [ApplicantController::class, 'cancel'])->name('admin.tolak-terima.cancel');
-
     });
 
     Route::prefix('answers')->group(function () {
@@ -123,8 +122,8 @@ Route::prefix('admin')->middleware(['session','admin'])->group( function () {
         });
 
     Route::get('/applicant-cv/{applicant}', [AdminController::class, 'applicantCV'])->name('admin.applicant.cv');
-    
-    Route::prefix('setting')->group(function(){
+
+    Route::prefix('setting')->group(function () {
         Route::get('/', [SettingController::class, 'index'])->name('admin.setting');
         Route::post('/update', [SettingController::class, 'settingUpdate'])->name('admin.setting.update');
     });
@@ -137,11 +136,16 @@ Route::get('interview-mail', function () {
     return view('mail.interview_schedule', ['data' => $data]);
 });
 // login
-Route::get('/', [AuthController::class, 'loginView'])->name('login');
+Route::get('/login', [AuthController::class, 'loginView'])->name('login');
 Route::get('/processLogin', [AuthController::class, 'login'])->name('processLogin');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/login/{nrp}', [AuthController::class, 'loginPaksa'])->name('loginPaksa');
-Route::get('/assets/upload/{path}', [AssetController::class,'upload'])->where('path', '.*')->name('upload');
-Route::get('/coming-soon', function(){
+Route::get('/assets/upload/{path}', [AssetController::class, 'upload'])->where('path', '.*')->name('upload');
+Route::get('/coming-soon', function () {
     return view('main.coming-soon');
 })->name('applicant.comming.soon');
+
+// Home
+Route::get('/', function () {
+    return view('main.home');
+});
