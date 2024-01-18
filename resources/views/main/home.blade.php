@@ -420,7 +420,7 @@
 
 <body class="p-0 m-0 overflow-x-hidden bg-[#171838] h-screen font-asap select-none relative">
     {{-- Baymax --}}
-    <img class="baymax absolute" id="baymax" src="{{ asset('assets/baymax.png') }}" alt="" style="z-index:1000; width:100px;">
+    <img class="baymax absolute" id="baymax" src="{{ asset('assets/baymax.png') }}" alt="" style="z-index:1000; width:125px;">
 
     <!-- Landing -->
     <div class="w-full h-full"></div>
@@ -1523,8 +1523,14 @@
         var baymax = document.querySelector("#baymax");
         document.addEventListener("mousemove", async function(e){
             await getMouse(e);
-            // console.log(mouse.x,mouse.y,e.pageX,e.pageY,window.innerHeight)
         }); 
+        document.addEventListener("touchmove", async function(e){
+            await getMouse(e);
+        });
+
+        document.addEventListener('click', function(){
+            changeBaymaxSrc()
+        })
         
         baymax.style.position = "absolute"; //css		
         var baymaxpos = {x:0, y:0};
@@ -1539,7 +1545,7 @@
             if(mouse.x > baymaxpos.x){
                 dir = "right";
             } else {
-            dir = "left";
+                dir = "left";
             }
         }
 
@@ -1555,16 +1561,32 @@
             // baymax.style.left = baymaxpos.x + "px";
             // baymax.style.top = baymaxpos.y + "px";
 
-            baymax.style.left = mouse.x + "px";
-            baymax.style.top = mouse.y + "px";
+            baymax.style.left = (mouse.x + 10) + "px";
+            baymax.style.top = (mouse.y + 10) + "px";
             
             //Apply css class 
             if (dir == "right"){
                 baymax.setAttribute("class", "right");
+                // changeBaymaxSrc(0)
             } else {
-                baymax.setAttribute("class", "left");        
+                baymax.setAttribute("class", "left");     
+                // changeBaymaxSrc(1)   
             }
             
+        }
+
+        var source = {
+            0 : "{{ asset('assets/baymax.png') }}",
+            1 : "{{ asset('assets/baymax-touch.png') }}",
+        }
+        let now = 0
+        function changeBaymaxSrc(){
+            if(now == 0){
+                now = 1
+            }else{
+                now = 0
+            }
+            baymax.src = source[now]
         }
         startBaymaxFollow();
         </script>
