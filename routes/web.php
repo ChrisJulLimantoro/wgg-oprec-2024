@@ -108,6 +108,7 @@ Route::prefix('admin')->middleware(['session','admin'])->group( function () {
         Route::post('/tolak', [ApplicantController::class, 'tolak'])->name('admin.tolak-terima.tolak');
         Route::post('/terima', [ApplicantController::class, 'terima'])->name('admin.tolak-terima.terima');
         Route::post('/culik', [ApplicantController::class, 'culik'])->name('admin.tolak-terima.culik');
+        Route::post('/cancel', [ApplicantController::class, 'cancel'])->name('admin.tolak-terima.cancel');
 
     });
 

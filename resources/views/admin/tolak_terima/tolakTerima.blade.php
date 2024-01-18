@@ -11,6 +11,15 @@
 </div>  
 
 <div class="flex flex-col w-full py-8 rounded-lg shadow-xl items-center justify-center mb-8">
+    <div class="relative px-5 flex w-full flex-wrap justify-end items-stretch">
+        <input
+            id="datatable-search-input"
+            type="search"
+            class="relative m-0 -mr-0.5 block min-w-0  rounded border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
+            placeholder="Search"
+            aria-label="Search"
+            aria-describedby="button-addon1" />
+      </div>
     <div id="datatable" class="w-full px-5 py-5"></div> 
 </div>
     
@@ -52,7 +61,7 @@
 
                         <a href="{{ route('admin.applicant.answer', '') }}/${item.id}" target="_blank"
                         type="button"
-                        class="btn-answer block rounded bg-danger px-6 pb-2 pt-2.5 text-xs text-center font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(220,76,100,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)]">
+                        class="btn-answer inline-block rounded bg-stone-600 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-stone-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] transition duration-150 ease-in-out hover:bg-stone-700 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-stone-700 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:outline-none focus:ring-0 active:bg-stone-800 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] dark:bg-stone-700 dark:shadow-[0_4px_9px_-4px_#030202] dark:hover:bg-stone-800 dark:hover:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:focus:bg-stone-800 dark:focus:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:active:bg-stone-700 dark:active:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)]">
                         Answer
                         </a>
                     `,
@@ -62,6 +71,10 @@
             },
             { hover: true }
             );
+
+            document.getElementById('datatable-search-input').addEventListener('input', (e) => {
+                table.search(e.target.value);
+            });
 
             $(document).on("click",".btn-terima",function(){
                 const index = $(this).data("te-index");
@@ -130,6 +143,58 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             url : "{{ route('admin.tolak-terima.tolak') }}",
+                            method : "POST",
+                            data : {
+                                _token : "{{ csrf_token() }}",
+                                id : applicant_id,
+                                priority : prirority
+                            },
+                            success : function(res){
+                                console.log(res);
+                                if(res.success){
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success',
+                                        text: res.message,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                    setTimeout(function(){
+                                        window.location.reload();
+                                    },1500)
+                                }else{
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: res.message,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                }
+                            }
+                        })
+
+                    }
+                })
+            })
+
+            $(document).on("click",".btn-cancel",function(){
+                const index = $(this).data("te-index");
+                const prirority = $(this).data("te-priority");
+                let applicant_id = data[index]['id'];
+                let status = $(this).parent().find('h1').text() == "Accepted" ? "menerima" : "menolak";
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Apakah anda yakin untuk batal "+ status +" di divisi " + data[index]['prioritas'+prirority] + "?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3b71ca',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url : "{{ route('admin.tolak-terima.cancel') }}",
                             method : "POST",
                             data : {
                                 _token : "{{ csrf_token() }}",
