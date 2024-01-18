@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\BaseController;
-use App\Models\Schedule;
-use App\Models\Date;
-use App\Models\Admin;
-use Exception;
-use Illuminate\Http\Request;
-use App\Http\Controllers\DateController;
-use App\Models\Applicant;
-use Carbon\Carbon;
-use App\Models\Division;
 use DateTime;
+use Exception;
+use Carbon\Carbon;
+use App\Models\Date;
+use App\Models\Division;
+use App\Models\Schedule;
+use App\Models\Applicant;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\BaseController;
+use App\Http\Controllers\DateController;
 
 class ScheduleController extends BaseController
 {
@@ -286,6 +286,8 @@ class ScheduleController extends BaseController
     }
 
     public function reschedule(Request $request){
+        DB::beginTransaction();
+
         try{
             $schedule = $this->model->findOrFail($request->schedule_id);
             $applicant_id = $schedule->applicant_id;
@@ -318,7 +320,7 @@ class ScheduleController extends BaseController
             }
             
             //create or update new schedule
-            $new_schedule = $this->model->where(['admin_id' => session('admin_id'), 'date_id' => $new_date_id, 'time' => $new_time])->first();
+            $new_schedule = $this->model->where(['admin_id' => session('admin_id'), 'date_id' => $new_date_id, 'time' => $new_time])->lockForUpdate()->first();
             
             //update new schedule
             if($new_schedule){         
@@ -350,9 +352,11 @@ class ScheduleController extends BaseController
             $schedule->save();
             
             $this->updateRescheduleStatus($applicant_id, $type, 2);
+            DB::commit();
             return redirect()->back()->with('success', 'Jadwal berhasil diubah');
 
         }catch(Exception $e){
+            DB::rollback();
             return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
         }
         

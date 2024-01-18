@@ -2,34 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\scheduleMail;
-use App\Models\Applicant;
+use App\Jobs\SendMailJob;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Http\Request;
+use Illuminate\Mail\Mailable;
 
 class MailController extends Controller
 {
+    public $mail;
 
-    public function __construct()
+    public function __construct(Mailable $mail)
     {
-        // $this->applicant = new Applicant();
+        $this->mail = $mail;
     }
 
-    public static function sendInterviewSchedule($data) {
-        // dd($data);
-        $mail = new scheduleMail($data);
+    public function determineTarget(string $email) {
+        return 'c14210017@john.petra.ac.id';
+        // return(env("APP_ENV") === "local" ? 'c14210017@john.petra.ac.id' : $email);
+    }
 
-        if (env("APP_ENV") === "local") {
-            $succ = Mail::to('c14210017@john.petra.ac.id')->send($mail);
-        }
-        else {
-            $succ = Mail::to($data['applicant']['email'])->send($mail);
-        }
-
-        if ($succ != null) {
-            return true;
-        } else {
-            return false;
-        }
+    public function sendMail($data) {
+        return Mail::to($this->determineTarget($data['applicant']->email))->send($this->mail);
     }
 }

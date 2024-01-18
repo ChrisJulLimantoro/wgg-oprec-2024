@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         html * {
-            font-family: 'Roboto', 'sans-serif';
+            font-family: 'system-ui', 'sans-serif';
             line-height: 1.5;
         }
 

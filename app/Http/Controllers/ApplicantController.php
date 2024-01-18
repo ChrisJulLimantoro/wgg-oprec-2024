@@ -4,11 +4,17 @@ namespace App\Http\Controllers;
 
 use Exception;
 use ErrorException;
+use App\Mail\adminMail;
+use App\Mail\scheduleMail;
+use App\Mail\rescheduleMail;
 use App\Models\Date;
 use App\Models\Admin;
+use App\Models\Major;
+use App\Models\Faculty;
 use App\Models\Setting;
 use App\Models\Division;
 use App\Models\Schedule;
+use App\Jobs\SendMailJob;
 use App\Models\Applicant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -22,8 +28,6 @@ use App\Http\Requests\ApplicationRequest;
 use App\Events\ApplicantDocumentsUploaded;
 use App\Http\Requests\PickScheduleRequest;
 use App\Http\Requests\StoreDocumentRequest;
-use App\Models\Faculty;
-use App\Models\Major;
 
 class ApplicantController extends BaseController
 {
@@ -302,32 +306,35 @@ class ApplicantController extends BaseController
                 $schedule->applicant_id = $applicant->id;
                 $schedule->save();
 
-                $data['schedules'][] = $schedule->load(['admin', 'date'])->toArray();
+                $data['schedules'][] = $schedule->load(['admin', 'date']);
             }
 
-            $data['applicant'] = $applicant->load(['priorityDivision1', 'priorityDivision2'])->toArray();
+            $data['applicant'] = $applicant->load(['priorityDivision1', 'priorityDivision2']);
 
             $emailSettings = Setting::where('key', 'Email')->first();
 
             // dd($emailSettings);
 
             if ($emailSettings->value === 1) {
-                $mailer = new MailController();
-                $emailed = $mailer->sendInterviewSchedule($data);
+                $userMailer = new MailController(new scheduleMail($data));
+                dispatch(new SendMailJob($userMailer, $data));
 
-                if ($emailed) {
-                    DB::commit();
-                    return redirect()->back()->with('success', 'Jadwal interview berhasil dipilih!');
-                } else {
-                    DB::rollback();
-                    return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
+                foreach ($data['schedules'] as $s) {
+                    $adminMailer = new MailController(new adminMail([
+                        'schedules' => $s,
+                        'applicant' => $data['applicant']
+                    ]));
+                    dispatch(new SendMailJob($adminMailer, $data));
                 }
+
+                DB::commit();
+                return redirect()->back()->with('success', 'Jadwal interview berhasil dipilih!');
             }
 
             DB::commit();
             return redirect()->back()->with('success', 'Jadwal interview berhasil dipilih!');
         } catch (Exception $e) {
-            dd($e);
+            // dd($e);
             DB::rollback();
             return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
         }
@@ -360,6 +367,16 @@ class ApplicantController extends BaseController
             //update reschadule status
             $applicant->reschedule = $index == 0 ? "1" . $reschedule_status[1] : $reschedule_status[0] . "1";
             $applicant->save();
+            
+            $data['applicant'] = $applicant->load(['priorityDivision1', 'priorityDivision2']);
+            $data['schedules'] = $schedule->load(['admin', 'date']);            
+
+            $emailSettings = Setting::where('key', 'Email')->first();
+
+            if ($emailSettings->value === 1) {
+                $rescheduleMailer = new MailController(new rescheduleMail($data));
+                dispatch(new SendMailJob($rescheduleMailer, $data));
+            }
 
             return redirect()->back()->with('success_confirm', 'Pengajuan ganti jadwal sudah diajukan. Silahkan menghubungi contact person untuk menentukan jadwal terbaru.');
         }
@@ -530,7 +547,6 @@ class ApplicantController extends BaseController
                 <button
                 type='button' class='btn-cancel mx-auto block rounded bg-danger px-2 pb-2 pt-2.5 text-[0.5rem] font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(220,76,100,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)]'
                 data-te-index='$i' data-te-priority='1'>cancel</button>";
-                
             } else if ($a->acceptance_stage == 3) {
                 // ditolak prioritas1
                 $temp['action1'] = "<div class='text-center w-full '> 
@@ -604,7 +620,7 @@ class ApplicantController extends BaseController
             ->where('status', 2)
             ->whereHas('applicant', function ($query) {
                 $query->where('stage', '>', 3)
-                    ->where('acceptance_stage','>=', 5);
+                    ->where('acceptance_stage', '>=', 5);
             })
             ->get();
 
@@ -644,18 +660,17 @@ class ApplicantController extends BaseController
             $temp['diet'] = $a->diet;
             $temp['allergy'] = $a->allergy;
 
-            if($a->acceptance_stage == 6 && $a->division_accepted == session('division_id')){
+            if ($a->acceptance_stage == 6 && $a->division_accepted == session('division_id')) {
                 $temp['action'] = "<button
                 type='button' class='btn-cancel block rounded bg-danger px-4 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(220,76,100,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)]'
                 data-te-index='$i' data-te-priority='3'>cancel</button>";
-            }
-            else if($a->acceptance_stage == 6){
+            } else if ($a->acceptance_stage == 6) {
                 $name = $a->divisionAccepted->slug;
                 $temp['action'] = "<div class='text-center w-full '> 
                 <i class='fa-solid fa-circle-info fa-lg' style='color: #fb923c;'></i>   
                 </div>
                 <h1 class='text-orange-500 font-bold text-center'>Terculik $name </h1>";
-            }else{
+            } else {
                 $temp['action'] = "<button
                 type='button' class='btn-culik block mb-2 rounded bg-success px-4 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(20,164,77,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.2),0_4px_18px_0_rgba(20,164,77,0.1)]'
                 data-te-index='$i'>Culik Anak 
@@ -756,13 +771,14 @@ class ApplicantController extends BaseController
 
         return response()->json(['success' => false, 'message' => 'Gagal menculik anak']);
     }
-    public function cancel(Request $request){
+    public function cancel(Request $request)
+    {
         $data = $request->only(['id', 'priority']);
         $applicant = $this->getById($data['id']);
         $admin_division = Division::where('id', session('division_id'))->first();
 
         // check stage priority
-        if($data['priority'] == 1){
+        if ($data['priority'] == 1) {
             // check apakah punya kuasa
             if ($admin_division->id != $applicant->priorityDivision1->id && $admin_division->slug != "bph") {
                 return response()->json(['success' => false, 'message' => 'Anda tidak memiliki kuasa untuk cancel pilihan 1']);
@@ -773,8 +789,7 @@ class ApplicantController extends BaseController
                 $this->updatePartial(['acceptance_stage' => 1, 'division_accepted' => null], $data['id']);
                 return response()->json(['success' => true, 'message' => 'Berhasil cancel anak di pilihan 1']);
             }
-        }
-        else if($data['priority'] == 2){
+        } else if ($data['priority'] == 2) {
             // check apakah punya kuasa
             if ($admin_division->id != $applicant->priorityDivision2->id && $admin_division->slug != "bph") {
                 return response()->json(['success' => false, 'message' => 'Anda tidak memiliki kuasa untuk cancel pilihan 2']);
@@ -788,7 +803,7 @@ class ApplicantController extends BaseController
         }
 
         //untuk culik
-        else if($data['priority'] == 3){
+        else if ($data['priority'] == 3) {
             // check apakah punya kuasa
             if ($admin_division->id != $applicant->division_accepted && $admin_division->slug != "bph") {
                 return response()->json(['success' => false, 'message' => 'Anda tidak memiliki kuasa untuk cancel anak']);
