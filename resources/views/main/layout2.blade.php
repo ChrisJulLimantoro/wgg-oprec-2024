@@ -89,7 +89,7 @@
 
     <!-- Background -->
     <script>
-        console.clear();
+        // console.clear();
 
         function perlin() {
             return `
