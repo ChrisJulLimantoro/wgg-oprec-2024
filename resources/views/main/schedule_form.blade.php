@@ -3,10 +3,10 @@
 @section('content')
     @include('main.stepper', ['applicant' => $applicant])
 
-    <h1 class="text-3xl font-bold text-center">Pilih Jadwal Wawancara</h1>
-    <section class="max-w-[940px] mx-auto pt-3 pb-16">
+    <h1 class="text-3xl font-bold text-center text-white">Pilih Jadwal Wawancara</h1>
+    <section class="relative max-w-[940px] mx-auto pt-3 pb-16">
         <div
-            class="block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+            class="block rounded-xl bg-white/10 backdrop-blur-md bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
             <form data-te-validation-init action="{{ route('applicant.pick-schedule') }}" method="POST"
                 id="application-applicant">
                 @csrf
@@ -18,7 +18,7 @@
                 @endif
 
                 {{-- Wawancara pertama --}}
-                <p class="text-lg font-semibold mb-4">Wawancara Divisi
+                <p class="text-lg font-semibold mb-4 text-white">Wawancara Divisi
                     {{ strtoupper($applicant['priority_division1']['slug']) . ($applicant['priority_division2'] && !$double_interview ? ' & ' . strtoupper($applicant['priority_division2']['slug']) : '') }}
                 </p>
 
@@ -86,7 +86,7 @@
 
                 {{-- Wawancara kedua --}}
                 @if ($double_interview)
-                    <p class="text-lg font-semibold mt-10 md:mt-0 mb-4">Wawancara Divisi
+                    <p class="text-lg font-semibold mt-10 md:mt-0 mb-4 text-white   ">Wawancara Divisi
                         {{ strtoupper($applicant['priority_division2']['slug']) }}
                     </p>
 
@@ -291,6 +291,10 @@
                     timer: 1700
                 });
             @endif
+
+            $("#modalLocationBtn0, #modalLocationBtn1").click(async function() {
+                $("div[data-te-backdrop-show]").remove();
+            })
         })
     </script>
 @endsection

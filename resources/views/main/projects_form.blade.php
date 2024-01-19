@@ -26,14 +26,13 @@
     @include('main.stepper', ['applicant' => $applicant])
 
     <div class="mb-4 pt-5">
-        <div class="flex justify-center mb-5">
-            <h1
-                class="sm:text-7xl text-4xl lg:ml-0 md:ml-5 sm:ml-10 font-bold bg-clip-text inline whitespace-nowrap uppercase">
-                Project</h1>
+        <div class="flex justify-center mb-2">
+            <h1 class="text-3xl font-bold text-center text-white">Submit Project</h1>
         </div>
 
-        <div class="flex justify-center mt-10">
-            <div class="mb-3 w-[650px] mx-auto">
+        <section class="flex justify-center max-w-[940px] mx-auto pt-3 pb-16">
+            <div
+                class="mb-3 w-[650px] mx-auto block rounded-xl bg-white/10 backdrop-blur-md bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                 <div class="relative mb-4 flex w-full flex-wrap">
                     <div class="w-full mb-6">
                         <label class="text-xl font-bold">Pilih Divisi : </label>
@@ -63,23 +62,22 @@
                         class="w-full">
                         @csrf
                         <div class="w-full mb-8">
-                            <label for="project" class="mb-3">Link Project (drive)</label>
+                            <label for="project" class="mb-5">Link Project (drive)</label>
                             <textarea id="project" name="project" @if (!$selected || $passedDeadline) disabled @endif
                                 class="w-full bg-transparent border-2 font-serif disabled:!bg-gray-400/25 text-sm rounded-lg block py-3 pl-3 shadow-lg enabled:hover:shadow-xl"
                                 rows="2" placeholder="Link Project">{{ data_get($applicant, 'documents.projects.' . $selected) }}</textarea>
-                            <div class="text-xs mx-1 mt-1">Jangan lupa atur access file supaya dapat diakses oleh panitia
+                            <div class="text-xs mx-1 mt-1 text-white">Jangan lupa atur access file supaya dapat diakses oleh panitia
                             </div>
                         </div>
                         <button type="submit" data-te-ripple-init data-te-ripple-color="light" id="submitProject"
                             @if (!$selected || $passedDeadline) disabled @endif
-                            class="w-full inline-block rounded bg-success disabled:opacity-75 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out enabled:hover:bg-success-600 enabled:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 enabled:active:bg-success-700 enabled:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:enabled:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:enabled:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                            class="w-full inline-block rounded bg-success disabled:opacity-75 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out enabled:hover:bg-success-600 focus:bg-success-600 focus:outline-none focus:ring-0 enabled:active:bg-success-700">
                             Submit Project
                         </button>
                     </form>
                 </div>
             </div>
-        </div>
-
+        </section>
     </div>
 @endsection
 

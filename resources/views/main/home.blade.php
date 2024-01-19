@@ -54,6 +54,10 @@
             src: url('{{ asset('assets/dillan.otf') }}') format('truetype');
         }
 
+        body {
+            cursor: url('{{ asset('assets/baymax-smol.png') }}'), auto;
+        }
+
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -1509,7 +1513,7 @@
     </script>
 
     {{-- Baymax Follow Mouse --}}
-    <script>
+    {{-- <script>
         var follow = 0;
         function startBaymaxFollow(){
             if(follow == 0){
@@ -1589,7 +1593,19 @@
             baymax.src = source[now]
         }
         startBaymaxFollow();
-        </script>
+    </script> --}}
+
+    <script>
+        $(document).ready(function() {
+            $(document.body).on('touchstart mousedown', function() {
+                document.body.style.cursor = "url('{{ asset('assets/baymax-touch-smol.png') }}'), auto"
+            })
+
+            $(document.body).on("touchend mouseup", function() {
+                document.body.style.cursor = "url('{{ asset('assets/baymax-smol.png') }}'), auto"
+            })
+        })
+    </script>
 </body>
 
 </html>

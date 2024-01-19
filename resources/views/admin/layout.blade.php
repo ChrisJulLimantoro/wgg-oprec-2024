@@ -31,6 +31,7 @@
             },
         };
     </script>
+
     @yield('style')
 </head>
 
@@ -148,7 +149,7 @@
 
                         </svg>
                     </span>
-                    <span>Interviews</span>
+                    <span>All Interviews</span>
                 </a>
             </li>
             <li class="relative">
@@ -428,6 +429,10 @@
                                 <a class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
                                     href="{{ route('admin.tolak-terima.culikAnak') }}" data-te-dropdown-item-ref>Culik Anak</a>
                             </li>
+                            <li>
+                                <a class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                    href="{{ route('admin.tolak-terima.accepted') }}" data-te-dropdown-item-ref>Accepted</a>
+                            </li>
                         </ul>
                     </li>
 
@@ -435,6 +440,12 @@
                     <li class="mb-4 pl-2 sm:mb-0 sm:pl-0 sm:pr-1" data-te-nav-item-ref>
                         <a class="text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 sm:px-2 [&.active]:text-black/90 dark:[&.active]:text-zinc-400"
                             href="{{ route('admin.setting') }}" data-te-nav-link-ref>Setting</a>
+                    </li>
+
+                    {{-- To applicant site --}}
+                    <li class="mb-4 pl-2 sm:mb-0 sm:pl-0 sm:pr-1" data-te-nav-item-ref>
+                        <a class="text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 sm:px-2 [&.active]:text-black/90 dark:[&.active]:text-zinc-400"
+                        href="{{ route('applicant.application-form') }}" data-te-nav-link-ref>To Applicant Site</a>
                     </li>
                 </ul>
             </div>

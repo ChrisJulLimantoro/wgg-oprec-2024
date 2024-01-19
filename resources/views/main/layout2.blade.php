@@ -66,6 +66,7 @@
         body {
             background: rgb(16, 23, 57);
             background: linear-gradient(180deg, rgba(16, 23, 57, 1) 0%, rgba(48, 63, 107, 1) 50%, rgba(86, 71, 120, 1) 100%);
+            cursor: url('{{ asset('assets/baymax-smol.png') }}'), auto;
         }
     </style>
 
@@ -591,7 +592,7 @@
         update();
     </script>
     {{-- Script for Baymax --}}
-    <script>
+    {{-- <script>
         var follow = 0;
         function startBaymaxFollow(){
             if(follow == 0){
@@ -671,7 +672,19 @@
             baymax.src = source[now]
         }
         startBaymaxFollow();
-        </script>
+    </script> --}}
+
+    <script>
+        $(document).ready(function() {
+            $(document.body).on('touchstart mousedown', function() {
+                document.body.style.cursor = "url('{{ asset('assets/baymax-touch-smol.png') }}'), auto"
+            })
+
+            $(document.body).on("touchend mouseup", function() {
+                document.body.style.cursor = "url('{{ asset('assets/baymax-smol.png') }}'), auto"
+            })
+        })
+    </script>
     @yield('script')
 
 </body>
