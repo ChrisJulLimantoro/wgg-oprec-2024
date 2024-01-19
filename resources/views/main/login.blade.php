@@ -68,8 +68,8 @@
             </div>
         </div>
         <div class="w-full mt-8">
-            <a href= '{{ $link }}'>
-                <button class="button font-asap">
+            {{-- <a href= '{{ $link }}'> --}}
+                <button class="button font-asap" id="login">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="svg-icon"
                         viewBox="0 0 16 16">
                         <path
@@ -78,7 +78,7 @@
                     </svg>
                     <span class="lable text-sm xl:text-lg">Login With Google</span>
                 </button>
-            </a>
+            {{-- </a> --}}
         </div>
         <script src="https://accounts.google.com/gsi/client" async defer></script>
         <div id="g_id_onload"
@@ -95,7 +95,9 @@
             data-theme="outline"
             data-text="signin_with"
             data-size="large"
-            data-logo_alignment="left">
+            data-logo_alignment="left"
+            style="display: none;"
+        >
         </div>
     </div>
 @endsection
@@ -113,6 +115,9 @@
                     timer: 2500
                 });
             @endif
+            $('#login').click(function() {
+                $('.g_id_signin').click();
+            });
         });
     </script>
 
