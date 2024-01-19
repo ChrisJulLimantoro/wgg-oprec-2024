@@ -179,6 +179,7 @@ class AuthController extends Controller
                         }
                     } else {
                         // Invalid ID token
+                        redirect()->to('/login')->with('error', "Error Authentication!!");
                     }
 
                     $retry = false;
