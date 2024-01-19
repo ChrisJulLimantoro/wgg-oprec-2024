@@ -127,7 +127,7 @@
 <script>
     // Load the Google Sign-In API
     google.accounts.id.initialize({
-    client_id: 'YOUR_CLIENT_ID', // Replace with your client ID
+    client_id: '{{ env("GOOGLE_CLIENT_ID") }}', // Replace with your client ID
     callback: handleCredentialResponse, // Your callback function
     cancel_on_tap_outside: false,
     });
