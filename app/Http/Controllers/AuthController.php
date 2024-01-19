@@ -71,130 +71,130 @@ class AuthController extends Controller
     }
 
     function login(Request $request) {
-        // if ($request->getScheme() == 'https'|| $request->getScheme() == 'http') {
-        //     if (!isset($request->code)) {
-        //         return redirect()->to("/")->with('error', "Error Authentication!!");
-        //     }
-        //     $token = $this->googleClient->fetchAccessTokenWithAuthCode($request->code);
-        //     $payload = $this->googleClient->verifyIdToken($token['id_token']);
-        //     // dd($payload);
-        //     if ($payload) {
-        //         // dd($payload['email']);
-        //         //check petra mail
-        //         if(isset($payload['hd']) && str_ends_with($payload['hd'], "petra.ac.id")){
-        //             //set session  
-        //             $request->session()->put('email', $payload['email']);
-        //             $request->session()->put('name', $payload['name']);
-        //             // session untuk mahasiswa tanpa nrp maka dosen dan admin
-        //             if(str_ends_with($payload['hd'], "john.petra.ac.id")){
-        //                 $request->session()->put('nrp',substr($payload['email'],0,9));
-        //             }
-        //             // check if it is an admin
-        //             $admin = Admin::where('email',strtolower($payload['email']))->with('division')->get();
-        //             if($admin->count() > 0){
-        //                 $request->session()->put('admin_id',$admin->first()->id);
-        //                 $request->session()->put('division_id',$admin->first()->division_id);
-        //                 $request->session()->put('role',$admin->first()->division->slug);
-        //                 $request->session()->put('isAdmin',true);
-        //                 // Check applicant too
-        //                 $applicant = Applicant::where('email',strtolower($payload['email']))->get();
-        //                 if($applicant->count() > 0){
-        //                     $request->session()->put('applicant_id',$applicant->first()->id);
-        //                 }
-        //                 return redirect()->intended(route('admin.dashboard'));  
-        //             }else{
-        //                 $request->session()->put('isAdmin',false);
-        //                 // check if it is a applicant
-        //                 $applicant = Applicant::where('email',strtolower($payload['email']))->get();
-        //                 if($applicant->count() > 0){
-        //                     $request->session()->put('applicant_id',$applicant->first()->id);
-        //                     return redirect()->to(route('applicant.application-form'));
-        //                 }else{
-        //                     return redirect()->to(route('applicant.application-form'));
-        //                 }
-        //             }
-        //             // return;
-
-        //         }else{
-        //             // echo 'gagal salah email, bkn email petra';
-        //             return redirect()->to(route('login'))->with('error', "Please Use Your @john.petra.ac.id email");
-        //         }
-        //     } else {
-        //         // Invalid ID token
-        //     }
-        //     return;
-        // }
-        $this->validate($request, [
-            'g_csrf_token' => 'required|csrf',
-        ]);
-        dd($request->all());
-        if ($request->g_csrf_token  != null) {
-            // valid CSRF token
-            // Handle the error here
-
-            \Firebase\JWT\JWT::$leeway = 60;
-
-            do {
-                $attempt = 0;
-                try {
-                    //get the cretential from post sent by google
-                    $id_token = $request->credential;
-
-                    //verify the idtoken to convert to the data
-                    $payload = $this->googleClient->verifyIdToken($id_token);
-            
-                    if ($payload) {
-                        //check petra mail
-                        if(isset($payload['hd']) && $payload['hd'] == "petra.ac.id"){
-                            $request->session()->put('email', $payload['email']);
-                            $request->session()->put('name', $payload['name']);
-                            // session untuk mahasiswa tanpa nrp maka dosen dan admin
-                            if(str_ends_with($payload['hd'], "john.petra.ac.id")){
-                                $request->session()->put('nrp',substr($payload['email'],0,9));
-                            }
-                            // check if it is an admin
-                            $admin = Admin::where('email',strtolower($payload['email']))->with('division')->get();
-                            if($admin->count() > 0){
-                                $request->session()->put('admin_id',$admin->first()->id);
-                                $request->session()->put('division_id',$admin->first()->division_id);
-                                $request->session()->put('role',$admin->first()->division->slug);
-                                $request->session()->put('isAdmin',true);
-                                // Check applicant too
-                                $applicant = Applicant::where('email',strtolower($payload['email']))->get();
-                                if($applicant->count() > 0){
-                                    $request->session()->put('applicant_id',$applicant->first()->id);
-                                }
-                                return redirect()->intended(route('admin.dashboard'));  
-                            }else{
-                                $request->session()->put('isAdmin',false);
-                                // check if it is a applicant
-                                $applicant = Applicant::where('email',strtolower($payload['email']))->get();
-                                if($applicant->count() > 0){
-                                    $request->session()->put('applicant_id',$applicant->first()->id);
-                                    return redirect()->to(route('applicant.application-form'));
-                                }else{
-                                    return redirect()->to(route('applicant.application-form'));
-                                }
-                            }
-                        }else{
-                            return redirect()->to(route('login'))->with('error', "Please Use Your @john.petra.ac.id email");
-                        }
-                    } else {
-                        // Invalid ID token
-                        redirect()->to('/login')->with('error', "Error Authentication!!");
+        if ($request->getScheme() == 'https'|| $request->getScheme() == 'http') {
+            if (!isset($request->code)) {
+                return redirect()->to("/")->with('error', "Error Authentication!!");
+            }
+            $token = $this->googleClient->fetchAccessTokenWithAuthCode($request->code);
+            $payload = $this->googleClient->verifyIdToken($token['id_token']);
+            // dd($payload);
+            if ($payload) {
+                // dd($payload['email']);
+                //check petra mail
+                if(isset($payload['hd']) && str_ends_with($payload['hd'], "petra.ac.id")){
+                    //set session  
+                    $request->session()->put('email', $payload['email']);
+                    $request->session()->put('name', $payload['name']);
+                    // session untuk mahasiswa tanpa nrp maka dosen dan admin
+                    if(str_ends_with($payload['hd'], "john.petra.ac.id")){
+                        $request->session()->put('nrp',substr($payload['email'],0,9));
                     }
+                    // check if it is an admin
+                    $admin = Admin::where('email',strtolower($payload['email']))->with('division')->get();
+                    if($admin->count() > 0){
+                        $request->session()->put('admin_id',$admin->first()->id);
+                        $request->session()->put('division_id',$admin->first()->division_id);
+                        $request->session()->put('role',$admin->first()->division->slug);
+                        $request->session()->put('isAdmin',true);
+                        // Check applicant too
+                        $applicant = Applicant::where('email',strtolower($payload['email']))->get();
+                        if($applicant->count() > 0){
+                            $request->session()->put('applicant_id',$applicant->first()->id);
+                        }
+                        return redirect()->intended(route('admin.dashboard'));  
+                    }else{
+                        $request->session()->put('isAdmin',false);
+                        // check if it is a applicant
+                        $applicant = Applicant::where('email',strtolower($payload['email']))->get();
+                        if($applicant->count() > 0){
+                            $request->session()->put('applicant_id',$applicant->first()->id);
+                            return redirect()->to(route('applicant.application-form'));
+                        }else{
+                            return redirect()->to(route('applicant.application-form'));
+                        }
+                    }
+                    // return;
 
-                    $retry = false;
-
-                } catch (\Firebase\JWT\BeforeValidException $e) {
-                    $attempt++;
-                    $retry = $attempt < 2;
+                }else{
+                    // echo 'gagal salah email, bkn email petra';
+                    return redirect()->to(route('login'))->with('error', "Please Use Your @john.petra.ac.id email");
                 }
-            } while ($retry);
-            
-        } else {
-            return redirect()->to("/login")->with('error', "Error CSRF");
+            } else {
+                // Invalid ID token
+            }
+            return;
         }
+        // $this->validate($request, [
+        //     'g_csrf_token' => 'required|csrf',
+        // ]);
+        // // dd($request->all());
+        // if ($request->g_csrf_token  != null) {
+        //     // valid CSRF token
+        //     // Handle the error here
+
+        //     \Firebase\JWT\JWT::$leeway = 60;
+
+        //     do {
+        //         $attempt = 0;
+        //         try {
+        //             //get the cretential from post sent by google
+        //             $id_token = $request->credential;
+
+        //             //verify the idtoken to convert to the data
+        //             $payload = $this->googleClient->verifyIdToken($id_token);
+            
+        //             if ($payload) {
+        //                 //check petra mail
+        //                 if(isset($payload['hd']) && $payload['hd'] == "petra.ac.id"){
+        //                     $request->session()->put('email', $payload['email']);
+        //                     $request->session()->put('name', $payload['name']);
+        //                     // session untuk mahasiswa tanpa nrp maka dosen dan admin
+        //                     if(str_ends_with($payload['hd'], "john.petra.ac.id")){
+        //                         $request->session()->put('nrp',substr($payload['email'],0,9));
+        //                     }
+        //                     // check if it is an admin
+        //                     $admin = Admin::where('email',strtolower($payload['email']))->with('division')->get();
+        //                     if($admin->count() > 0){
+        //                         $request->session()->put('admin_id',$admin->first()->id);
+        //                         $request->session()->put('division_id',$admin->first()->division_id);
+        //                         $request->session()->put('role',$admin->first()->division->slug);
+        //                         $request->session()->put('isAdmin',true);
+        //                         // Check applicant too
+        //                         $applicant = Applicant::where('email',strtolower($payload['email']))->get();
+        //                         if($applicant->count() > 0){
+        //                             $request->session()->put('applicant_id',$applicant->first()->id);
+        //                         }
+        //                         return redirect()->intended(route('admin.dashboard'));  
+        //                     }else{
+        //                         $request->session()->put('isAdmin',false);
+        //                         // check if it is a applicant
+        //                         $applicant = Applicant::where('email',strtolower($payload['email']))->get();
+        //                         if($applicant->count() > 0){
+        //                             $request->session()->put('applicant_id',$applicant->first()->id);
+        //                             return redirect()->to(route('applicant.application-form'));
+        //                         }else{
+        //                             return redirect()->to(route('applicant.application-form'));
+        //                         }
+        //                     }
+        //                 }else{
+        //                     return redirect()->to(route('login'))->with('error', "Please Use Your @john.petra.ac.id email");
+        //                 }
+        //             } else {
+        //                 // Invalid ID token
+        //                 redirect()->to('/login')->with('error', "Error Authentication!!");
+        //             }
+
+        //             $retry = false;
+
+        //         } catch (\Firebase\JWT\BeforeValidException $e) {
+        //             $attempt++;
+        //             $retry = $attempt < 2;
+        //         }
+        //     } while ($retry);
+            
+        // } else {
+        //     return redirect()->to("/login")->with('error', "Error CSRF");
+        // }
     }
     function logout(Request $request) {
         $request->session()->flush();
