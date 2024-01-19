@@ -80,20 +80,29 @@
                 </button>
             </a>
         </div>
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+        <div id="g_id_onload"
+            data-client_id="{{ env('GOOGLE_CLIENT_ID') }}"
+            data-context="signin"
+            data-ux_mode="redirect"
+            data-login_uri="{{ route('processLogin') }}"
+            data-auto_prompt="false">
+        </div>
+
+        <div class="g_id_signin"
+            data-type="standard"
+            data-shape="rectangular"
+            data-theme="outline"
+            data-text="signin_with"
+            data-size="large"
+            data-logo_alignment="left">
+        </div>
     </div>
 @endsection
 
 @section('script')
     <script>
         AOS.init();
-        // var cursor = document.getElementById("cursor");
-        // var cursor2 = document.getElementById("cursor_2")
-        // document.body.addEventListener("mousemove", function(e) {
-        //     cursor.style.left = e.clientX + "px",
-        //     cursor.style.top = e.clientY + "px";
-        //     cursor2.style.left = Math.abs(document.body.clientWidth - e.clientX) + "px";
-        //     cursor2.style.top = Math.abs(document.body.clientHeight - e.clientY) + "px";
-        // });
         $(document).ready(function() {
             @if (Session::has('error'))
                 Swal.fire({
