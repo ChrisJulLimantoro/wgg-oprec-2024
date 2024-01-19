@@ -51,6 +51,7 @@
             background: rgba(255, 255, 255, 0.1);
         }
     </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 @endsection
 @section('content')
     {{-- <div id="cursor"></div>
@@ -80,7 +81,6 @@
                 </button>
             {{-- </a> --}}
         </div>
-        <script src="https://accounts.google.com/gsi/client" async defer></script>
         {{-- <div id="g_id_onload"
             data-client_id="{{ env('GOOGLE_CLIENT_ID') }}"
             data-context="signin"
