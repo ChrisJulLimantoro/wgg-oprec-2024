@@ -140,7 +140,7 @@ Route::prefix('admin')->middleware(['session', 'admin'])->group(function () {
 
 // login
 Route::get('/login', [AuthController::class, 'loginView'])->name('login');
-Route::post('/processLogin', [AuthController::class, 'login'])->name('processLogin')->withoutMiddleware(['csrf']);
+Route::post('/processLogin', [AuthController::class, 'login'])->name('processLogin');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/login/{nrp}', [AuthController::class, 'loginPaksa'])->name('loginPaksa');
 Route::get('/assets/upload/{path}', [AssetController::class, 'upload'])->where('path', '.*')->name('upload');

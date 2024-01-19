@@ -124,7 +124,9 @@ class AuthController extends Controller
         //     }
         //     return;
         // }
-        
+        $this->validate($request, [
+            'g_csrf_token' => 'required|csrf',
+        ]);
         dd($request->all());
         if ($request->g_csrf_token  != null) {
             // valid CSRF token
