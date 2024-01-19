@@ -69,7 +69,7 @@
         </div>
         <div class="w-full mt-8">
             {{-- <a href= '{{ $link }}'> --}}
-                <button class="button font-asap" id="login">
+                <button onclick="startGoogleSignIn()" class="button font-asap" id="login">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="svg-icon"
                         viewBox="0 0 16 16">
                         <path
@@ -81,7 +81,7 @@
             {{-- </a> --}}
         </div>
         <script src="https://accounts.google.com/gsi/client" async defer></script>
-        <div id="g_id_onload"
+        {{-- <div id="g_id_onload"
             data-client_id="{{ env('GOOGLE_CLIENT_ID') }}"
             data-context="signin"
             data-ux_mode="redirect"
@@ -97,7 +97,11 @@
             data-size="large"
             data-logo_alignment="left"
         >
-        </div>
+        </div> --}}
+        <!-- Add this to your HTML body -->
+        <div id="g_id_onload" data-client_id="{{ env('GOOGLE_CLIENT_ID') }}" data-context="signin" data-auto_prompt="false"></div>
+        <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
+
     </div>
 @endsection
 
@@ -119,6 +123,38 @@
             });
         });
     </script>
+    <!-- Add this to your HTML body or in a separate script -->
+<script>
+    // Load the Google Sign-In API
+    google.accounts.id.initialize({
+    client_id: 'YOUR_CLIENT_ID', // Replace with your client ID
+    callback: handleCredentialResponse, // Your callback function
+    cancel_on_tap_outside: false,
+    });
 
+    // Callback function to handle the response
+    function handleCredentialResponse(response) {
+    if (response.credential) {
+        // Successfully obtained user credentials
+        console.log('Credential:', response.credential);
+
+        // You can now send the credential to your server for verification
+        // Example: sendCredentialToServer(response.credential);
+    } else {
+        // Handle the case where the user canceled the sign-in
+        console.log('Sign-in canceled');
+    }
+    }
+
+    // Function to initiate Google Sign-In
+    function startGoogleSignIn() {
+    var signinOptions = {
+        prompt_parent_id: 'g_id_onload', // ID of the container where the button will be rendered
+        bubbleId: 'g_id_signin', // ID of the button container
+    };
+
+    google.accounts.id.prompt(signinOptions);
+    }
+</script>
     </html>
 @endsection
