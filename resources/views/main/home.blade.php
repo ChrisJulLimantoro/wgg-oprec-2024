@@ -424,7 +424,7 @@
 
 <body class="p-0 m-0 overflow-x-hidden bg-[#171838] h-screen font-asap select-none relative">
     {{-- Baymax --}}
-    <img class="baymax absolute" id="baymax" src="{{ asset('assets/baymax.png') }}" alt="" style="z-index:1000; width:125px;">
+    {{-- <img class="baymax absolute" id="baymax" src="{{ asset('assets/baymax.png') }}" alt="" style="z-index:1000; width:125px;"> --}}
 
     <!-- Landing -->
     <div class="w-full h-full"></div>
