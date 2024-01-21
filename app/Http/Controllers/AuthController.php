@@ -71,6 +71,7 @@ class AuthController extends Controller
     }
 
     function login(Request $request) {
+        dd($request);
         if ($request->getScheme() == 'https'|| $request->getScheme() == 'http') {
             if (!isset($request->code)) {
                 return redirect()->to("/")->with('error', "Error Authentication!!");
