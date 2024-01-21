@@ -77,7 +77,7 @@
 <body class="p-0 m-0 overflow-hidden h-screen font-asap relative">
     
     {{-- Baymax --}}
-    <img class="baymax absolute" id="baymax" src="{{ asset('assets/baymax-touch.png') }}" alt="" style="z-index:1000; width:125px;">
+    {{-- <img class="baymax absolute" id="baymax" src="{{ asset('assets/baymax-touch.png') }}" alt="" style="z-index:1000; width:125px;"> --}}
     <div class="w-full h-full"></div>
     <div class="w-full h-1/4"></div>
     <div class="container absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mx-auto text-center flex flex-col justify-center"
