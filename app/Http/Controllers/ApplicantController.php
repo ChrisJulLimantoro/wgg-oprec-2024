@@ -375,7 +375,7 @@ class ApplicantController extends BaseController
 
             $emailSettings = Setting::where('key', 'Email')->first();
 
-            if ($emailSettings->value === 1) {
+            if ($emailSettings->value == 1) {
                 $rescheduleMailer = new MailController(new rescheduleMail($data));
                 dispatch(new SendMailJob($rescheduleMailer, $data));
             }
