@@ -65,7 +65,7 @@ Route::prefix('admin')->middleware(['session', 'admin'])->group(function () {
     });
 
     // Dates
-    Route::prefix('dates')->group(function () {
+    Route::prefix('dates')->middleware('role:bph,it')->group(function () {
         Route::get('/', [DateController::class, 'index'])->name('admin.date');
         Route::post('/', [DateController::class, 'add'])->name('admin.date.add');
         Route::delete('/{id}', [DateController::class, 'destroy'])->name('admin.date.delete');
@@ -123,7 +123,7 @@ Route::prefix('admin')->middleware(['session', 'admin'])->group(function () {
 
     Route::get('/applicant-cv/{applicant}', [AdminController::class, 'applicantCV'])->name('admin.applicant.cv');
 
-    Route::prefix('setting')->group(function () {
+    Route::prefix('setting')->middleware('role:bph,it')->group(function () {
         Route::get('/', [SettingController::class, 'index'])->name('admin.setting');
         Route::post('/update', [SettingController::class, 'settingUpdate'])->name('admin.setting.update');
     });
