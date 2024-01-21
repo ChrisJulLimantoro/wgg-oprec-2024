@@ -84,6 +84,7 @@ class AuthController extends Controller
                     $token = $this->googleClient->fetchAccessTokenWithAuthCode($request->code);
                     $payload = $this->googleClient->verifyIdToken($token['id_token']);
                     // dd($payload);
+                    dd($payload);
                     if ($payload) {
                         // dd($payload['email']);
                         //check petra mail
@@ -137,6 +138,7 @@ class AuthController extends Controller
                 }
             } while ($retry);
 
+            // return redirect()->back()->with('error', "Error Authentication!!");
             return;
         }
     }
@@ -214,6 +216,7 @@ class AuthController extends Controller
             return redirect()->to("/login")->with('error', "Error CSRF");
         }
     }
+
     function logout(Request $request) {
         $request->session()->flush();
         return redirect()->to("/");
