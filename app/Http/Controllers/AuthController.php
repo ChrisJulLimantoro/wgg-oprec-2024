@@ -78,6 +78,7 @@ class AuthController extends Controller
 
             \Firebase\JWT\JWT::$leeway = 60;
             
+            dd($this->googleClient);
             do {
                 $attempt = 0;
                 try {
