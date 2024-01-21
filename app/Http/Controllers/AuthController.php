@@ -71,7 +71,6 @@ class AuthController extends Controller
     }
 
     function login(Request $request) {
-        dd($request);
         if ($request->getScheme() == 'https'|| $request->getScheme() == 'http') {
             if (!isset($request->code)) {
                 return redirect()->to("/")->with('error', "Error Authentication!!");
@@ -79,15 +78,12 @@ class AuthController extends Controller
 
             \Firebase\JWT\JWT::$leeway = 60;
             
-            dd($this->googleClient);
             do {
                 $attempt = 0;
                 try {
                     $token = $this->googleClient->fetchAccessTokenWithAuthCode($request->code);
-                    dd($token);
                     $payload = $this->googleClient->verifyIdToken($token['id_token']);
                     // dd($payload);
-                    dd($payload);
                     if ($payload) {
                         // dd($payload['email']);
                         //check petra mail
@@ -136,7 +132,6 @@ class AuthController extends Controller
                     $retry = false;
 
                 } catch (\Firebase\JWT\BeforeValidException $e) {
-                    dd($e);
                     $attempt++;
                     $retry = $attempt < 2;
                 }
