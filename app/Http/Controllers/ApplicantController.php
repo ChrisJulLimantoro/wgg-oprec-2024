@@ -317,14 +317,15 @@ class ApplicantController extends BaseController
 
             if ($emailSettings->value === 1) {
                 $userMailer = new MailController(new scheduleMail($data));
-                dispatch(new SendMailJob($userMailer, $data));
+                $userMailer->sendMail($data);
+                // dispatch(new SendMailJob($userMailer, $data));
 
                 foreach ($data['schedules'] as $s) {
-                    $adminMailer = new MailController(new adminMail([
-                        'schedules' => $s,
-                        'applicant' => $data['applicant']
-                    ]));
-                    dispatch(new SendMailJob($adminMailer, $data));
+                    $data['schedules'] = $s;
+                    $data['applicant'] = $data['applicant'];
+                    $adminMailer = new MailController(new adminMail($data));
+                    $adminMailer->sendMail($data);
+                    // dispatch(new SendMailJob($adminMailer, $data));
                 }
 
                 DB::commit();
