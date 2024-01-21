@@ -317,7 +317,13 @@ class ApplicantController extends BaseController
 
             if ($emailSettings->value === 1) {
                 $userMailer = new MailController(new scheduleMail($data));
-                $userMailer->sendMail($data);
+                $userMailed = $userMailer->sendMail($data);
+
+                dd($userMailed);
+                if ($userMailed !== true) {
+                    DB::rollback();
+                    return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
+                }
                 // dispatch(new SendMailJob($userMailer, $data));
 
                 foreach ($data['schedules'] as $s) {
