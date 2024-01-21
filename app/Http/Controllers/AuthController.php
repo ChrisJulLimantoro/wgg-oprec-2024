@@ -82,6 +82,7 @@ class AuthController extends Controller
                 $attempt = 0;
                 try {
                     $token = $this->googleClient->fetchAccessTokenWithAuthCode($request->code);
+                    dd($token);
                     $payload = $this->googleClient->verifyIdToken($token['id_token']);
                     // dd($payload);
                     dd($payload);
@@ -133,6 +134,7 @@ class AuthController extends Controller
                     $retry = false;
 
                 } catch (\Firebase\JWT\BeforeValidException $e) {
+                    dd($e);
                     $attempt++;
                     $retry = $attempt < 2;
                 }
