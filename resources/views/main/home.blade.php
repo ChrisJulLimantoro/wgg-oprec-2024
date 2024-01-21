@@ -55,7 +55,7 @@
         }
 
         body {
-            cursor: url('{{ asset('assets/baymax-smol.png') }}'), auto;
+            cursor: url('{{ asset('assets/baymax-touch-smol.png') }}'), auto;
         }
 
         ::-webkit-scrollbar {
@@ -1598,11 +1598,11 @@
     <script>
         $(document).ready(function() {
             $(document.body).on('touchstart mousedown', function() {
-                document.body.style.cursor = "url('{{ asset('assets/baymax-touch-smol.png') }}'), auto"
+                document.body.style.cursor = "url('{{ asset('assets/baymax-smol.png') }}'), auto"
             })
 
             $(document.body).on("touchend mouseup", function() {
-                document.body.style.cursor = "url('{{ asset('assets/baymax-smol.png') }}'), auto"
+                document.body.style.cursor = "url('{{ asset('assets/baymax-touch-smol.png') }}'), auto"
             })
         })
     </script>

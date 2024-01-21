@@ -66,7 +66,7 @@
         body {
             background: rgb(16, 23, 57);
             background: linear-gradient(180deg, rgba(16, 23, 57, 1) 0%, rgba(48, 63, 107, 1) 50%, rgba(86, 71, 120, 1) 100%);
-            cursor: url('{{ asset('assets/baymax-smol.png') }}'), auto;
+            cursor: url('{{ asset('assets/baymax-touch-smol.png') }}'), auto;
         }
     </style>
 
@@ -77,7 +77,6 @@
 <body class="p-0 m-0 overflow-hidden h-screen font-asap relative">
     
     {{-- Baymax --}}
-    {{-- <img class="baymax absolute" id="baymax" src="{{ asset('assets/baymax-touch.png') }}" alt="" style="z-index:1000; width:125px;"> --}}
     <div class="w-full h-full"></div>
     <div class="w-full h-1/4"></div>
     <div class="container absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mx-auto text-center flex flex-col justify-center"
@@ -677,11 +676,11 @@
     <script>
         $(document).ready(function() {
             $(document.body).on('touchstart mousedown', function() {
-                document.body.style.cursor = "url('{{ asset('assets/baymax-touch-smol.png') }}'), auto"
+                document.body.style.cursor = "url('{{ asset('assets/baymax-smol.png') }}'), auto"
             })
 
             $(document.body).on("touchend mouseup", function() {
-                document.body.style.cursor = "url('{{ asset('assets/baymax-smol.png') }}'), auto"
+                document.body.style.cursor = "url('{{ asset('assets/baymax-touch-smol.png') }}'), auto"
             })
         })
     </script>

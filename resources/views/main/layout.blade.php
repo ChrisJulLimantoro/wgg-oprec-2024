@@ -23,7 +23,7 @@
             margin: 0;
             min-height: 100vh;
             font-family: 'Asap', sans-serif, 'Roboto', 'sans-serif';
-            cursor: url('{{ asset('assets/baymax-smol.png') }}'), auto;
+            cursor: url('{{ asset('assets/baymax-touch-smol.png') }}'), auto;
             background: rgb(16, 23, 57);
             background: linear-gradient(180deg, rgba(16, 23, 57, 1) 0%, rgba(48, 63, 107, 1) 50%, rgba(86, 71, 120, 1) 100%);
         }
@@ -140,11 +140,11 @@
     <script>
         $(document).ready(function() {
             $(document.body).on('touchstart mousedown', function() {
-                document.body.style.cursor = "url('{{ asset('assets/baymax-touch-smol.png') }}'), auto"
+                document.body.style.cursor = "url('{{ asset('assets/baymax-smol.png') }}'), auto"
             })
 
             $(document.body).on("touchend mouseup", function() {
-                document.body.style.cursor = "url('{{ asset('assets/baymax-smol.png') }}'), auto"
+                document.body.style.cursor = "url('{{ asset('assets/baymax-touch-smol.png') }}'), auto"
             })
         })
     </script>

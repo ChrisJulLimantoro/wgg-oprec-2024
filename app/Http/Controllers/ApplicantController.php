@@ -315,23 +315,18 @@ class ApplicantController extends BaseController
 
             // dd($emailSettings);
 
-            if ($emailSettings->value === 1) {
+            if ($emailSettings->value == 1) {
                 $userMailer = new MailController(new scheduleMail($data));
-                $userMailed = $userMailer->sendMail($data);
-
-                dd($userMailed);
-                if ($userMailed !== true) {
-                    DB::rollback();
-                    return redirect()->back()->with('error', 'Terjadi kesalahan! Silahkan coba lagi');
-                }
-                // dispatch(new SendMailJob($userMailer, $data));
+                // $userMailer->sendMail($data);
+                dispatch(new SendMailJob($userMailer, $data));
 
                 foreach ($data['schedules'] as $s) {
-                    $data['schedules'] = $s;
-                    $data['applicant'] = $data['applicant'];
-                    $adminMailer = new MailController(new adminMail($data));
-                    $adminMailer->sendMail($data);
-                    // dispatch(new SendMailJob($adminMailer, $data));
+                    $adminMailer = new MailController(new adminMail([
+                        'schedules' => $s,
+                        'applicant' => $data['applicant']
+                    ]));
+                    // $adminMailer->sendMail($data);
+                    dispatch(new SendMailJob($adminMailer, $data));
                 }
 
                 DB::commit();
