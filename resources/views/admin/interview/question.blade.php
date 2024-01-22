@@ -61,6 +61,14 @@
 @section("script")
 <script>
     $(document).ready(function(){
+        
+        @if(session('role') != 'it' && session('role') != 'bph')
+            var divisi = "{{ session('division_id') }}"
+            let akses = false;
+        @else
+            let akses = true;
+        @endif
+
         var i = 0;
         function add(){
             $("#add").off("click");
@@ -172,7 +180,12 @@
             $(".submitting").click(function(){
                 var question = $(this).parent().parent().find("textarea").eq(0).val();
                 var description = $(this).parent().parent().find("textarea").eq(1).val();
-                var division_id = $('#division').val();
+                if(akses){
+                    var division_id = $('#division').val();
+                }else{
+                    var division_id = divisi;
+                }
+
                 $this = $(this);
                 if(question == "" || description == ""){
                     Swal.fire('Error', 'Pertanyaan dan Deskripsi tidak boleh kosong', 'error');
