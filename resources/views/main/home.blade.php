@@ -493,7 +493,7 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-acara.png') }}" alt=""
                                     class="top-[-60px] left-[80px]">
-                                <h3 class="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Acara</h3>
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Acara</h3>
                                 <p class="mt-2">Divisi yang mengonsep dan memimpin jalannya acara untuk mengantarkan
                                     pesan kepada
                                     mahasiswa baru.</p>
@@ -505,7 +505,7 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-creative.png') }}" alt=""
                                     class="top-[-70px] left-[50px]">
-                                <h3 class="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Creative
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Creative
                                 </h3>
                                 <p class="mt-2">Divisi yang menjadi tempat untuk berkarya serta melayani melalui ide
                                     yang
@@ -518,7 +518,7 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-it.png') }}" alt=""
                                     class="top-[-70px] left-[60px]">
-                                <h3 class="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">IT</h3>
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">IT</h3>
                                 <p class="mt-2">Divisi yang bertugas untuk mengelola database dan website mengenai
                                     informasi seputar
                                     WGG dan mengatur data serta absensi mahasiswa peserta WGG.</p>
@@ -530,7 +530,7 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-kesehatan.png') }}" alt=""
                                     class="top-[-65px] left-[55px] scale-90">
-                                <h3 class="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Kesehatan
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Kesehatan
                                 </h3>
                                 <p class="mt-2">Divisi yang memberikan bantuan yang berhubungan dengan kesehatan dan
                                     bertanggung
@@ -543,7 +543,7 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-konsumsi.png') }}" alt=""
                                     class="top-[-75px] left-[50px]">
-                                <h3 class="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Konsumsi
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Konsumsi
                                 </h3>
                                 <p class="mt-2">Divisi yang memfasilitasi konsumsi untuk menemani mahasiswa baru
                                     selama
@@ -557,7 +557,7 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-peran.png') }}" alt=""
                                     class="top-[-70px] left-[60px] scale-75">
-                                <h3 class="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Peran</h3>
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Peran</h3>
                                 <p class="mt-2">Divisi yang menjadi wadah untuk menyambut dan mendampingi mahasiswa
                                     baru
                                     dalam
@@ -570,7 +570,7 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-perkap.png') }}" alt=""
                                     class="top-[-60px] left-[60px] scale-90">
-                                <h3 class="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
                                     Perlengkapan</h3>
                                 <p class="mt-2">Divisi yang mempersiapkan segala keperluan barang maupun ruangan, dan
                                     menjadi
@@ -583,7 +583,7 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-regulasi.png') }}" alt=""
                                     class="top-[-65px] left-[60px] scale-[0.8]">
-                                <h3 class="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Regulasi
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Regulasi
                                 </h3>
                                 <p class="mt-2">Divisi yang bertanggung jawab dalam pembuatan dan pelaksanaan
                                     peraturan,
@@ -597,7 +597,7 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-sekret.png') }}" alt=""
                                     class="top-[-70px] left-[60px]">
-                                <h3 class="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
                                     Sekretariat
                                 </h3>
                                 <p class="mt-2">Divisi yang menjadi pusat data dan informasi bagi mahasiswa baru
@@ -1527,7 +1527,7 @@
         var baymax = document.querySelector("#baymax");
         document.addEventListener("mousemove", async function(e){
             await getMouse(e);
-        }); 
+        });
         document.addEventListener("touchmove", async function(e){
             await getMouse(e);
         });
@@ -1535,12 +1535,12 @@
         document.addEventListener('click', function(){
             changeBaymaxSrc()
         })
-        
-        baymax.style.position = "absolute"; //css		
+
+        baymax.style.position = "absolute"; //css
         var baymaxpos = {x:0, y:0};
-        
+
         var mouse = {x:0, y:0}; //mouse.x, mouse.y
-        
+
         var dir = "right";
         function getMouse(e){
             mouse.x = e.pageX;
@@ -1557,26 +1557,26 @@
             //1. find distance X , distance Y
             var distX = mouse.x - baymaxpos.x;
             var distY = mouse.y - baymaxpos.y;
-            //Easing motion 
-            //Progressive reduction of distance 
+            //Easing motion
+            //Progressive reduction of distance
             baymaxpos.x += distX/5;
             baymaxpos.y += distY/2;
-            
+
             // baymax.style.left = baymaxpos.x + "px";
             // baymax.style.top = baymaxpos.y + "px";
 
             baymax.style.left = (mouse.x + 10) + "px";
             baymax.style.top = (mouse.y + 10) + "px";
-            
-            //Apply css class 
+
+            //Apply css class
             if (dir == "right"){
                 baymax.setAttribute("class", "right");
                 // changeBaymaxSrc(0)
             } else {
-                baymax.setAttribute("class", "left");     
-                // changeBaymaxSrc(1)   
+                baymax.setAttribute("class", "left");
+                // changeBaymaxSrc(1)
             }
-            
+
         }
 
         var source = {
