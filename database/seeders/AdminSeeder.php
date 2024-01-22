@@ -366,7 +366,15 @@ class AdminSeeder extends Seeder
                 'name' => 'Jocelyn Jane Michaela',
                 'email' => 'd12220012@john.petra.ac.id',
                 'line' => 'jocelynjane0509',
-                'division_id' => Division::where('slug','sekret')->first()->id ],];
+                'division_id' => Division::where('slug','sekret')->first()->id 
+            ],
+            [ 
+                'name' => 'Alexander Yofilio',
+                'email' => 'c14220071@john.petra.ac.id',
+                'line' => 'lio2511',
+                'division_id' => Division::where('slug','regul')->first()->id 
+            ],
+        ];
         foreach($admins as $admin){
             Admin::create($admin);
         }
