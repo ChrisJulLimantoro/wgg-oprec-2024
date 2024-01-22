@@ -25,6 +25,11 @@ class SettingSeeder extends Seeder
                 'key' => 'Email',
                 'value' => 1,
                 'description' => 'This will send an email to the applicant after they have successfully registered'
+            ],
+            [
+                'key' => 'BPH',
+                'value' => 1,
+                'description' => 'BPH bisa interview semua divisi (1) atau peran saja (0)'
             ]
         ];
         foreach($settings as $setting){

@@ -56,7 +56,7 @@
             outline: rgb(229, 153, 128) !important;
         }
 
-        form select svg {
+        form svg {
             stroke: #fff !important;
         }
 

@@ -3,6 +3,10 @@
 @section('content')
     @include('main.stepper', ['applicant' => $applicant])
 
+    @php 
+        $onsiteOnly = ['Creative', 'Regulasi'];
+    @endphp
+
     <h1 class="text-3xl font-bold text-center text-white">Pilih Jadwal Wawancara</h1>
     <section class="relative max-w-[940px] mx-auto pt-3 pb-16">
         <div
@@ -19,7 +23,14 @@
 
                 {{-- Wawancara pertama --}}
                 <p class="text-lg font-semibold mb-4 text-white">Wawancara Divisi
-                    {{ strtoupper($applicant['priority_division1']['slug']) . ($applicant['priority_division2'] && !$double_interview ? ' & ' . strtoupper($applicant['priority_division2']['slug']) : '') }}
+                    {{ strtoupper($applicant['priority_division1']['slug']) }}
+                    
+                    {{ ($applicant['priority_division2'] && !$double_interview ? ' & ' . strtoupper($applicant['priority_division2']['slug']) : '') }}
+
+                    @if (in_array($applicant['priority_division1']['name'], $onsiteOnly) || 
+                    $applicant['priority_division2'] && in_array($applicant['priority_division2']['name'], $onsiteOnly))
+                    <span class="text-red-400">(Onsite Only)</span>
+                    @endif
                 </p>
 
                 <div
@@ -54,10 +65,12 @@
                                 @if ($read_only) {{ strval($schedules[0]['online']) === '0' ? 'selected' : '' }} @endif
                                 @if (!empty(old('online'))) {{ old('online')[0] == '0' ? 'selected' : '' }} @endif>
                                 Onsite</option>
+                            @if(!in_array($applicant['priority_division1']['name'], $onsiteOnly))
                             <option value="1"
                                 @if ($read_only) {{ strval($schedules[0]['online']) === '1' ? 'selected' : '' }} @endif
                                 @if (!empty(old('online'))) {{ old('online')[0] == '1' ? 'selected' : '' }} @endif>
                                 Online</option>
+                            @endif
                         </select>
 
                         <label data-te-select-label-ref>Tipe</label>
@@ -117,6 +130,7 @@
                                     @if ($read_only) {{ strval($schedules[1]['online']) === '0' ? 'selected' : '' }} @endif
                                     @if (!empty(old('online'))) {{ old('online')[1] == '0' ? 'selected' : '' }} @endif>
                                     Onsite</option>
+                                {{-- @if() --}}
                                 <option value="1"
                                     @if ($read_only) {{ strval($schedules[1]['online']) === '1' ? 'selected' : '' }} @endif
                                     @if (!empty(old('online'))) {{ old('online')[1] == '1' ? 'selected' : '' }} @endif>
@@ -292,9 +306,9 @@
                 });
             @endif
 
-            $("#modalLocationBtn0, #modalLocationBtn1").click(async function() {
+            $("#modalLocationBtn0, #modalLocationBtn1, #btn-cp0, #btn-cp1").click(async function() {
                 $("div[data-te-backdrop-show]").remove();
-            })
+            })  
         })
     </script>
 @endsection

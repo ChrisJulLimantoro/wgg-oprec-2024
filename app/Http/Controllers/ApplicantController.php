@@ -4,21 +4,22 @@ namespace App\Http\Controllers;
 
 use Exception;
 use ErrorException;
-use App\Mail\adminMail;
-use App\Mail\scheduleMail;
-use App\Mail\rescheduleMail;
 use App\Models\Date;
 use App\Models\Admin;
 use App\Models\Major;
+use App\Mail\adminMail;
 use App\Models\Faculty;
 use App\Models\Setting;
 use App\Models\Division;
 use App\Models\Schedule;
 use App\Jobs\SendMailJob;
 use App\Models\Applicant;
+use App\Mail\scheduleMail;
+use App\Mail\rescheduleMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -190,6 +191,8 @@ class ApplicantController extends BaseController
                 $reschedule[$i] = $this->canReschedule($schedule['date']['date'], $schedule['time']);
             }
 
+            // dd($reschedule);
+
             $data['reschedule'] = $reschedule;
         } else
             $data['read_only'] = false;
@@ -209,7 +212,11 @@ class ApplicantController extends BaseController
         $date = $request->date;
         $online = intval($request->online);
         $division = $request->division;
-        $interviewers = Admin::where('division_id', $division)->get();
+        $isBphEnabled = Setting::where('key', 'BPH')->first()->value == 1;
+
+        if ($isBphEnabled) $bph = Division::where('name', 'Badan Pengurus Harian')->first();
+
+        $interviewers = Admin::whereIn('division_id', $isBphEnabled ? [$division, $bph->id] : [$division])->get();
 
         $schedules = Schedule::select('time')
             ->where([
@@ -246,8 +253,15 @@ class ApplicantController extends BaseController
 
         $pickedSchedule = [];
         $count = $isPeran && $applicant->priority_division2 != null ? 2 : 1;
+        $onsiteOnly = ['Creative', 'Regulasi'];
 
         for ($i = 0; $i < $count; $i++) {
+            // check whether the selected division allow online interview
+            $division = Division::where('id', $validated['division'][$i])->first();
+            if ($validated['online'][$i] == 1 && in_array($division->name, $onsiteOnly)) {
+                return redirect()->back()->with('error', 'Divisi ' . $division->name . ' hanya menerima interview onsite!');
+            }
+
             // get available schedules
             $schedules = Schedule::join('admins', 'schedules.admin_id', '=', 'admins.id')
                 ->select('schedules.id', 'schedules.admin_id', 'schedules.date_id', 'schedules.time', 'schedules.online')
@@ -262,28 +276,33 @@ class ApplicantController extends BaseController
 
             // dd($schedules);
 
-            // favor interviewer that haven't interview anyone
-            $admin = Schedule::select('admin_id')
-                ->whereIn('admin_id', $schedules->pluck('admin_id'))
-                ->whereNotExists(function ($query) {
-                    $query->select("*")
-                        ->from('schedules as s')
-                        ->whereColumn('s.admin_id', 'schedules.admin_id')
-                        ->where('s.status', 2);
-                })
-                ->groupBy('admin_id')
-                ->first();
+            // choose interviewer from selected division
+            $admin = $this->chooseInterviewer($schedules->pluck('admin_id'));
+            // dd($admin);
 
-            // if there's none, pick interviewer with least interviewees
-            if (!$admin) {
-                $admin = Schedule::select('admin_id', DB::raw("COUNT(*) as count"))
-                    ->whereIn('admin_id', $schedules->pluck('admin_id'))
-                    ->where('status', 2)
-                    ->groupBy('admin_id')
-                    ->orderBy('count', 'asc')
-                    ->first();
+            // if still there's none, pick interviewer from bph division
+            if (!$admin && ($division->name == 'Peran' || Setting::where('key', 'BPH')->first()->value == 1)) {
+                $bph = Division::where('name', 'Badan Pengurus Harian')->first();
+
+                $peranExcluded = [
+                    'f11210017@john.petra.ac.id',
+                ];
+
+                $schedules = Schedule::join('admins', 'schedules.admin_id', '=', 'admins.id')
+                    ->select('schedules.id', 'schedules.admin_id', 'schedules.date_id', 'schedules.time', 'schedules.online')
+                    ->where([
+                        'admins.division_id' => $bph->id,
+                        'date_id' => $validated['date_id'][$i],
+                        'time' => $validated['time'][$i],
+                        'status' => 1,
+                    ])
+                    ->whereNotIn('email', $division->name == 'Peran' ? [$peranExcluded] : [])
+                    ->whereIn('online', $validated['online'][$i] == 1 ? [0, 1] : [0])
+                    ->get();
+                
+                $admin = $this->chooseInterviewer($schedules->pluck('admin_id'));
             }
-
+            
             // dd($admin);
             $pickedSchedule[] = $schedules->where('admin_id', $admin->admin_id)->first();
         }
@@ -298,7 +317,7 @@ class ApplicantController extends BaseController
 
                 $type = 0;
                 if (!$applicant->priority_division2) $type = 1;
-                else if ($isPeran) $type = $key + 1;
+                if ($isPeran) $type = $key + 1;
 
                 $schedule->status = 2;
                 $schedule->type = $type;
@@ -342,6 +361,33 @@ class ApplicantController extends BaseController
         }
     }
 
+    public function chooseInterviewer(Collection $admin_id)
+    {
+        // favor interviewer that haven't interview anyone
+        $admin = Schedule::select('admin_id')
+            ->whereIn('admin_id', $admin_id)
+            ->whereNotExists(function ($query) {
+                $query->select("*")
+                    ->from('schedules as s')
+                    ->whereColumn('s.admin_id', 'schedules.admin_id')
+                    ->where('s.status', 2);
+            })
+            ->groupBy('admin_id')
+            ->first();
+
+        // if there's none, pick interviewer with least interviewees
+        if (!$admin) {
+            $admin = Schedule::select('admin_id', DB::raw("COUNT(*) as count"))
+                ->whereIn('admin_id', $admin_id)
+                ->where('status', 2)
+                ->groupBy('admin_id')
+                ->orderBy('count', 'asc')
+                ->first();
+        }
+
+        return $admin;
+    }
+
     public function reschedule(Request $request)
     {
         $schedule_id = $request->schedule_id;
@@ -359,7 +405,7 @@ class ApplicantController extends BaseController
                 return redirect()->back()->with('error', 'Tidak dapat mengganti jadwal karena telah melebihi batas waktu');
             }
 
-            $index = $schedule->type == 2 ? 1 : 0;    //index for reschedule status to update
+            $index = $schedule->type == 2 ? 1 : 0; //index for reschedule status to update
 
             //check already request reschedule
             if ($reschedule_status[$index] > 0) {
@@ -369,9 +415,9 @@ class ApplicantController extends BaseController
             //update reschadule status
             $applicant->reschedule = $index == 0 ? "1" . $reschedule_status[1] : $reschedule_status[0] . "1";
             $applicant->save();
-            
+
             $data['applicant'] = $applicant->load(['priorityDivision1', 'priorityDivision2']);
-            $data['schedules'] = $schedule->load(['admin', 'date']);            
+            $data['schedules'] = $schedule->load(['admin', 'date']);
 
             $emailSettings = Setting::where('key', 'Email')->first();
 
