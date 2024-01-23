@@ -152,6 +152,7 @@
                                 showDenyButton: true,
                                 showCancelButton: true,
                                 confirmButtonText: "Change to Online",
+                                confirmgButtonColor: "#D0B739",
                                 denyButtonText: "Deactivate",
                             }).then((result) => {
                                 if(result.isConfirmed){
@@ -181,6 +182,7 @@
                                 showDenyButton: true,
                                 showCancelButton: true,
                                 confirmButtonText: "Change to Onsite",
+                                confirmButtonColor: "#46C92C",
                                 denyButtonText: "Deactivate",
                             }).then((result) => {
                                 if(result.isConfirmed){
@@ -211,7 +213,9 @@
                                 showDenyButton: true,
                                 showCancelButton: true,
                                 confirmButtonText: "Onsite",
+                                confirmButtonColor: "#46C92C",
                                 denyButtonText: "Online",
+                                denyButtonColor: "#D0B739",
                             }).then((result) => {
                                 if(result.isConfirmed){
                                     data = {
