@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Setting;
+use App\Models\Applicant;
 
 class applicantMiddleware
 {
@@ -17,8 +18,15 @@ class applicantMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $active = Setting::where('key','Active')->first();
-        if (session('applicant_id') && $active->value == 0){
-            return redirect()->route('applicant.comming.soon');
+        if ($active->value == 0 && !session('isAdmin')){
+            if(session('applicant_id') == null){
+                return redirect()->route('applicant.comming.soon');
+            }else{
+                $app = Applicant::where('id',session('applicant_id'))->get()->first();
+                if($app->stage <= 3){
+                    return redirect()->route('applicant.comming.soon');
+                }
+            }
         }
         return $next($request);
     }

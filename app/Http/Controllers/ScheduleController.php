@@ -114,9 +114,9 @@ class ScheduleController extends BaseController
     }
 
     public function divisionInterview(){
-        $data['title'] = 'My Interview';
+        $data['title'] = 'All Interview';
         if(session('role') == 'bph'){
-            $interview = $this->model->where('status',2)->with(['applicant.priorityDivision1','applicant.priorityDivision2','date','admin'])->get()->toArray();
+            $interview = $this->model->where('status',2)->with(['applicant.priorityDivision1','applicant.priorityDivision2','date','admin','applicant.major'])->get()->toArray();
         }else{
             $interview = $this->model->whereHas('applicant',function($q){
                 $q->where('priority_division1',session('division_id'))->orWhere('priority_division2',session('division_id'));
@@ -168,7 +168,7 @@ class ScheduleController extends BaseController
     {
         $division = $request->division;
         if($division == 'all'){
-            $interview = $this->model->where('status',2)->with(['applicant.priorityDivision1','applicant.priorityDivision2','date','admin'])->get()->toArray();
+            $interview = $this->model->where('status',2)->with(['applicant.priorityDivision1','applicant.priorityDivision2','date','admin','applicant.major'])->get()->toArray();
         }else{
             $interview = $this->model->whereHas('applicant',function($q) use ($division){
                 $q->where('priority_division1',$division)->orWhere('priority_division2',$division);
