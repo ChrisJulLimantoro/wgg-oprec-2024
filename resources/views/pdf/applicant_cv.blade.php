@@ -222,7 +222,7 @@
                     <tr>
                         <td class="label">Pengalaman Organisasi / Panitia</td>
                         <td>:</td>
-                        <td class="value">{{ $applicant['experience'] }} Lorem ipsum dolor, sit amet consectetur</td>
+                        <td class="value">{{ $applicant['experience'] }}</td>
                         <td></td>
                     </tr>
                     <tr>
