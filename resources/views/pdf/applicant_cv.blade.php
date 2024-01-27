@@ -226,7 +226,7 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td class="label">Astor</td>
+                        <td class="label">ASTOR</td>
                         <td>:</td>
                         <td class="value">{{ ['Tidak', 'Iya'][$applicant['astor']] }}</td>
                         <td></td>
