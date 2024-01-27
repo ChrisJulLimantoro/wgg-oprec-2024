@@ -467,7 +467,7 @@
                                 style=" text-shadow: 0px 1px 1px hsla(0, 0%, 100%, 1);"><span
                                     class="font-dillan">Welcome Grateful Generation</span>
                                 atau yang kerap kita kenal
-                                sebagai WGG adalah kegiatan orientasi mahasiswa baru di Universitas Kristen Petra. Pada
+                                sebagai WGG adalah kegiatan penyambutan mahasiswa baru di Petra Christian University. Pada
                                 acara ini, para mahasiswa baru diajak untuk mengenal dan beradaptasi dengan lingkungan
                                 kampus.</p>
                         </div>
@@ -1260,7 +1260,7 @@
 
     <!-- Tulisan Oprec & Tema -->
     <script>
-        const texts = ["WGG 2024", "Let There Be Light"];
+        const texts = ["WGG 2024", "On the solid rock, I stand"];
         const typingContainer = document.getElementById("typing-container");
         let currentTextIndex = 0;
         let currentText = "";

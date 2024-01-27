@@ -352,7 +352,7 @@
                         type="checkbox" id="astor" name="astor"
                         {{ !empty(old('astor')) || data_get($form, 'astor', false) ? 'checked' : '' }} />
                     <label class="inline-block pl-[0.15rem] hover:cursor-pointer" for="astor">
-                        Centang jika merupakan Astor
+                        Centang jika merupakan ASTOR
                     </label>
                 </div>
 
@@ -391,7 +391,7 @@
                 @if (!array_key_exists('id', $form))
                     <div class="px-3 mb-8 text-white">
                         <p style="font-size: 110%;"><span class="text-red-400">Perhatian!</span><br />Pilihan <span
-                                class="text-red-400">Astor</span> dan <span class="text-red-400">Divisi</span> hanya dapat
+                                class="text-red-400">ASTOR</span> dan <span class="text-red-400">Divisi</span> hanya dapat
                             dipilih <span class="text-red-400">satu kali</span> dan <span class="text-red-400">tidak dapat
                                 diubah</span>!</p>
                     </div>

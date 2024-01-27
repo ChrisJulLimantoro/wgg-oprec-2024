@@ -504,17 +504,14 @@ class ApplicantController extends BaseController
     public function tolakTerima()
     {
         $data['title'] = 'Tolak Terima';
-        $schedule = Schedule::with(['applicant', 'applicant.priorityDivision1', 'applicant.priorityDivision2', 'applicant.divisionAccepted'])
-            ->where('status', 2)
-            ->whereHas('applicant', function ($query) {
-                $query->where('stage', '>', 3);
-            })
+        $applicant = Applicant::with(['priorityDivision1', 'priorityDivision2', 'divisionAccepted'])
+            ->where('stage', '>', 3)
             ->get();
         $data['applicant'] = [];
         $i = 0;
-        foreach ($schedule as $b) {
-            $a = $b->applicant;
-            if ($a->priorityDivision1->id != session('division_id') && $a->priorityDivision2->id != session('division_id') && session('role') != "bph") {
+
+        foreach ($applicant as $a) {
+            if ($a->priorityDivision1->id != session('division_id') && ($a->priorityDivision2 ?  $a->priorityDivision2->id != session('division_id') : true) && session('role') != "bph") {
                 continue;
             }
             $temp = [];
@@ -523,31 +520,8 @@ class ApplicantController extends BaseController
             $temp['nrp'] = $a->getNRP();
             $temp['name'] = $a->name;
             $temp['prioritas1'] = $a->priorityDivision1->name;
-            $temp['prioritas1_id'] = $a->priorityDivision1->id;
-            $temp['prioritas2'] = $a->priorityDivision2->name;
-            $temp['prioritas2_id'] = $a->priorityDivision2->id;
+            $temp['prioritas2'] = $a->priorityDivision2 == null ? "---" : $a->priorityDivision2->name;
             $temp['divisi'] = $a->divisionAccepted;
-            $temp['email'] = $a->email;
-            $temp['gender'] = $a->gender == 0 ? 'Laki-laki' : 'Perempuan';
-            $temp['religion'] = $a->religion;
-            $temp['birth_place'] = $a->birthplace;
-            $temp['birth_date'] = $a->birthdate;
-            $temp['province'] = $a->province;
-            $temp['city'] = $a->city;
-            $temp['address'] = $a->address;
-            $temp['postal_code'] = $a->postal_code;
-            $temp['phone'] = $a->phone;
-            $temp['line'] = $a->line;
-            $temp['instagram'] = $a->instagram;
-            $temp['tiktok'] = $a->tiktok;
-            $temp['gpa'] = $a->gpa;
-            $temp['motivation'] = $a->motivation;
-            $temp['commitment'] = $a->commitment;
-            $temp['strength'] = $a->strength;
-            $temp['weakness'] = $a->weakness;
-            $temp['experience'] = $a->experience;
-            $temp['diet'] = $a->diet;
-            $temp['allergy'] = $a->allergy;
 
             // button action atau acceptance status logic
             $temp['action1'] =  "
@@ -637,7 +611,6 @@ class ApplicantController extends BaseController
                 <i class=' fa-sharp fa-regular fa-circle-xmark fa-lg' style='color: #dc2626;'></i>
                 </div>
                 <h1 class='text-red-600 font-bold text-center'>Tertolak</h1>
-               
                 <button
                 type='button' class='btn-cancel mx-auto block rounded bg-danger px-2 pb-2 pt-2.5 text-[0.5rem] font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(220,76,100,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)]'
                 data-te-index='$i' data-te-priority='2'>cancel</button>";
@@ -656,57 +629,28 @@ class ApplicantController extends BaseController
         }
         $data['applicant'] = json_encode($data['applicant']);
 
-        // dd($data['applicant']);
-
         return view('admin.tolak_terima.tolakTerima', $data);
     }
 
     public function culikAnak()
     {
         $data['title'] = 'Tolak Terima';
-        $schedule = Schedule::with(['applicant', 'applicant.priorityDivision1', 'applicant.priorityDivision2', 'applicant.divisionAccepted'])
-            ->where('status', 2)
-            ->whereHas('applicant', function ($query) {
-                $query->where('stage', '>', 3)
-                    ->where('acceptance_stage', '>=', 5);
-            })
-            ->get();
+        $applicant = Applicant::with(['priorityDivision1', 'priorityDivision2', 'divisionAccepted'])
+        ->where('stage', '>', 3)
+        ->where('acceptance_stage','>=' ,5)
+        ->get();
 
         $data['applicant'] = [];
         $i = 0;
-        foreach ($schedule as $b) {
-            $a = $b->applicant;
+        foreach ($applicant as $a) {
             $temp = [];
             $temp['no'] = $i + 1;
             $temp['id'] = $a->id;
             $temp['nrp'] = $a->getNRP();
             $temp['name'] = $a->name;
             $temp['prioritas1'] = $a->priorityDivision1->name;
-            $temp['prioritas1_id'] = $a->priorityDivision1->id;
-            $temp['prioritas2'] = $a->priorityDivision2->name;
-            $temp['prioritas2_id'] = $a->priorityDivision2->id;
+            $temp['prioritas2'] = $a->priorityDivision2 ? $a->priorityDivision2->name : "---";
             $temp['divisi'] = $a->divisionAccepted;
-            $temp['email'] = $a->email;
-            $temp['gender'] = $a->gender == 0 ? 'Laki-laki' : 'Perempuan';
-            $temp['religion'] = $a->religion;
-            $temp['birth_place'] = $a->birthplace;
-            $temp['birth_date'] = $a->birthdate;
-            $temp['province'] = $a->province;
-            $temp['city'] = $a->city;
-            $temp['address'] = $a->address;
-            $temp['postal_code'] = $a->postal_code;
-            $temp['phone'] = $a->phone;
-            $temp['line'] = $a->line;
-            $temp['instagram'] = $a->instagram;
-            $temp['tiktok'] = $a->tiktok;
-            $temp['gpa'] = $a->gpa;
-            $temp['motivation'] = $a->motivation;
-            $temp['commitment'] = $a->commitment;
-            $temp['strength'] = $a->strength;
-            $temp['weakness'] = $a->weakness;
-            $temp['experience'] = $a->experience;
-            $temp['diet'] = $a->diet;
-            $temp['allergy'] = $a->allergy;
 
             if ($a->acceptance_stage == 6 && $a->division_accepted == session('division_id')) {
                 $temp['action'] = "<button
@@ -753,11 +697,17 @@ class ApplicantController extends BaseController
         }
 
         if ($data['priority'] == 2) {
+            // check apakah prioritas 2 ada
+            if (!$applicant->priorityDivision2) {
+                return response()->json(['success' => false, 'message' => 'Tidak ada pilihan 2']);
+            }
+
             // check apakah punya kuasa
             if ($admin_division->id != $applicant->priorityDivision2->id && $admin_division->slug != "bph") {
                 return response()->json(['success' => false, 'message' => 'Anda tidak memiliki kuasa untuk menerima pilihan 2']);
             }
 
+            // terima prioritas 2
             if ($applicant->acceptance_stage == 3) {
                 $this->updatePartial(['acceptance_stage' => 4, 'division_accepted' => $applicant->priorityDivision2->id], $data['id']);
                 return response()->json(['success' => true, 'message' => 'Berhasil menerima anak di pilihan 2']);
@@ -779,14 +729,24 @@ class ApplicantController extends BaseController
                 return response()->json(['success' => false, 'message' => 'Anda tidak memiliki kuasa untuk menolak pilihan 1']);
             }
 
-            // terima prioritas 1
+            // tolak prioritas 1
             if ($applicant->acceptance_stage == 1) {
-                $this->updatePartial(['acceptance_stage' => 3], $data['id']);
-                return response()->json(['success' => true, 'message' => 'Berhasil menolak anak di pilihan 1']);
+                // check apa ada prioritas2
+                if ($applicant->priorityDivision2) {
+                    $this->updatePartial(['acceptance_stage' => 3], $data['id']);
+                    return response()->json(['success' => true, 'message' => 'Berhasil menolak anak di pilihan 1']);
+                } else {
+                    $this->updatePartial(['acceptance_stage' => 5], $data['id']);
+                    return response()->json(['success' => true, 'message' => 'Berhasil menolak anak di pilihan 1']);
+                }
             }
         }
 
         if ($data['priority'] == 2) {
+            // check apa ada prioritas 2
+            if (!$applicant->priorityDivision2) {
+                return response()->json(['success' => false, 'message' => 'Tidak ada prioritas 2']);
+            }
             // check apakah punya kuasa
             if ($admin_division->id != $applicant->priorityDivision2->id && $admin_division->slug != "bph") {
                 return response()->json(['success' => false, 'message' => 'Anda tidak memiliki kuasa untuk menolak pilihan 2']);
@@ -825,6 +785,7 @@ class ApplicantController extends BaseController
         $applicant = $this->getById($data['id']);
         $admin_division = Division::where('id', session('division_id'))->first();
 
+        
         // check stage priority
         if ($data['priority'] == 1) {
             // check apakah punya kuasa
@@ -832,12 +793,28 @@ class ApplicantController extends BaseController
                 return response()->json(['success' => false, 'message' => 'Anda tidak memiliki kuasa untuk cancel pilihan 1']);
             }
 
-            // cancel prioritas 1
-            if ($applicant->acceptance_stage <= 3 && $applicant->acceptance_stage >= 2) {
-                $this->updatePartial(['acceptance_stage' => 1, 'division_accepted' => null], $data['id']);
-                return response()->json(['success' => true, 'message' => 'Berhasil cancel anak di pilihan 1']);
+            // APAKAH ADA PRIORITAS 2
+            if ($applicant->priorityDivision2) {
+                // kalau ada cancel
+                if ($applicant->acceptance_stage <= 3 && $applicant->acceptance_stage >= 2) {
+                    $this->updatePartial(['acceptance_stage' => 1, 'division_accepted' => null], $data['id']);
+                    return response()->json(['success' => true, 'message' => 'Berhasil cancel anak di pilihan 1']);
+                }
+            }else{
+                // kalau tidak ada cancel
+                if ($applicant->acceptance_stage <= 5 && $applicant->acceptance_stage >= 2) {
+                    $this->updatePartial(['acceptance_stage' => 1, 'division_accepted' => null], $data['id']);
+                    return response()->json(['success' => true, 'message' => 'Berhasil cancel anak di pilihan 1']);
+                }
+
             }
+
         } else if ($data['priority'] == 2) {
+            // check apa ada prioritas 2
+            if (!$applicant->priorityDivision2) {
+                return response()->json(['success' => false, 'message' => 'Tidak ada prioritas 2']);
+            }
+
             // check apakah punya kuasa
             if ($admin_division->id != $applicant->priorityDivision2->id && $admin_division->slug != "bph") {
                 return response()->json(['success' => false, 'message' => 'Anda tidak memiliki kuasa untuk cancel pilihan 2']);

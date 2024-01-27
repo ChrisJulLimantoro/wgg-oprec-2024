@@ -2,44 +2,46 @@
 @section("content")
     <div class="flex flex-col w-full h-full rounded-lg shadow-xl items-center justify-center mb-8 py-8">
         <h1 class="text-center uppercase font-bold text-3xl mb-5">Select Schedules</h1>
-        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-2 mx-5">
-            <div class="grid grid-cols-3 h-full">
-                <div class="p-3 w-full h-full">
-                    <div class="rounded-lg w-full h-full bg-red-500"> </div>
-                </div>
-                <div class="p-3 col-span-2 w-full h-full text-lg font-bold flex justify-start items-center">
-                    <div class="my-auto">
-                        Tidak Bisa
+        <div class="">
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-2 mx-5">
+                <div class="grid grid-cols-3 h-full">
+                    <div class="p-3 w-full h-full">
+                        <div class="rounded-lg w-full h-full bg-red-500"> </div>
+                    </div>
+                    <div class="p-3 col-span-2 w-full h-full text-lg font-bold flex justify-start items-center">
+                        <div class="my-auto">
+                            Tidak Bisa
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="grid grid-cols-3 h-full">
-                <div class="p-3 w-full h-full">
-                    <div class="rounded-lg w-full h-full bg-green-500"> </div>
-                </div>
-                <div class="p-3 col-span-2 w-full h-full text-lg font-bold flex justify-start items-center">
-                    <div class="my-auto">
-                        Bisa
+                <div class="grid grid-cols-3 h-full">
+                    <div class="p-3 w-full h-full">
+                        <div class="rounded-lg w-full h-full bg-green-500"> </div>
+                    </div>
+                    <div class="p-3 col-span-2 w-full h-full text-lg font-bold flex justify-start items-center">
+                        <div class="my-auto">
+                            Bisa
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="grid grid-cols-3 h-full">
-                <div class="p-3 w-full h-full">
-                    <div class="rounded-lg w-full h-full bg-yellow-500"> </div>
-                </div>
-                <div class="p-3 col-span-2 w-full h-full text-lg font-bold flex justify-start items-center">
-                    <div class="my-auto">
-                        Bisa Online Saja
+                <div class="grid grid-cols-3 h-full">
+                    <div class="p-3 w-full h-full">
+                        <div class="rounded-lg w-full h-full bg-yellow-500"> </div>
+                    </div>
+                    <div class="p-3 col-span-2 w-full h-full text-lg font-bold flex justify-start items-center">
+                        <div class="my-auto">
+                            Bisa Online Saja
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="grid grid-cols-3 h-full">
-                <div class="p-3 w-full h-full">
-                    <div class="rounded-lg w-full h-full bg-black"> </div>
-                </div>
-                <div class="p-3 col-span-2 w-full h-full text-lg font-bold flex justify-start items-center">
-                    <div class="my-auto">
-                        Ada Interview
+                <div class="grid grid-cols-3 h-full">
+                    <div class="p-3 w-full h-full">
+                        <div class="rounded-lg w-full h-full bg-black"> </div>
+                    </div>
+                    <div class="p-3 col-span-2 w-full h-full text-lg font-bold flex justify-start items-center">
+                        <div class="my-auto">
+                            Ada Interview
+                        </div>
                     </div>
                 </div>
             </div>
@@ -152,6 +154,7 @@
                                 showDenyButton: true,
                                 showCancelButton: true,
                                 confirmButtonText: "Change to Online",
+                                confirmgButtonColor: "#D0B739",
                                 denyButtonText: "Deactivate",
                             }).then((result) => {
                                 if(result.isConfirmed){
@@ -181,6 +184,7 @@
                                 showDenyButton: true,
                                 showCancelButton: true,
                                 confirmButtonText: "Change to Onsite",
+                                confirmButtonColor: "#46C92C",
                                 denyButtonText: "Deactivate",
                             }).then((result) => {
                                 if(result.isConfirmed){
@@ -211,7 +215,9 @@
                                 showDenyButton: true,
                                 showCancelButton: true,
                                 confirmButtonText: "Onsite",
+                                confirmButtonColor: "#46C92C",
                                 denyButtonText: "Online",
+                                denyButtonColor: "#D0B739",
                             }).then((result) => {
                                 if(result.isConfirmed){
                                     data = {
