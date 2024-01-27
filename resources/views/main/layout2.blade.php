@@ -66,7 +66,7 @@
         body {
             background: rgb(16, 23, 57);
             background: linear-gradient(180deg, rgba(16, 23, 57, 1) 0%, rgba(48, 63, 107, 1) 50%, rgba(86, 71, 120, 1) 100%);
-            cursor: url('{{ asset('assets/baymax-touch-smol.png') }}'), auto;
+            cursor: url('{{ asset('assets/baymax-touch-smol.png') }}') 25 25, auto;
         }
     </style>
 
@@ -75,7 +75,7 @@
 </head>
 
 <body class="p-0 m-0 overflow-hidden h-screen font-asap relative">
-    
+
     {{-- Baymax --}}
     <div class="w-full h-full"></div>
     <div class="w-full h-1/4"></div>
@@ -192,7 +192,9 @@
         camera.position.z = 10;
         scene.add(camera);
 
-        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        const renderer = new THREE.WebGLRenderer({
+            alpha: true
+        });
         renderer.setSize(width, height);
         document.body.appendChild(renderer.domElement);
 
@@ -322,7 +324,11 @@
                     rotation: 0,
                     leafSizePercent: 0.25,
                     size: 1.5,
-                    color: { x: 37, y: 40, z: 91 }
+                    color: {
+                        x: 37,
+                        y: 40,
+                        z: 91
+                    }
                 },
                 ...props
             };
@@ -356,7 +362,11 @@
             let baseDarkness = 1 - darkness;
             let darkerDarkness = 0.9 - darkness;
             return {
-                color: { x: 37 * baseDarkness, y: 40 * baseDarkness, z: 91 * baseDarkness },
+                color: {
+                    x: 37 * baseDarkness,
+                    y: 40 * baseDarkness,
+                    z: 91 * baseDarkness
+                },
                 centerColor: {
                     x: 31 * darkerDarkness,
                     y: 33 * darkerDarkness,
@@ -366,22 +376,52 @@
         };
 
         const lightBlueBush = {
-            color: { x: 94, y: 48, z: 134 },
-            centerColor: { x: 65, y: 40, z: 126 }
+            color: {
+                x: 94,
+                y: 48,
+                z: 134
+            },
+            centerColor: {
+                x: 65,
+                y: 40,
+                z: 126
+            }
         };
 
         const lightBlueAltBush = {
-            color: { x: 37 * 1.1, y: 40 * 1.1, z: 91 * 1.1 },
-            centerColor: { x: 31, y: 33, z: 76 }
+            color: {
+                x: 37 * 1.1,
+                y: 40 * 1.1,
+                z: 91 * 1.1
+            },
+            centerColor: {
+                x: 31,
+                y: 33,
+                z: 76
+            }
         };
 
         const darkerBlueBush = {
-            color: { x: 37 * 0.75, y: 40 * 0.75, z: 91 * 0.75 },
-            centerColor: { x: 37 * 0.7, y: 40 * 0.7, z: 91 * 0.7 }
+            color: {
+                x: 37 * 0.75,
+                y: 40 * 0.75,
+                z: 91 * 0.75
+            },
+            centerColor: {
+                x: 37 * 0.7,
+                y: 40 * 0.7,
+                z: 91 * 0.7
+            }
         };
 
-        const bushes = [
-            { ...lightBlueAltBush, size: 1.8, x: 0, y: 1.7, z: 6.6, numLeafs: 5 }, // font and center
+        const bushes = [{
+                ...lightBlueAltBush,
+                size: 1.8,
+                x: 0,
+                y: 1.7,
+                z: 6.6,
+                numLeafs: 5
+            }, // font and center
 
             {
                 ...darkBlueBush(0.05),
@@ -542,10 +582,17 @@
         for (let i = 0; i < bushes.length; i++) {
             let b = bushes[i];
             b.rotation = b.rotation || i * 13.14156;
-            let doubledBush = { ...b, rotation: b.rotation + Math.PI };
+            let doubledBush = {
+                ...b,
+                rotation: b.rotation + Math.PI
+            };
 
             bush(b);
-            if (bushes[i].mirrorX) bush({ ...b, x: b.x * -1, rotation: b.rotation * -1 });
+            if (bushes[i].mirrorX) bush({
+                ...b,
+                x: b.x * -1,
+                rotation: b.rotation * -1
+            });
 
             if (b.double !== false) {
                 bush(doubledBush);
@@ -676,11 +723,12 @@
     <script>
         $(document).ready(function() {
             $(document.body).on('touchstart mousedown', function() {
-                document.body.style.cursor = "url('{{ asset('assets/baymax-smol.png') }}'), auto"
+                document.body.style.cursor = "url('{{ asset('assets/baymax-smol.png') }}') 25 25, auto"
             })
 
             $(document.body).on("touchend mouseup", function() {
-                document.body.style.cursor = "url('{{ asset('assets/baymax-touch-smol.png') }}'), auto"
+                document.body.style.cursor =
+                    "url('{{ asset('assets/baymax-touch-smol.png') }}') 25 25, auto"
             })
         })
     </script>

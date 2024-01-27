@@ -55,7 +55,7 @@
         }
 
         body {
-            cursor: url('{{ asset('assets/baymax-touch-smol.png') }}'), auto;
+            cursor: url('{{ asset('assets/baymax-touch-smol.png') }}') 25 25, auto;
         }
 
         ::-webkit-scrollbar {
@@ -493,7 +493,8 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-acara.png') }}" alt=""
                                     class="top-[-60px] left-[80px]">
-                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Acara</h3>
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
+                                    Acara</h3>
                                 <p class="mt-2">Divisi yang mengonsep dan memimpin jalannya acara untuk mengantarkan
                                     pesan kepada
                                     mahasiswa baru.</p>
@@ -505,7 +506,8 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-creative.png') }}" alt=""
                                     class="top-[-70px] left-[50px]">
-                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Creative
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
+                                    Creative
                                 </h3>
                                 <p class="mt-2">Divisi yang menjadi tempat untuk berkarya serta melayani melalui ide
                                     yang
@@ -518,7 +520,8 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-it.png') }}" alt=""
                                     class="top-[-70px] left-[60px]">
-                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">IT</h3>
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
+                                    IT</h3>
                                 <p class="mt-2">Divisi yang bertugas untuk mengelola database dan website mengenai
                                     informasi seputar
                                     WGG dan mengatur data serta absensi mahasiswa peserta WGG.</p>
@@ -530,7 +533,8 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-kesehatan.png') }}" alt=""
                                     class="top-[-65px] left-[55px] scale-90">
-                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Kesehatan
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
+                                    Kesehatan
                                 </h3>
                                 <p class="mt-2">Divisi yang memberikan bantuan yang berhubungan dengan kesehatan dan
                                     bertanggung
@@ -543,7 +547,8 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-konsumsi.png') }}" alt=""
                                     class="top-[-75px] left-[50px]">
-                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Konsumsi
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
+                                    Konsumsi
                                 </h3>
                                 <p class="mt-2">Divisi yang memfasilitasi konsumsi untuk menemani mahasiswa baru
                                     selama
@@ -557,7 +562,8 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-peran.png') }}" alt=""
                                     class="top-[-70px] left-[60px] scale-75">
-                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Peran</h3>
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
+                                    Peran</h3>
                                 <p class="mt-2">Divisi yang menjadi wadah untuk menyambut dan mendampingi mahasiswa
                                     baru
                                     dalam
@@ -583,7 +589,8 @@
                             <div class="content">
                                 <img src="{{ asset('assets/logo-regulasi.png') }}" alt=""
                                     class="top-[-65px] left-[60px] scale-[0.8]">
-                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">Regulasi
+                                <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
+                                    Regulasi
                                 </h3>
                                 <p class="mt-2">Divisi yang bertanggung jawab dalam pembuatan dan pelaksanaan
                                     peraturan,
@@ -1598,11 +1605,12 @@
     <script>
         $(document).ready(function() {
             $(document.body).on('touchstart mousedown', function() {
-                document.body.style.cursor = "url('{{ asset('assets/baymax-smol.png') }}'), auto"
+                document.body.style.cursor = "url('{{ asset('assets/baymax-smol.png') }}') 25 25, auto"
             })
 
             $(document.body).on("touchend mouseup", function() {
-                document.body.style.cursor = "url('{{ asset('assets/baymax-touch-smol.png') }}'), auto"
+                document.body.style.cursor =
+                    "url('{{ asset('assets/baymax-touch-smol.png') }}') 25 25, auto"
             })
         })
     </script>
