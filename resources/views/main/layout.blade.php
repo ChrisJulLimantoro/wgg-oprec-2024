@@ -19,16 +19,17 @@
             font-family: dillan;
             src: url('{{ asset('assets/dillan.otf') }}') format('truetype');
         }
+
         body {
             margin: 0;
             min-height: 100vh;
             font-family: 'Asap', sans-serif, 'Roboto', 'sans-serif';
-            cursor: url('{{ asset('assets/baymax-touch-smol.png') }}'), auto;
+            cursor: url('{{ asset('assets/baymax-touch-smol.png') }}') 25 25, auto;
             background: rgb(16, 23, 57);
             background: linear-gradient(180deg, rgba(16, 23, 57, 1) 0%, rgba(48, 63, 107, 1) 50%, rgba(86, 71, 120, 1) 100%);
         }
 
-        ::-webkit-scrollbar {   
+        ::-webkit-scrollbar {
             width: 10px;
         }
 
@@ -48,7 +49,9 @@
             color: #fff !important;
         }
 
-        input, textarea, select {
+        input,
+        textarea,
+        select {
             color: rgb(229, 153, 128) !important;
         }
 
@@ -64,7 +67,8 @@
             fill: #fff !important;
         }
 
-        input:disabled, textarea:disabled {
+        input:disabled,
+        textarea:disabled {
             background: #aaaaaa50 !important;
         }
     </style>
@@ -140,11 +144,12 @@
     <script>
         $(document).ready(function() {
             $(document.body).on('touchstart mousedown', function() {
-                document.body.style.cursor = "url('{{ asset('assets/baymax-smol.png') }}'), auto"
+                document.body.style.cursor = "url('{{ asset('assets/baymax-smol.png') }}') 25 25, auto"
             })
 
             $(document.body).on("touchend mouseup", function() {
-                document.body.style.cursor = "url('{{ asset('assets/baymax-touch-smol.png') }}'), auto"
+                document.body.style.cursor =
+                    "url('{{ asset('assets/baymax-touch-smol.png') }}') 25 25, auto"
             })
         })
     </script>
