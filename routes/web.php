@@ -139,7 +139,7 @@ Route::prefix('admin')->middleware(['session', 'admin'])->group(function () {
 // });
 
 // login
-Route::get('/login', [AuthController::class, 'loginView'])->name('login');
+Route::get('/login', [AuthController::class, 'loginView'])->name('login')->middleware('login');
 Route::get('/processLogin', [AuthController::class, 'login'])->name('processLogin');
 Route::post('/processLogin', [AuthController::class, 'login'])->name('processLogin');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
