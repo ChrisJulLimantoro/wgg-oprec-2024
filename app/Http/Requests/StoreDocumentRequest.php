@@ -34,11 +34,15 @@ class StoreDocumentRequest extends FormRequest
 
             $rules[strtolower($documentType)] = [
                 'required_without_all:' . strtolower(join(',', $allExcludeCurrentType)),
-                File::image()
-                    ->max('5mb'),
-                'mimes:jpg,png',
                 new DocumentExistsRule(),
+                // ($documentType == DocumentType::Frontline_Test->name) ? File : File::image()->max('5mb'),
+                // ($documentType == DocumentType::Frontline_Test->name) ? 'mimes:pdf' : 'mimes:jpg,png',
             ];
+            if ($documentType == DocumentType::Frontline_Test->name) {
+                $rules[strtolower($documentType)][] = File::types('pdf')->max('5mb');
+            } else {
+                $rules[strtolower($documentType)][] = File::image()->max('5mb');
+            }
         }
 
         return $rules;
@@ -57,7 +61,10 @@ class StoreDocumentRequest extends FormRequest
             $messages[strtolower($documentType->name) . '.required_without_all'] = $documentType->value . ' file is required';
             $messages[strtolower($documentType->name) . '.image'] = $documentType->value . ' file must be an image';
             $messages[strtolower($documentType->name) . '.max'] = $documentType->value . ' file size must be less than 5mb';
-            $messages[strtolower($documentType->name) . '.mimes'] = $documentType->value . ' file must be a file of type: jpg, png';
+            $messages[strtolower($documentType->name) . '.mimes'] =
+                ($documentType->name == DocumentType::Frontline_Test->name)
+                ? $documentType->value . ' file must be a file of type: jpg, png'
+                : $documentType->value . ' file must be a file of type: pdf';
         }
 
         return $messages;
