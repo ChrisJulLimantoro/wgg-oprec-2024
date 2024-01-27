@@ -429,12 +429,12 @@
     <!-- Landing -->
     <div class="w-full h-full"></div>
     <div class="w-full h-1/4"></div>
-    <div class="container absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mx-auto text-center flex flex-col justify-center"
+    <div class="container absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mx-auto text-center flex flex-col justify-center w-[90vw] xl:w-[60vw] 2xl:w-[48vw]"
         style="z-index: 1;">
-        <h2 class="font-dillan text-[8vw] font-bold -mt-20 mb-8 xl:-mt-48 xl:mb-6 xl:text-[4vw] text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] gs_reveal"
+        <h2 class="font-dillan text-[8vw] font-bold mb-8 lg:-mt-56 2xl:-mt-48 xl:mb-6 xl:text-[4vw] text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] gs_reveal"
             id="judul1">
             OPEN RECRUITMENT</h2>
-        <div class="font-dillan h-14 text-[10vw] font-bold typing-container text-white whitespace-nowrap xl:text-[5vw] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] gs_reveal"
+        <div class="font-dillan h-28 text-[10vw] font-bold typing-container text-white whitespace-normal xl:text-[5vw] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] gs_reveal"
             id="typing-container">
         </div>
     </div>
@@ -1260,7 +1260,7 @@
 
     <!-- Tulisan Oprec & Tema -->
     <script>
-        const texts = ["WGG 2024", "On the solid rock, I stand"];
+        const texts = ["WGG 2024", "On The Solid Rock, I Stand"];
         const typingContainer = document.getElementById("typing-container");
         let currentTextIndex = 0;
         let currentText = "";
