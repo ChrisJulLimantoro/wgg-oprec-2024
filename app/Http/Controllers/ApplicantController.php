@@ -171,7 +171,10 @@ class ApplicantController extends BaseController
             return redirect()->route('applicant.documents-form')
                 ->with('previous_stage_not_completed', 'Silahkan upload berkas Anda terlebih dahulu!');
 
-        if ($applicant->astor) return;
+        if ($applicant->astor) {
+            $data['applicant'] = $applicant->toArray();
+            return view('main.schedule_form', $data);
+        };
 
         if ($this->cekPeran($applicant->email) && $applicant->priority_division2 != null)
             $data['double_interview'] = true;
