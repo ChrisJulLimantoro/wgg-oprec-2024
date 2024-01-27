@@ -309,6 +309,14 @@
             $("#modalLocationBtn0, #modalLocationBtn1, #btn-cp0, #btn-cp1").click(async function() {
                 $("div[data-te-backdrop-show]").remove();
             })  
+
+            @if (Session::has('previous_stage_not_completed'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: '{{ Session::get('previous_stage_not_completed') }}',
+                });
+            @endif
         })
     </script>
 @endsection

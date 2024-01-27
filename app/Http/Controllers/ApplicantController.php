@@ -106,7 +106,8 @@ class ApplicantController extends BaseController
         );
 
         if (!$applicant)
-            return 'Silahkan isi form pendaftaran terlebih dahulu di <a href="' . route('applicant.application-form') . '">sini</a>!';
+            return redirect()->route('applicant.application-form')
+                    ->with('previous_stage_not_completed', 'Silahkan isi form pendaftaran terlebih dahulu!');
 
         $data['title'] = 'Upload Berkas';
         $data['documentTypes'] = self::documentTypes($applicant->astor);
@@ -167,7 +168,8 @@ class ApplicantController extends BaseController
             ->first();
 
         if (!$applicant)
-            return 'Silahkan isi form upload berkas terlebih dahulu di <a href="' . route('applicant.documents-form') . '">sini</a>!';
+            return redirect()->route('applicant.documents-form')
+                ->with('previous_stage_not_completed', 'Silahkan upload berkas Anda terlebih dahulu!');
 
         if ($applicant->astor) return;
 

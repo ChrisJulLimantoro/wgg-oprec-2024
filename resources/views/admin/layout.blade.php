@@ -463,7 +463,7 @@ $access = [
             <!-- Right elements -->
             <div class="relative flex items-center">
                 <!-- Logout Icon -->
-                <a class="pl-2 mb-4 sm:mb-0 sm:mr-4 text-secondary-500 transition duration-200 hover:text-secondary-400 hover:ease-in-out focus:text-secondary-400 disabled:text-black/30 motion-reduce:transition-none"
+                <a class="pl-2 my-auto sm:mb-0 sm:mr-4 text-secondary-500 transition duration-200 hover:text-secondary-400 hover:ease-in-out focus:text-secondary-400 disabled:text-black/30 motion-reduce:transition-none"
                     href="{{ route('logout') }}">
                     <span class="[&>svg]:w-5">
                         <svg class="w-[24px] h-[24px] fill-[#ff6b6b]" viewBox="0 0 512 512"
