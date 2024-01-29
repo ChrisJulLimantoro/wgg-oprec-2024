@@ -29,6 +29,7 @@ use App\Http\Requests\ApplicationRequest;
 use App\Events\ApplicantDocumentsUploaded;
 use App\Http\Requests\PickScheduleRequest;
 use App\Http\Requests\StoreDocumentRequest;
+use App\Models\Disease;
 
 class ApplicantController extends BaseController
 {
@@ -42,6 +43,7 @@ class ApplicantController extends BaseController
         $data['title'] = 'Form Pendaftaran';
         $data['religions'] = self::religions();
         $data['diets'] = self::diets();
+        $data['diseases'] = Disease::all(['id', 'name'])->toArray();
 
         $divisions = Division::all(['id', 'name'])->toArray();
         $excludedDivisions = ['Badan Pengurus Harian', 'Opening', 'Closing'];
@@ -73,7 +75,7 @@ class ApplicantController extends BaseController
             ->where('code', $majorCode)
             ->get();
 
-        $applicantData = $this->model->findByNRP($nrp);
+        $applicantData = $this->model->findByNRP($nrp, relations: ['diseases']);
         if ($applicantData) {
             $data['form'] = $applicantData->toArray();
         }
@@ -84,6 +86,9 @@ class ApplicantController extends BaseController
     public function storeApplication(ApplicationRequest $request)
     {
         $this->store($request);
+
+        $applicant = $this->model->findByEmail($request->email);
+        $applicant->addDiseases($request->diseases);
 
         return redirect()->back()
             ->with('success', 'Pendaftaran berhasil!');
@@ -107,7 +112,7 @@ class ApplicantController extends BaseController
 
         if (!$applicant)
             return redirect()->route('applicant.application-form')
-                    ->with('previous_stage_not_completed', 'Silahkan isi form pendaftaran terlebih dahulu!');
+                ->with('previous_stage_not_completed', 'Silahkan isi form pendaftaran terlebih dahulu!');
 
         $data['title'] = 'Upload Berkas';
         $data['documentTypes'] = self::documentTypes($applicant->astor);
@@ -303,10 +308,10 @@ class ApplicantController extends BaseController
                     ->whereNotIn('email', $division->name == 'Peran' ? [$peranExcluded] : [])
                     ->whereIn('online', $validated['online'][$i] == 1 ? [0, 1] : [0])
                     ->get();
-                
+
                 $admin = $this->chooseInterviewer($schedules->pluck('admin_id'));
             }
-            
+
             // dd($admin);
             $pickedSchedule[] = $schedules->where('admin_id', $admin->admin_id)->first();
         }
@@ -640,9 +645,9 @@ class ApplicantController extends BaseController
     {
         $data['title'] = 'Tolak Terima';
         $applicant = Applicant::with(['priorityDivision1', 'priorityDivision2', 'divisionAccepted'])
-        ->where('stage', '>', 3)
-        ->where('acceptance_stage','>=' ,5)
-        ->get();
+            ->where('stage', '>', 3)
+            ->where('acceptance_stage', '>=', 5)
+            ->get();
 
         $data['applicant'] = [];
         $i = 0;
@@ -789,7 +794,7 @@ class ApplicantController extends BaseController
         $applicant = $this->getById($data['id']);
         $admin_division = Division::where('id', session('division_id'))->first();
 
-        
+
         // check stage priority
         if ($data['priority'] == 1) {
             // check apakah punya kuasa
@@ -804,15 +809,13 @@ class ApplicantController extends BaseController
                     $this->updatePartial(['acceptance_stage' => 1, 'division_accepted' => null], $data['id']);
                     return response()->json(['success' => true, 'message' => 'Berhasil cancel anak di pilihan 1']);
                 }
-            }else{
+            } else {
                 // kalau tidak ada cancel
                 if ($applicant->acceptance_stage <= 5 && $applicant->acceptance_stage >= 2) {
                     $this->updatePartial(['acceptance_stage' => 1, 'division_accepted' => null], $data['id']);
                     return response()->json(['success' => true, 'message' => 'Berhasil cancel anak di pilihan 1']);
                 }
-
             }
-
         } else if ($data['priority'] == 2) {
             // check apa ada prioritas 2
             if (!$applicant->priorityDivision2) {

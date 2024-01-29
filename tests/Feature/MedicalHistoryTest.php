@@ -3,10 +3,21 @@
 namespace Tests\Feature;
 
 use App\Models\Applicant;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class MedicalHistoryTest extends TestCase
 {
+    use RefreshDatabase;
+
+    public $seeder = 'DatabaseSeeder';
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->refreshDatabase();
+    }
     /**
      * A basic feature test example.
      */

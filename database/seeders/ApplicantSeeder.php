@@ -45,11 +45,11 @@ class ApplicantSeeder extends Seeder
                 'experience' => 'Saya memiliki pengalaman untuk mengikuti kegiatan WGG',
                 'diet' => 'Tidak ada',
                 'allergy' => 'Tidak ada',
-                'medical_history' => json_encode([
+                'medical_history' => [
                     'other_disease' => '-',
                     'disease_explanation' => '-',
                     'medication_allergy' => '-',
-                ]),
+                ],
                 'astor' => 0,
                 'priority_division1' => Division::where('slug', 'it')->first()->id,
                 'priority_division2' => Division::where('slug', 'acara')->first()->id,
@@ -80,11 +80,11 @@ class ApplicantSeeder extends Seeder
                 'experience' => 'Saya memiliki pengalaman untuk mengikuti kegiatan WGG',
                 'diet' => 'Tidak ada',
                 'allergy' => 'Tidak ada',
-                'medical_history' => json_encode([
+                'medical_history' => [
                     'other_disease' => '-',
                     'disease_explanation' => '-',
                     'medication_allergy' => '-',
-                ]),
+                ],
                 'astor' => 0,
                 'priority_division1' => Division::where('slug', 'peran')->first()->id,
                 'priority_division2' => Division::where('slug', 'it')->first()->id,
@@ -115,11 +115,11 @@ class ApplicantSeeder extends Seeder
                 'experience' => 'Saya memiliki pengalaman untuk mengikuti kegiatan WGG',
                 'diet' => 'Tidak ada',
                 'allergy' => 'Tidak ada',
-                'medical_history' => json_encode([
+                'medical_history' => [
                     'other_disease' => '-',
                     'disease_explanation' => '-',
                     'medication_allergy' => '-',
-                ]),
+                ],
                 'astor' => 0,
                 'priority_division1' => Division::where('slug', 'acara')->first()->id,
                 'priority_division2' => Division::where('slug', 'konsum')->first()->id,

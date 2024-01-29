@@ -302,6 +302,11 @@ class Applicant extends Model
         $this->save();
     }
 
+    public function addDiseases($diseaseIds)
+    {
+        $this->diseases()->attach($diseaseIds);
+    }
+
     public function findByEmail($email, array $columns = ['*'], $relations = null)
     {
         $builder = $relations ? $this->with($relations) : $this;
