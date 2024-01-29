@@ -22,25 +22,15 @@
                     <form class="grid sm:grid-cols-5 sm:gap-4 grid-cols-3 gap-2"
                         action="{{ route('applicant.document.store', ['type' => strtolower($type)]) }}">
                         @csrf
-                        @if ($applicant['documents'] && array_key_exists(strtolower($type), $applicant['documents']))
-                            <input
-                                class="relative m-0 block sm:col-span-4 col-span-2 min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none disabled:opacity-60 dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
-                                type="file" id="formFileDisabled" disabled />
-                            <button type="button"
-                                class="pointer-events-none inline-block rounded bg-[#e59980] sm:px-6 px-2.5 pb-1.5 pt-1.5 sm:text-sm text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-[#ba7d68] focus:bg-[#ba7d68] focus:outline-none focus:ring-0 active:bg-primary-700 disabled:opacity-70"
-                                disabled>
-                                UPLOAD
-                            </button>
-                        @else
-                            <input
-                                class="relative m-0 block sm:col-span-4 col-span-2 min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
-                                type="file" name="{{ strtolower($type) }}"
-                                accept="{{ $type == 'Frontline_Test' ? '.PDF' : '.PNG,.JPG,.JPEG' }}" />
-                            <button type="submit" data-te-ripple-init data-te-ripple-color="light"
-                                class="inline-block rounded bg-[#e59980] sm:px-6 px-2.5 pb-1.5 pt-1.5 sm:text-sm text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-[#ba7d68] focus:bg-[#ba7d68] focus:outline-none focus:ring-0 active:bg-primary-700">
-                                UPLOAD
-                            </button>
-                        @endif
+                        <input
+                            class="relative m-0 block sm:col-span-4 col-span-2 min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary disabled:opacity-60"
+                            type="file" name="{{ strtolower($type) }}" @if ($applicant['documents'] && array_key_exists(strtolower($type), $applicant['documents'])) disabled @endif
+                            accept="{{ $type == 'Frontline_Test' ? '.PDF' : '.PNG,.JPG,.JPEG' }}" />
+                        <button type="submit" data-te-ripple-init data-te-ripple-color="light"
+                            class="inline-block rounded bg-[#e59980] sm:px-6 px-2.5 pb-1.5 pt-1.5 sm:text-sm text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-[#ba7d68] focus:bg-[#ba7d68] focus:outline-none focus:ring-0 active:bg-primary-700 disabled:opacity-70 disabled:pointer-events-none"
+                            @if ($applicant['documents'] && array_key_exists(strtolower($type), $applicant['documents'])) disabled @endif>
+                            UPLOAD
+                        </button>
                     </form>
                     <div
                         class="h-1 w-full bg-neutral-200 dark:bg-neutral-600 my-1 {{ $applicant['documents'] && array_key_exists(strtolower($type), $applicant['documents']) ? '' : 'hidden' }} progress-bar">
@@ -89,6 +79,7 @@
 
             $('form').on('submit', function(e) {
                 e.preventDefault();
+                $(this).children('button').attr('disabled', true);
 
                 const storeUrl = $(this).attr('action');
                 const type = storeUrl.split('/').pop();
@@ -135,9 +126,9 @@
                     Swal.fire(config);
 
                     $(this).children('input').attr('disabled', true);
-                    $(this).children('button').attr('disabled', true);
                 }).fail((e) => {
                     const errors = e.responseJSON.errors;
+                    $(this).children('button').attr('disabled', false);
                     if (Object.keys(errors).length > 1) {
                         Swal.fire({
                             icon: 'error',
