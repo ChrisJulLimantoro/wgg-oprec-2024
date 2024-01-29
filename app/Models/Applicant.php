@@ -39,6 +39,7 @@ class Applicant extends Model
         'experience',
         'diet',
         'allergy',
+        'medical_history',
         'astor',
         'priority_division1',
         'priority_division2',
@@ -60,7 +61,7 @@ class Applicant extends Model
         'deleted_at',
     ];
 
-    protected $casts = ['documents' => 'array'];
+    protected $casts = ['documents' => 'array', 'medical_history' => 'array'];
 
     /**
      * Rules that applied in this model
@@ -82,8 +83,8 @@ class Applicant extends Model
             'address' => 'required|string',
             'postal_code' => 'required|string|max:5',
             'phone' => 'required|string|regex:/^([0-9]{8,16})$/',
-            'line' => 'nullable|string|max:50',
-            'instagram' => 'nullable|string|max:50',
+            'line' => 'required|string|max:50',
+            'instagram' => 'required|string|max:50',
             'tiktok' => 'nullable|string|max:50',
             'gpa' => ['required', 'string', 'regex:/^(4\.00|[0-3]\.[0-9]{2})$/'],
             'motivation' => 'required|string',
@@ -93,6 +94,10 @@ class Applicant extends Model
             'experience' => 'nullable|string',
             'diet' => 'required|string|max:50',
             'allergy' => 'nullable|string|max:150',
+            'medical_history' => 'required|required_array_keys:other_disease,disease_explanation,medication_allergy',
+            'medical_history.other_disease' => 'required|string',
+            'medical_history.disease_explanation' => 'required|string',
+            'medical_history.medication_allergy' => 'required|string',
             'astor' => 'required|boolean',
             'priority_division1' => ['required', 'uuid', 'exists:divisions,id', new AstorDivisionRule],
             'priority_division2' => ['nullable', 'uuid', 'exists:divisions,id', 'different:priority_division1', new AstorDivisionRule],
@@ -146,8 +151,10 @@ class Applicant extends Model
             'phone.required' => 'Phone is required',
             'phone.string' => 'Phone must be a string',
             'phone.regex' => 'Phone must be a valid phone number',
+            'line.required' => 'Line is required',
             'line.string' => 'Line must be a string',
             'line.max' => 'Line must be less than 50 characters',
+            'instagram.required' => 'Instagram is required',
             'instagram.string' => 'Instagram must be a string',
             'instagram.max' => 'Instagram must be less than 50 characters',
             'tiktok.string' => 'TikTok must be a string',
@@ -169,6 +176,14 @@ class Applicant extends Model
             'diet.max' => 'Diet must be less than 50 characters',
             'allergy.string' => 'Allergy must be a string',
             'allergy.max' => 'Allergy must be less than 150 characters',
+            'medical_history.required' => 'Medical history is required',
+            'medical_history.required_array_keys' => 'Medical history is required',
+            'medical_history.other_disease.required' => 'Other disease is required',
+            'medical_history.other_disease.string' => 'Other disease must be a string',
+            'medical_history.disease_explanation.required' => 'Disease explanation is required',
+            'medical_history.disease_explanation.string' => 'Disease explanation must be a string',
+            'medical_history.medication_allergy.required' => 'Medication allergy is required',
+            'medical_history.medication_allergy.string' => 'Medication allergy must be a string',
             'astor.required' => 'Astor is required',
             'astor.boolean' => 'Astor must be a boolean',
             'division_priority1.required' => 'Division priority1 is required',
@@ -218,7 +233,7 @@ class Applicant extends Model
      */
     public function relations()
     {
-        return ['major', 'priorityDivision1', 'priorityDivision2', 'divisionAccepted', 'answers', 'schedules'];
+        return ['major', 'priorityDivision1', 'priorityDivision2', 'divisionAccepted', 'answers', 'schedules', 'diseases'];
     }
 
     /**
@@ -253,6 +268,11 @@ class Applicant extends Model
     public function answers()
     {
         return $this->hasMany(Answer::class);
+    }
+
+    public function diseases()
+    {
+        return $this->belongsToMany(Disease::class);
     }
 
     public function getNRP()

@@ -26,8 +26,8 @@ return new class extends Migration
             $table->text('address');
             $table->string('postal_code', 5);
             $table->string('phone', 15);
-            $table->string('line', 50)->nullable();
-            $table->string('instagram', 50)->nullable();
+            $table->string('line', 50);
+            $table->string('instagram', 50);
             $table->string('tiktok', 50)->nullable();
 
             $table->string('gpa', 4)->comment('IPK');
@@ -39,6 +39,7 @@ return new class extends Migration
 
             $table->string('diet', 50);
             $table->string('allergy', 150)->nullable();
+            $table->json('medical_history');
             $table->boolean('astor')->comment('0: tidak, 1: ya');
 
             $table->unsignedTinyInteger('stage')->default(1)->comment('1:udh isi Biodata, 2:udh isi Berkas, 3:udh Pilih Jadwal, 4:udh Interview & kerja Proyek');
