@@ -18,10 +18,10 @@ class DatabaseSeeder extends Seeder
         $this->call(MajorSeeder::class);
         $this->call(AdminSeeder::class);
         $this->call(SettingSeeder::class);
-        $this->call(DateSeeder::class);
-        $this->call(QuestionSeeder::class);
-        $this->call(ApplicantSeeder::class);
-        $this->call(ScheduleSeeder::class);
-        $this->call(ApplicantDiseaseSeeder::class);
+        // $this->call(DateSeeder::class);
+        // $this->call(QuestionSeeder::class);
+        // $this->call(ApplicantSeeder::class);
+        // $this->call(ScheduleSeeder::class);
+        // $this->call(ApplicantDiseaseSeeder::class);
     }
 }
