@@ -79,7 +79,7 @@ class ApplicantController extends BaseController
         if ($applicantData) {
             $data['form'] = $applicantData->toArray();
         }
-
+        
         return view('main.application_form', $data);
     }
 

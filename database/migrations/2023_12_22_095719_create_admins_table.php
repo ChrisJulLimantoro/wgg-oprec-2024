@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('meet')->nullable();
             $table->string('spot')->nullable();
             $table->uuid('division_id')->nullable();
+            $table->json('medical_history')->nullable();
 
 
             $table->foreign('division_id')->references('id')->on('divisions');

@@ -64,6 +64,11 @@ Route::prefix('admin')->middleware(['session', 'admin'])->group(function () {
         Route::patch('/{admin}', [AdminController::class, 'updateMeetSpot'])->name('admin.meeting-spot.update');
     });
 
+    Route::prefix('medical-form')->group(function(){
+        Route::get('/',[AdminController::class, 'medicalForm'])->name('admin.medical-form');
+        Route::post('/{admin}',[AdminController::class, 'updateMedicalHistory'])->name('admin.medical-form.update');
+    });
+
     // Dates
     Route::prefix('dates')->middleware('role:bph,it')->group(function () {
         Route::get('/', [DateController::class, 'index'])->name('admin.date');

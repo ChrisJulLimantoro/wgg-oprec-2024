@@ -100,4 +100,9 @@ class Disease extends Model
     {
         return $this->belongsToMany(Applicant::class);
     }
+
+    public function admins()
+    {
+        return $this->belongsToMany(Admin::class);
+    }
 }
