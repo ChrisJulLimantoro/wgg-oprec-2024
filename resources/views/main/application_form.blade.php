@@ -326,8 +326,7 @@
 
                 <div>
                     <div class="text-white pl-1 mb-1">Penyakit lain-lain yang tidak disebutkan (jika ada luka yang baru
-                        didapat, bisa
-                        disebutkan)
+                        didapat, bisa disebutkan), jika tidak ada bisa diisi dengan “-“
                     </div>
                     <div class="relative mb-6" data-te-validate="input"
                         @error('medical_history.other_disease') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
@@ -344,8 +343,7 @@
 
                 <div>
                     <div class="text-white pl-1 mb-1">Beri penjelasan mengenai riwayat penyakit / penyakit yang kalian
-                        punya (contoh : asma
-                        karena…, dislokasi karena…)
+                        punya (contoh : asma karena…, dislokasi karena…), jika tidak ada bisa diisi dengan “-“
                     </div>
                     <div class="relative mb-6" data-te-validate="input"
                         @error('medical_history.disease_explanation') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
