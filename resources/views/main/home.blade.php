@@ -621,10 +621,14 @@
     </div>
 
     <!-- How To Join -->
-    <div class="w-screen flex relative z-10 mt-32 sm:mt-24">
+    <div class="w-screen flex flex-col relative z-10 mt-32 sm:mt-24">
         <div class="mx-auto text-center ">
             <h1 class="font-dillan text-[8vw] font-bold xl:text-[4vw] text-white gs_reveal gs_reveal_fromRight"
                 id="howtojoin">HOW TO JOIN?</h1>
+        </div>
+        <div class="font-dillan mx-auto text-yellow-400 uppercase text-md text-center py-8 px-6 sm:py-3 sm:px-3 sm:text-xl gs_reveal gs_reveal_fromRight" id="info">
+            Registration Opened from 5th February 2024 until 28th February 2024 <br>
+            The interview process will be held until 29th February 2024
         </div>
     </div>
     <div
@@ -637,15 +641,15 @@
                 <ul>
                     <li>
                         <span class="timeline-point"></span>
-                        <p class="font-semibold text-lg sm:text-xl">Isi Data Diri</p>
+                        <p class="font-semibold text-lg sm:text-xl">Fill Personal Data</p>
                     </li>
                     <li>
                         <span class="timeline-point"></span>
-                        <p class="font-semibold text-lg sm:text-xl">Upload Berkas</p>
+                        <p class="font-semibold text-lg sm:text-xl">Upload Files</p>
                     </li>
                     <li>
                         <span class="timeline-point"></span>
-                        <p class="font-semibold text-lg sm:text-xl">Melakukan Interview</p>
+                        <p class="font-semibold text-lg sm:text-xl">Interview Process</p>
                     </li>
                     <li>
                         <span class="timeline-point"></span>
@@ -1489,6 +1493,7 @@
             var element2 = document.getElementById('typing-container');
             var element3 = document.getElementById('timeline-container');
             var element4 = document.getElementById('howtojoin');
+            var element5 = document.getElementById('info');
 
             var screenWidth = window.innerWidth;
 
@@ -1501,6 +1506,8 @@
                 element3.classList.add('gs_reveal_fromTop');
                 element4.classList.remove('gs_reveal_fromRight');
                 element4.classList.add('gs_reveal_fromTop');
+                element5.classList.remove('gs_reveal_fromRight');
+                element5.classList.add('gs_reveal_fromTop');
             } else {
                 element.classList.remove('gs_reveal_fromBottom');
                 element.classList.add('gs_reveal_fromLeft');
@@ -1510,6 +1517,8 @@
                 element3.classList.add('gs_reveal_fromLeft');
                 element4.classList.remove('gs_reveal_fromTop');
                 element4.classList.add('gs_reveal_fromRight');
+                element5.classList.remove('gs_reveal_fromTop');
+                element5.classList.add('gs_reveal_fromRight');
             }
         }
 
