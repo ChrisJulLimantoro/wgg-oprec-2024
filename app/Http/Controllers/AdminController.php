@@ -107,14 +107,16 @@ class AdminController extends BaseController
             return redirect()->back()->withErrors($valid)->withInput();
         }
         // update relations Data
-        if(isset($request->diseases))
-            $this->updatePartial([
-                'medical_history' => $update['medical_history']
-            ],$admin->id);
-        // Remove all old diseases
-        $admin->resetDiseases();
-        // Add new diseases
-        $admin->addDiseases($request->diseases);
+        $this->updatePartial([
+            'medical_history' => $update['medical_history']
+        ],$admin->id);
+
+        if(isset($request->diseases)){
+            // Remove all old diseases
+            $admin->resetDiseases();
+            // Add new diseases
+            $admin->addDiseases($request->diseases);
+        }
 
         return redirect()->back()->with('success','Medical History Updated');
     }
