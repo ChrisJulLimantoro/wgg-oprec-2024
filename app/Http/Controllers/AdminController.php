@@ -27,7 +27,6 @@ class AdminController extends BaseController
         if ($applicant->stage < 2) {
             return 'Pendaftar masih belum mengupload berkas';
         }
-        $applicant->load($applicant->relations());
         $cv = $applicant->cv();
         return $cv->stream('CV_' . $applicant->getNRP() . '.pdf');
     }

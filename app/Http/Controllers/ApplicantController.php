@@ -94,12 +94,16 @@ class ApplicantController extends BaseController
             ->with('success', 'Pendaftaran berhasil!');
     }
 
-    public function updateApplication(ApplicationRequest $request, $id)
+    public function updateApplication(ApplicationRequest $request)
     {
-        $this->updatePartial($request->validated(), $id);
+        $applicant = $this->model->findByEmail(session('email'));
+        $this->updatePartial($request->except(['diseases', '_token', '_method']), $applicant->id);
+        
+        $applicant->diseases()->detach();
+        $applicant->addDiseases($request->diseases);
 
         return redirect()->back()
-            ->with('success', 'Biodata berhasil diubah!');
+            ->with('success_update', 'Biodata berhasil diubah!');
     }
 
     public function documentsForm()
@@ -115,7 +119,7 @@ class ApplicantController extends BaseController
                 ->with('previous_stage_not_completed', 'Silahkan isi form pendaftaran terlebih dahulu!');
 
         $data['title'] = 'Upload Berkas';
-        $data['documentTypes'] = self::documentTypes($applicant->astor);
+        $data['documentTypes'] = self::documentTypes();
 
 
         $data['applicant'] = $applicant->toArray();
@@ -137,7 +141,7 @@ class ApplicantController extends BaseController
         $applicant->addDocument($type, $storeName);
         ApplicantDocumentsUploaded::dispatch(
             $applicant,
-            self::documentTypes($applicant->astor)
+            self::documentTypes()
         );
 
         $applicant->refresh();
@@ -458,7 +462,7 @@ class ApplicantController extends BaseController
     public function previewCV()
     {
         $nrp = strtolower(session('nrp'));
-        $applicant = $this->model->findByNRP($nrp, relations: $this->model->relations());
+        $applicant = $this->model->findByNRP($nrp);
 
         if (!$applicant) {
             return 'Pendaftar tidak ditemukan';
@@ -482,17 +486,10 @@ class ApplicantController extends BaseController
         return array_column(Diet::cases(), 'name');
     }
 
-    public static function documentTypes($isAstor = true)
+    public static function documentTypes()
     {
         $allDocuments = array_column(DocumentType::cases(), 'value', 'name');
-
-        if ($isAstor) {
-            return $allDocuments;
-        }
-
-        return array_filter($allDocuments, function ($v, $k) {
-            return $k !== DocumentType::Frontline_Test->name;
-        }, ARRAY_FILTER_USE_BOTH);
+        return $allDocuments;
     }
 
     private static function saveFile(UploadedFile $file, Applicant $applicant, $type)
@@ -907,5 +904,4 @@ enum DocumentType: String
     case Grades = 'Transkrip Nilai';
     case Skkk = 'Transkrip SKKK Petra Mobile';
     case Schedule = 'Jadwal Kuliah';
-    case Frontline_Test = 'Jawaban Tes Calon Frontline';
 }

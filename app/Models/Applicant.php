@@ -322,6 +322,7 @@ class Applicant extends Model
 
     public function cv()
     {
+        $this->load($this->relations());
         return Pdf::loadView(
             'pdf.applicant_cv',
             ['applicant' => $this]
