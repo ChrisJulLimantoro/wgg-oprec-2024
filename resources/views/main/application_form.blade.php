@@ -286,7 +286,7 @@
                                     {{ $diet }}</option>
                             @endforeach
                         </select>
-                        <label data-te-select-label-ref>Jenis Makanan</label>
+                        <label data-te-select-label-ref>Jenis Diet</label>
                     </div>
 
                     <div class="relative mb-8" data-te-validate="input"
