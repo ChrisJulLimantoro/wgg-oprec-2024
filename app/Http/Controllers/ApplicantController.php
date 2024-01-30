@@ -94,12 +94,16 @@ class ApplicantController extends BaseController
             ->with('success', 'Pendaftaran berhasil!');
     }
 
-    public function updateApplication(ApplicationRequest $request, $id)
+    public function updateApplication(ApplicationRequest $request)
     {
-        $this->updatePartial($request->validated(), $id);
+        $applicant = $this->model->findByEmail(session('email'));
+        $this->updatePartial($request->except(['diseases', '_token', '_method']), $applicant->id);
+        
+        $applicant->diseases()->detach();
+        $applicant->addDiseases($request->diseases);
 
         return redirect()->back()
-            ->with('success', 'Biodata berhasil diubah!');
+            ->with('success_update', 'Biodata berhasil diubah!');
     }
 
     public function documentsForm()
@@ -458,7 +462,7 @@ class ApplicantController extends BaseController
     public function previewCV()
     {
         $nrp = strtolower(session('nrp'));
-        $applicant = $this->model->findByNRP($nrp, relations: $this->model->relations());
+        $applicant = $this->model->findByNRP($nrp);
 
         if (!$applicant) {
             return 'Pendaftar tidak ditemukan';

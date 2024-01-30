@@ -30,7 +30,7 @@ use App\Http\Controllers\AssetController;
 Route::prefix('main')->middleware(['session', 'applicant'])->group(function () {
     Route::get('application-form', [ApplicantController::class, 'applicationForm'])->name('applicant.application-form');
     Route::post('store-application', [ApplicantController::class, 'storeApplication'])->name('applicant.application.store');
-    Route::patch('update-application/{id}', [ApplicantController::class, 'updateApplication'])->name('applicant.application.update');
+    Route::patch('update-application', [ApplicantController::class, 'updateApplication'])->name('applicant.application.update');
 
     Route::get('documents-form', [ApplicantController::class, 'documentsForm'])->name('applicant.documents-form');
     Route::post('store-document/{type}', [ApplicantController::class, 'storeDocument'])->name('applicant.document.store')
