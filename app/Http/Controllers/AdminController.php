@@ -27,6 +27,7 @@ class AdminController extends BaseController
         if ($applicant->stage < 2) {
             return 'Pendaftar masih belum mengupload berkas';
         }
+        $applicant->load($applicant->relations());
         $cv = $applicant->cv();
         return $cv->stream('CV_' . $applicant->getNRP() . '.pdf');
     }
@@ -85,7 +86,7 @@ class AdminController extends BaseController
             'medical_history.other_disease' => 'required|string|min:1',
             'medical_history.disease_explanation' => 'required|string|min:1',
             'medical_history.medication_allergy' => 'required|string|min:1',
-            'diseases' => 'required|array|exists:diseases,id'
+            'diseases' => 'array|exists:diseases,id'
         ],[
             'medical_history.required' => 'Medical History is required',
             'medical_history.required_array_keys' => 'Medical History must be an array with keys other_disease,disease_explanation,medication_allergy',
@@ -98,7 +99,6 @@ class AdminController extends BaseController
             'medical_history.medication_allergy.required' => 'Medication Allergy is required',
             'medical_history.medication_allergy.string' => 'Medication Allergy must be a string',
             'medical_history.medication_allergy.min' => 'Medication Allergy must be at least 1 character',
-            'diseases.required' => 'Diseases is required',
             'diseases.array' => 'Diseases must be an array',
             'diseases.exists' => 'Diseases must be exists',
         ]);
@@ -107,9 +107,10 @@ class AdminController extends BaseController
             return redirect()->back()->withErrors($valid)->withInput();
         }
         // update relations Data
-        $this->updatePartial([
-            'medical_history' => $update['medical_history']
-        ],$admin->id);
+        if(isset($request->diseases))
+            $this->updatePartial([
+                'medical_history' => $update['medical_history']
+            ],$admin->id);
         // Remove all old diseases
         $admin->resetDiseases();
         // Add new diseases
