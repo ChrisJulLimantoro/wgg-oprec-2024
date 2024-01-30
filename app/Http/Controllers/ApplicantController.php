@@ -115,7 +115,7 @@ class ApplicantController extends BaseController
                 ->with('previous_stage_not_completed', 'Silahkan isi form pendaftaran terlebih dahulu!');
 
         $data['title'] = 'Upload Berkas';
-        $data['documentTypes'] = self::documentTypes($applicant->astor);
+        $data['documentTypes'] = self::documentTypes();
 
 
         $data['applicant'] = $applicant->toArray();
@@ -137,7 +137,7 @@ class ApplicantController extends BaseController
         $applicant->addDocument($type, $storeName);
         ApplicantDocumentsUploaded::dispatch(
             $applicant,
-            self::documentTypes($applicant->astor)
+            self::documentTypes()
         );
 
         $applicant->refresh();
@@ -482,17 +482,10 @@ class ApplicantController extends BaseController
         return array_column(Diet::cases(), 'name');
     }
 
-    public static function documentTypes($isAstor = true)
+    public static function documentTypes()
     {
         $allDocuments = array_column(DocumentType::cases(), 'value', 'name');
-
-        if ($isAstor) {
-            return $allDocuments;
-        }
-
-        return array_filter($allDocuments, function ($v, $k) {
-            return $k !== DocumentType::Frontline_Test->name;
-        }, ARRAY_FILTER_USE_BOTH);
+        return $allDocuments;
     }
 
     private static function saveFile(UploadedFile $file, Applicant $applicant, $type)
@@ -907,5 +900,4 @@ enum DocumentType: String
     case Grades = 'Transkrip Nilai';
     case Skkk = 'Transkrip SKKK Petra Mobile';
     case Schedule = 'Jadwal Kuliah';
-    case Frontline_Test = 'Jawaban Tes Calon Frontline';
 }
