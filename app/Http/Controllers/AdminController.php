@@ -62,10 +62,14 @@ class AdminController extends BaseController
             $update['spot'] = $request->spot;
         }
 
+        if($request->line){
+            $update['line'] = $request->line;
+        }
+
         $this->updatePartial($update,$admin);
         return response()->json([
             'success' => true,
-            'message' => 'Meeting Spot Updated'
+            'message' => 'Data Updated'
         ],200);
     }
 
