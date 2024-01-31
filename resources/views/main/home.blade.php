@@ -429,12 +429,12 @@
     <!-- Landing -->
     <div class="w-full h-full"></div>
     <div class="w-full h-1/4"></div>
-    <div class="container absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mx-auto text-center flex flex-col justify-center"
+    <div class="container absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mx-auto text-center flex flex-col justify-center w-[90vw] xl:w-[60vw] 2xl:w-[48vw]"
         style="z-index: 1;">
-        <h2 class="font-dillan text-[8vw] font-bold -mt-20 mb-8 xl:-mt-48 xl:mb-6 xl:text-[4vw] text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] gs_reveal"
+        <h2 class="font-dillan text-[8vw] font-bold mb-8 lg:-mt-56 2xl:-mt-48 xl:mb-6 xl:text-[4vw] text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] gs_reveal"
             id="judul1">
             OPEN RECRUITMENT</h2>
-        <div class="font-dillan h-14 text-[10vw] font-bold typing-container text-white whitespace-nowrap xl:text-[5vw] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] gs_reveal"
+        <div class="font-dillan h-28 text-[10vw] font-bold typing-container text-white whitespace-normal xl:text-[5vw] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] gs_reveal"
             id="typing-container">
         </div>
     </div>
@@ -621,10 +621,14 @@
     </div>
 
     <!-- How To Join -->
-    <div class="w-screen flex relative z-10 mt-32 sm:mt-24">
+    <div class="w-screen flex flex-col relative z-10 mt-32 sm:mt-24">
         <div class="mx-auto text-center ">
             <h1 class="font-dillan text-[8vw] font-bold xl:text-[4vw] text-white gs_reveal gs_reveal_fromRight"
                 id="howtojoin">HOW TO JOIN?</h1>
+        </div>
+        <div class="font-dillan mx-auto text-yellow-400 uppercase text-md text-center py-8 px-6 sm:py-3 sm:px-3 sm:text-xl gs_reveal gs_reveal_fromRight" id="info">
+            Registration Opened from 5th February 2024 until 28th February 2024 <br>
+            The interview process will be held until 29th February 2024
         </div>
     </div>
     <div
@@ -637,15 +641,15 @@
                 <ul>
                     <li>
                         <span class="timeline-point"></span>
-                        <p class="font-semibold text-lg sm:text-xl">Isi Data Diri</p>
+                        <p class="font-semibold text-lg sm:text-xl">Fill Personal Data</p>
                     </li>
                     <li>
                         <span class="timeline-point"></span>
-                        <p class="font-semibold text-lg sm:text-xl">Upload Berkas</p>
+                        <p class="font-semibold text-lg sm:text-xl">Upload Files</p>
                     </li>
                     <li>
                         <span class="timeline-point"></span>
-                        <p class="font-semibold text-lg sm:text-xl">Melakukan Interview</p>
+                        <p class="font-semibold text-lg sm:text-xl">Interview Process</p>
                     </li>
                     <li>
                         <span class="timeline-point"></span>
@@ -1260,7 +1264,7 @@
 
     <!-- Tulisan Oprec & Tema -->
     <script>
-        const texts = ["WGG 2024", "On the solid rock, I stand"];
+        const texts = ["WGG 2024", "On The Solid Rock, I Stand"];
         const typingContainer = document.getElementById("typing-container");
         let currentTextIndex = 0;
         let currentText = "";
@@ -1489,6 +1493,7 @@
             var element2 = document.getElementById('typing-container');
             var element3 = document.getElementById('timeline-container');
             var element4 = document.getElementById('howtojoin');
+            var element5 = document.getElementById('info');
 
             var screenWidth = window.innerWidth;
 
@@ -1501,6 +1506,8 @@
                 element3.classList.add('gs_reveal_fromTop');
                 element4.classList.remove('gs_reveal_fromRight');
                 element4.classList.add('gs_reveal_fromTop');
+                element5.classList.remove('gs_reveal_fromRight');
+                element5.classList.add('gs_reveal_fromTop');
             } else {
                 element.classList.remove('gs_reveal_fromBottom');
                 element.classList.add('gs_reveal_fromLeft');
@@ -1510,6 +1517,8 @@
                 element3.classList.add('gs_reveal_fromLeft');
                 element4.classList.remove('gs_reveal_fromTop');
                 element4.classList.add('gs_reveal_fromRight');
+                element5.classList.remove('gs_reveal_fromTop');
+                element5.classList.add('gs_reveal_fromRight');
             }
         }
 

@@ -34,11 +34,9 @@ class StoreDocumentRequest extends FormRequest
 
             $rules[strtolower($documentType)] = [
                 'required_without_all:' . strtolower(join(',', $allExcludeCurrentType)),
-                File::image()
-                    ->max('5mb'),
-                'mimes:jpg,png',
                 new DocumentExistsRule(),
             ];
+            $rules[strtolower($documentType)][] = File::image()->max('5mb');
         }
 
         return $rules;

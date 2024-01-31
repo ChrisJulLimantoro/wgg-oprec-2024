@@ -21,7 +21,11 @@ class CheckApplicantDocuments
         $remainingDocuments = array_diff($allDocuments, $applicantDocuments);
 
         if (count($remainingDocuments) === 0) {
-            AllApplicantDocumentsUploaded::dispatch($applicant, $event->nextStage);
+            $nextStage = 2;
+            if ($applicant->astor) {
+                $nextStage = 4;
+            }
+            AllApplicantDocumentsUploaded::dispatch($applicant, $nextStage);
         }
     }
 }

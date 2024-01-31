@@ -117,8 +117,9 @@
             });
         }  
 
-        function getQuestionByDivision(division){
-            $.ajax({
+        async function getQuestionByDivision(division){
+            Swal.showLoading();
+            await $.ajax({
                 url:  "{{ route('admin.question.get') }}",
                 method: "POST",
                 data: {
@@ -160,6 +161,7 @@
                     Swal.fire('Error', 'Gagal Pengambilan Data', 'error');
                 }
             })
+            Swal.close();
         }
 
         

@@ -1,7 +1,29 @@
 @extends('main.layout')
 
+@section('styles')
+    <style>
+        div[data-te-select-options-list-ref] div[data-te-select-option-ref]>span {
+            max-width: 97%;
+            overflow: hidden;
+            word-wrap: normal;
+            white-space: normal;
+        }
+
+        div[data-te-select-option-ref] {
+            height: auto !important;
+            padding-block: 7px;
+        }
+    </style>
+@endsection
+
 @section('content')
     @include('main.stepper', ['applicant' => $form])
+
+    {{-- @php
+        echo '<pre>';
+        print_r($errors);
+        echo '</pre>';
+    @endphp --}}
 
     <h1 class="text-3xl font-bold text-center text-white">Biodata Pendaftar</h1>
     <section class="max-w-[940px] mx-auto pt-3 pb-16">
@@ -9,7 +31,7 @@
         <div
             class="block rounded-xl bg-white/10 backdrop-blur-md p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
             <form data-te-validation-init
-                action="{{ !array_key_exists('id', $form) ? route('applicant.application.store') : route('applicant.application.update', ['id' => $form['id']]) }}"
+                action="{{ !array_key_exists('id', $form) ? route('applicant.application.store') : route('applicant.application.update') }}"
                 method="POST" id="application-form">
                 @csrf
                 @if (array_key_exists('id', $form))
@@ -54,7 +76,7 @@
                         @error('major_id') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
                         <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->
                         <select data-te-select-init name="major_id" {{ array_key_exists('id', $form) ? 'disabled' : '' }}>
-                            <option value="" selected disabled></option>
+                            <option value="" selected disabled hidden></option>
                             @foreach ($majors as $major)
                                 <option
                                     {{ old('major_id') === $major->id || data_get($form, 'major_id', '-1') === $major->id ? 'selected' : '' }}
@@ -83,7 +105,7 @@
                         @error('gender') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
                         <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->
                         <select data-te-select-init name="gender">
-                            <option value="" selected disabled></option>
+                            <option value="" selected disabled hidden></option>
                             <option value="0"
                                 {{ old('gender') === '0' || data_get($form, 'gender', '-1') === 0 ? 'selected' : '' }}>
                                 Laki-laki</option>
@@ -98,7 +120,7 @@
                         @error('religion') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
                         <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->
                         <select data-te-select-init name="religion">
-                            <option value="" selected disabled></option>
+                            <option value="" selected disabled hidden></option>
                             @foreach ($religions as $religion)
                                 <option value="{{ $religion }}"
                                     {{ old('religion') == $religion || data_get($form, 'religion', '-1') === $religion ? 'selected' : '' }}>
@@ -253,18 +275,18 @@
                 </div>
 
                 <div class="grid sm:grid-cols-2 sm:gap-4">
-                    <div class="relative mb-8" data-te-validate="input"
+                    <div class="relative mb-6" data-te-validate="input"
                         @error('diet') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
                         <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->
                         <select data-te-select-init name="diet">
-                            <option value="" selected disabled></option>
+                            <option value="" selected disabled hidden></option>
                             @foreach ($diets as $diet)
                                 <option value="{{ $diet }}"
                                     {{ old('diet') === $diet || data_get($form, 'diet', '-1') === $diet ? 'selected' : '' }}>
                                     {{ $diet }}</option>
                             @endforeach
                         </select>
-                        <label data-te-select-label-ref>Jenis Makanan</label>
+                        <label data-te-select-label-ref>Jenis Diet</label>
                     </div>
 
                     <div class="relative mb-8" data-te-validate="input"
@@ -273,10 +295,81 @@
                         <input type="text" value="{{ old('allergy') ?? ($form['allergy'] ?? '') }}"
                             {{ empty(old('allergy')) && !array_key_exists('allergy', $form) ? '' : 'data-te-input-state-active' }}
                             class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                            id="exampleInput123" aria-describedby="emailHelp123" placeholder="Alergi" name="allergy" />
+                            id="exampleInput123" aria-describedby="emailHelp123" placeholder="Alergi Makanan"
+                            name="allergy" />
                         <label for="emailHelp123"
                             class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">
-                            Alergi
+                            Alergi Makanan
+                        </label>
+                    </div>
+                </div>
+
+                <div class="relative mb-6" data-te-validate="input"
+                    @error('diseases') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
+                    @error('diseases.*') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
+                    <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->
+                    <select data-te-select-init name="diseases[]" multiple>
+                        @php
+                            $submittedDiseases = array_column(data_get($form, 'diseases', []), 'id');
+                        @endphp
+                        @foreach ($diseases as $disease)
+                            <option value="{{ $disease['id'] }}" class="w-full text-wrap"
+                                @if (
+                                    (!empty(old('diseases')) && in_array($disease['id'], old('diseases'))) ||
+                                        in_array($disease['id'], $submittedDiseases)) selected @endif>
+                                {{ $disease['name'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <label data-te-select-label-ref>Riwayat Penyakit</label>
+                </div>
+
+                <div>
+                    <div class="text-white pl-1 mb-1">Penyakit lain-lain yang tidak disebutkan (jika ada luka yang baru
+                        didapat, bisa disebutkan), jika tidak ada bisa diisi dengan “-“
+                    </div>
+                    <div class="relative mb-6" data-te-validate="input"
+                        @error('medical_history.other_disease') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
+                        data-te-input-wrapper-init>
+                        <textarea
+                            {{ empty(old('medical_history.other_disease')) && !array_key_exists('medical_history', $form) ? '' : 'data-te-input-state-active' }}
+                            class="peer block min-h-[auto] w-full rounded border-0 disabled:bg-gray-200 enabled:bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                            id="exampleFormControlTextarea13" rows="2" placeholder="" name="medical_history[other_disease]">{{ old('medical_history.other_disease') ?? (data_get($form, 'medical_history.other_disease') ?? '') }}</textarea>
+                        <label for="exampleFormControlTextarea13"
+                            class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="text-white pl-1 mb-1">Beri penjelasan mengenai riwayat penyakit / penyakit yang kalian
+                        punya (contoh : asma karena…, dislokasi karena…), jika tidak ada bisa diisi dengan “-“
+                    </div>
+                    <div class="relative mb-6" data-te-validate="input"
+                        @error('medical_history.disease_explanation') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
+                        data-te-input-wrapper-init>
+                        <textarea
+                            {{ empty(old('medical_history.disease_explanation')) && !array_key_exists('medical_history', $form) ? '' : 'data-te-input-state-active' }}
+                            class="peer block min-h-[auto] w-full rounded border-0 disabled:bg-gray-200 enabled:bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                            id="exampleFormControlTextarea13" rows="2" placeholder="" name="medical_history[disease_explanation]">{{ old('medical_history.disease_explanation') ?? (data_get($form, 'medical_history.disease_explanation') ?? '') }}</textarea>
+                        <label for="exampleFormControlTextarea13"
+                            class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="text-white pl-1 mb-1">Apakah Anda memiliki alergi obat? Jika ya, sebutkan, jika tidak
+                        silahkan mengisi “-”</div>
+                    <div class="relative mb-8" data-te-validate="input"
+                        @error('medical_history.medication_allergy') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
+                        data-te-input-wrapper-init>
+                        <textarea
+                            {{ empty(old('medical_history.medication_allergy')) && !array_key_exists('medical_history', $form) ? '' : 'data-te-input-state-active' }}
+                            class="peer block min-h-[auto] w-full rounded border-0 disabled:bg-gray-200 enabled:bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                            id="exampleFormControlTextarea13" rows="2" placeholder="" name="medical_history[medication_allergy]">{{ old('medical_history.medication_allergy') ?? (data_get($form, 'medical_history.medication_allergy') ?? '') }}</textarea>
+                        <label for="exampleFormControlTextarea13"
+                            class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">
                         </label>
                     </div>
                 </div>
@@ -362,7 +455,7 @@
                         <select {{ !empty(old('astor')) || data_get($form, 'astor', false) ? 'disabled' : '' }}
                             {{ array_key_exists('id', $form) ? 'disabled' : '' }} data-te-select-init
                             id="priority-division1" name="priority_division1">
-                            <option value="" selected disabled></option>
+                            <option value="" selected disabled hidden></option>
                             @foreach ($divisions as $division)
                                 <option value="{{ $division['id'] }}"
                                     {{ old('priority_division1') === $division['id'] || data_get($form, 'priority_division1', '-1') === $division['id'] ? 'selected' : '' }}>
@@ -453,6 +546,21 @@
                     didClose: () => {
                         window.location.href = '{{ route('applicant.documents-form') }}';
                     }
+                });
+            @endif
+
+            @if (Session::has('success_update'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: '{{ Session::get('success_update') }}',
+                });
+            @endif
+            @if (Session::has('previous_stage_not_completed'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: '{{ Session::get('previous_stage_not_completed') }}',
                 });
             @endif
         });

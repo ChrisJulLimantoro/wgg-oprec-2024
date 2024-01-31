@@ -27,6 +27,16 @@ class Admin extends Model
         'division_id'
     ]; 
 
+    public function addDiseases($diseaseIds)
+    {
+        $this->diseases()->attach($diseaseIds);
+    }
+
+    public function resetDiseases()
+    {
+        $this->diseases()->detach();
+    }
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -37,6 +47,8 @@ class Admin extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    protected $casts = ['medical_history' => 'array'];
 
     /**
      * Rules that applied in this model
@@ -52,6 +64,7 @@ class Admin extends Model
             'meet' => 'nullable|string|max:255',
             'spot' => 'nullable|string|max:255', // 'nullable|string|max:255
             'division_id' => 'required|uuid|exists:divisions,id',
+            'medical_history' => 'nullable',
         ];
     }
 
@@ -96,6 +109,7 @@ class Admin extends Model
             'meet' => $request->meet,
             'spot' => $request->spot,
             'division_id' => $request->division_id,
+            'medical_history' => $request->medical_history,
         ]);
     }
 
@@ -121,6 +135,7 @@ class Admin extends Model
         return [
             'schedules',
             'division',
+            'diseases',
         ];
     }
 
@@ -136,5 +151,9 @@ class Admin extends Model
     public function division()
     {
         return $this->belongsTo(Division::class);
+    }
+    public function diseases()
+    {
+        return $this->belongsToMany(Disease::class);
     }
 }

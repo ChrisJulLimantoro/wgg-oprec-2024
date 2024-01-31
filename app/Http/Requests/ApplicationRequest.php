@@ -77,8 +77,10 @@ class ApplicationRequest extends FormRequest
     public function rules(): array
     {
         $rules = $this->model->validationRules();
-        $rules['religion'] = '|in:' . join(',', self::enumValues(Religion::class));
-        $rules['diet'] = '|in:' . join(',', self::enumValues(Diet::class));
+        $rules['religion'] .= '|in:' . join(',', self::enumValues(Religion::class));
+        $rules['diet'] .= '|in:' . join(',', self::enumValues(Diet::class));
+        $rules['diseases'] = 'nullable|array';
+        $rules['diseases.*'] = 'nullable|exists:diseases,id';
 
         if ($this->routeIs('applicant.application.update')) {
             foreach (self::NON_UPDATABLE_FIELDS as $field) {

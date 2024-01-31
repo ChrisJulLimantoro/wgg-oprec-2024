@@ -53,7 +53,11 @@ class ProjectController extends BaseController
             $nrp,
             ['id', 'priority_division1', 'priority_division2', 'documents', 'stage'],
             ['priorityDivision1', 'priorityDivision2']
-        )->toArray();
+        );
+
+        if (!$applicant || $applicant->stage < 4)
+            return redirect()->route('applicant.schedule-form')
+                ->with('previous_stage_not_completed', 'Silahkan lakukan interview terlebih dahulu!');
 
         if ($selected == 2 && !$applicant['priority_division2']) abort(404);
 

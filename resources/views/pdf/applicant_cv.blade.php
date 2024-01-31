@@ -59,14 +59,18 @@
         }
 
         .data {
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
         .data tr>.label {
             width: 153px;
         }
 
-        .data tr>.value {
+        .value {
+            width: 400px;
+        }
+
+        .value.adjacent-photo {
             width: 320px;
         }
 
@@ -106,7 +110,7 @@
     </header>
     <main>
         <section class="photo">
-            <img src="{{ route('upload',['path' => 'photo/'.$applicant['documents']['photo'] ]) }}" alt="Foto Diri"
+            <img src="{{ route('upload', ['path' => 'photo/' . $applicant['documents']['photo']]) }}" alt="Foto Diri"
                 width="110">
         </section>
         <section class="data">
@@ -115,7 +119,7 @@
                     <tr>
                         <td class="label">Nama Lengkap</td>
                         <td>:</td>
-                        <td class="value">{{ $applicant['name'] }}</td>
+                        <td class="value adjacent-photo">{{ $applicant['name'] }}</td>
                         <td></td>
                     </tr>
                     <tr>
@@ -125,57 +129,58 @@
                             $nrp = explode('@', $email)[0];
                         @endphp
                         <td>:</td>
-                        <td class="value">{{ $nrp }}</td>
+                        <td class="value adjacent-photo">{{ $nrp }}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td class="label">Jurusan</td>
                         <td>:</td>
-                        <td class="value">{{ $applicant['major']['name'] }}</td>
+                        <td class="value adjacent-photo">{{ $applicant['major']['name'] }}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td class="label">Jenis Kelamin</td>
                         <td>:</td>
-                        <td class="value">{{ ['Laki-laki', 'Perempuan'][$applicant['gender']] }}</td>
+                        <td class="value adjacent-photo">{{ ['Laki-laki', 'Perempuan'][$applicant['gender']] }}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td class="label">Agama</td>
                         <td>:</td>
-                        <td class="value">{{ $applicant['religion'] }}</td>
+                        <td class="value adjacent-photo">{{ $applicant['religion'] }}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td class="label">Tempat, Tanggal Lahir</td>
                         <td>:</td>
-                        <td class="value">{{ sprintf('%s, %s', $applicant['birthplace'], $applicant['birthdate']) }}
+                        <td class="value adjacent-photo">
+                            {{ sprintf('%s, %s', $applicant['birthplace'], $applicant['birthdate']) }}
                         <td></td>
                         </td>
                     </tr>
                     <tr>
                         <td class="label">Alamat</td>
                         <td>:</td>
-                        <td class="value">{{ $applicant['address'] }}</td>
+                        <td class="value adjacent-photo">{{ $applicant['address'] }}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td class="label">IPK Terakhir</td>
                         <td>:</td>
-                        <td class="value">{{ $applicant['gpa'] }}</td>
+                        <td class="value adjacent-photo">{{ $applicant['gpa'] }}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td class="label">No HP</td>
                         <td>:</td>
-                        <td class="value">{{ $applicant['phone'] }}</td>
+                        <td class="value adjacent-photo">{{ $applicant['phone'] }}</td>
                         <td></td>
                     </tr>
                     @if ($applicant['line'] && strlen($applicant['line']) > 2)
                         <tr>
                             <td class="label">ID Line</td>
                             <td>:</td>
-                            <td class="value">{{ $applicant['line'] }}</td>
+                            <td class="value adjacent-photo">{{ $applicant['line'] }}</td>
                             <td></td>
                         </tr>
                     @endif
@@ -183,7 +188,7 @@
                         <tr>
                             <td class="label">Instagram</td>
                             <td>:</td>
-                            <td class="value">{{ $applicant['instagram'] }}</td>
+                            <td class="value adjacent-photo">{{ $applicant['instagram'] }}</td>
                             <td></td>
                         </tr>
                     @endif
@@ -191,7 +196,7 @@
                         <tr>
                             <td class="label">TikTok</td>
                             <td>:</td>
-                            <td class="value">{{ $applicant['tiktok'] }}</td>
+                            <td class="value adjacent-photo">{{ $applicant['tiktok'] }}</td>
                             <td></td>
                         </tr>
                     @endif
@@ -243,6 +248,54 @@
                         <td class="value">{{ data_get($applicant->priorityDivision2, 'name') }}</td>
                         <td></td>
                     </tr>
+                    <tr>
+                        <td class="label">Jenis Diet</td>
+                        <td>:</td>
+                        <td class="value">{{ $applicant->diet }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="label">Alergi Makanan</td>
+                        <td>:</td>
+                        <td class="value">{{ $applicant->allergy }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="label">Riwayat Penyakit</td>
+                        <td>:</td>
+                        <td class="value">
+                            <ul style="margin-top: 1px; margin-bottom: 2px; margin-left: 2px; padding-left: 14px;">
+                                @foreach ($applicant->diseases as $disease)
+                                    <li>{{ $disease->name }}</li>
+                                @endforeach
+                            </ul>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="label">Penyakit Lain</td>
+                        <td>:</td>
+                        <td class="value">
+                            {{ $applicant->medical_history['other_disease'] }}
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="label">Penjelasan Penyakit</td>
+                        <td>:</td>
+                        <td class="value">
+                            {{ $applicant->medical_history['disease_explanation'] }}
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="label">Alergi Obat</td>
+                        <td>:</td>
+                        <td class="value">
+                            {{ $applicant->medical_history['medication_allergy'] }}
+                        </td>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
         </section>
@@ -271,34 +324,35 @@
     <footer>
         <h2>Lampiran</h2>
         <div>
-            <a href="{{ route('upload',['path' => 'ktm/'.$applicant['documents']['ktm'] ]) }}" target="_blank">
+            <a href="{{ route('upload', ['path' => 'ktm/' . $applicant['documents']['ktm']]) }}" target="_blank">
                 <h3>KTM</h3>
             </a>
-            <img src="{{ route('upload',['path' => 'ktm/'.$applicant['documents']['ktm'] ]) }}" alt="KTM"
+            <img src="{{ route('upload', ['path' => 'ktm/' . $applicant['documents']['ktm']]) }}" alt="KTM"
                 style="max-width: 100%; max-height: 85%">
         </div>
         <div class="page-break"></div>
         <div>
-            <a href="{{ route('upload',['path' => 'skkk/'.$applicant['documents']['skkk'] ]) }}" target="_blank">
+            <a href="{{ route('upload', ['path' => 'skkk/' . $applicant['documents']['skkk']]) }}" target="_blank">
                 <h3>SKKK</h3>
             </a>
-            <img src="{{ route('upload',['path' => 'skkk/'.$applicant['documents']['skkk'] ]) }}" alt="SKKK"
+            <img src="{{ route('upload', ['path' => 'skkk/' . $applicant['documents']['skkk']]) }}" alt="SKKK"
                 style="max-width: 100%; max-height: 85%">
         </div>
         <div class="page-break"></div>
         <div>
-            <a href="{{ route('upload',['path' => 'grades/'.$applicant['documents']['grades'] ]) }}" target="_blank">
+            <a href="{{ route('upload', ['path' => 'grades/' . $applicant['documents']['grades']]) }}" target="_blank">
                 <h3>Transkrip</h3>
             </a>
-            <img src="{{ route('upload',['path' => 'grades/'.$applicant['documents']['grades'] ]) }}" alt="Transkrip"
+            <img src="{{ route('upload', ['path' => 'grades/' . $applicant['documents']['grades']]) }}" alt="Transkrip"
                 style="max-width: 100%; max-height: 85%">
         </div>
         <div class="page-break"></div>
         <div>
-            <a href="{{ route('upload',['path' => 'schedule/'.$applicant['documents']['schedule'] ]) }}" target="_blank">
+            <a href="{{ route('upload', ['path' => 'schedule/' . $applicant['documents']['schedule']]) }}"
+                target="_blank">
                 <h3>Jadwal Hidup</h3>
             </a>
-            <img src="{{ route('upload',['path' => 'schedule/'.$applicant['documents']['schedule'] ]) }}"
+            <img src="{{ route('upload', ['path' => 'schedule/' . $applicant['documents']['schedule']]) }}"
                 alt="Jadwal Hidup" style="max-width: 100%; max-height: 85%">
         </div>
     </footer>

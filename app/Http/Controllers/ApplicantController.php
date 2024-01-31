@@ -29,6 +29,7 @@ use App\Http\Requests\ApplicationRequest;
 use App\Events\ApplicantDocumentsUploaded;
 use App\Http\Requests\PickScheduleRequest;
 use App\Http\Requests\StoreDocumentRequest;
+use App\Models\Disease;
 
 class ApplicantController extends BaseController
 {
@@ -42,6 +43,7 @@ class ApplicantController extends BaseController
         $data['title'] = 'Form Pendaftaran';
         $data['religions'] = self::religions();
         $data['diets'] = self::diets();
+        $data['diseases'] = Disease::all(['id', 'name'])->toArray();
 
         $divisions = Division::all(['id', 'name'])->toArray();
         $excludedDivisions = ['Badan Pengurus Harian', 'Opening', 'Closing'];
@@ -73,11 +75,11 @@ class ApplicantController extends BaseController
             ->where('code', $majorCode)
             ->get();
 
-        $applicantData = $this->model->findByNRP($nrp);
+        $applicantData = $this->model->findByNRP($nrp, relations: ['diseases']);
         if ($applicantData) {
             $data['form'] = $applicantData->toArray();
         }
-
+        
         return view('main.application_form', $data);
     }
 
@@ -85,16 +87,23 @@ class ApplicantController extends BaseController
     {
         $this->store($request);
 
+        $applicant = $this->model->findByEmail($request->email);
+        $applicant->addDiseases($request->diseases);
+
         return redirect()->back()
             ->with('success', 'Pendaftaran berhasil!');
     }
 
-    public function updateApplication(ApplicationRequest $request, $id)
+    public function updateApplication(ApplicationRequest $request)
     {
-        $this->updatePartial($request->validated(), $id);
+        $applicant = $this->model->findByEmail(session('email'));
+        $this->updatePartial($request->except(['diseases', '_token', '_method']), $applicant->id);
+        
+        $applicant->diseases()->detach();
+        $applicant->addDiseases($request->diseases);
 
         return redirect()->back()
-            ->with('success', 'Biodata berhasil diubah!');
+            ->with('success_update', 'Biodata berhasil diubah!');
     }
 
     public function documentsForm()
@@ -106,10 +115,11 @@ class ApplicantController extends BaseController
         );
 
         if (!$applicant)
-            return 'Silahkan isi form pendaftaran terlebih dahulu di <a href="' . route('applicant.application-form') . '">sini</a>!';
+            return redirect()->route('applicant.application-form')
+                ->with('previous_stage_not_completed', 'Silahkan isi form pendaftaran terlebih dahulu!');
 
         $data['title'] = 'Upload Berkas';
-        $data['documentTypes'] = self::documentTypes($applicant->astor);
+        $data['documentTypes'] = self::documentTypes();
 
 
         $data['applicant'] = $applicant->toArray();
@@ -131,8 +141,7 @@ class ApplicantController extends BaseController
         $applicant->addDocument($type, $storeName);
         ApplicantDocumentsUploaded::dispatch(
             $applicant,
-            2,
-            self::documentTypes($applicant->astor)
+            self::documentTypes()
         );
 
         $applicant->refresh();
@@ -167,9 +176,13 @@ class ApplicantController extends BaseController
             ->first();
 
         if (!$applicant)
-            return 'Silahkan isi form upload berkas terlebih dahulu di <a href="' . route('applicant.documents-form') . '">sini</a>!';
+            return redirect()->route('applicant.documents-form')
+                ->with('previous_stage_not_completed', 'Silahkan upload berkas Anda terlebih dahulu!');
 
-        if ($applicant->astor) return;
+        if ($applicant->astor) {
+            $data['applicant'] = $applicant->toArray();
+            return view('main.schedule_form', $data);
+        };
 
         if ($this->cekPeran($applicant->email) && $applicant->priority_division2 != null)
             $data['double_interview'] = true;
@@ -299,10 +312,10 @@ class ApplicantController extends BaseController
                     ->whereNotIn('email', $division->name == 'Peran' ? [$peranExcluded] : [])
                     ->whereIn('online', $validated['online'][$i] == 1 ? [0, 1] : [0])
                     ->get();
-                
+
                 $admin = $this->chooseInterviewer($schedules->pluck('admin_id'));
             }
-            
+
             // dd($admin);
             $pickedSchedule[] = $schedules->where('admin_id', $admin->admin_id)->first();
         }
@@ -449,7 +462,7 @@ class ApplicantController extends BaseController
     public function previewCV()
     {
         $nrp = strtolower(session('nrp'));
-        $applicant = $this->model->findByNRP($nrp, relations: $this->model->relations());
+        $applicant = $this->model->findByNRP($nrp);
 
         if (!$applicant) {
             return 'Pendaftar tidak ditemukan';
@@ -473,17 +486,10 @@ class ApplicantController extends BaseController
         return array_column(Diet::cases(), 'name');
     }
 
-    public static function documentTypes($isAstor = true)
+    public static function documentTypes()
     {
         $allDocuments = array_column(DocumentType::cases(), 'value', 'name');
-
-        if ($isAstor) {
-            return $allDocuments;
-        }
-
-        return array_filter($allDocuments, function ($v, $k) {
-            return $k !== DocumentType::Frontline_Test->name;
-        }, ARRAY_FILTER_USE_BOTH);
+        return $allDocuments;
     }
 
     private static function saveFile(UploadedFile $file, Applicant $applicant, $type)
@@ -636,9 +642,9 @@ class ApplicantController extends BaseController
     {
         $data['title'] = 'Tolak Terima';
         $applicant = Applicant::with(['priorityDivision1', 'priorityDivision2', 'divisionAccepted'])
-        ->where('stage', '>', 3)
-        ->where('acceptance_stage','>=' ,5)
-        ->get();
+            ->where('stage', '>', 3)
+            ->where('acceptance_stage', '>=', 5)
+            ->get();
 
         $data['applicant'] = [];
         $i = 0;
@@ -785,7 +791,7 @@ class ApplicantController extends BaseController
         $applicant = $this->getById($data['id']);
         $admin_division = Division::where('id', session('division_id'))->first();
 
-        
+
         // check stage priority
         if ($data['priority'] == 1) {
             // check apakah punya kuasa
@@ -800,15 +806,13 @@ class ApplicantController extends BaseController
                     $this->updatePartial(['acceptance_stage' => 1, 'division_accepted' => null], $data['id']);
                     return response()->json(['success' => true, 'message' => 'Berhasil cancel anak di pilihan 1']);
                 }
-            }else{
+            } else {
                 // kalau tidak ada cancel
                 if ($applicant->acceptance_stage <= 5 && $applicant->acceptance_stage >= 2) {
                     $this->updatePartial(['acceptance_stage' => 1, 'division_accepted' => null], $data['id']);
                     return response()->json(['success' => true, 'message' => 'Berhasil cancel anak di pilihan 1']);
                 }
-
             }
-
         } else if ($data['priority'] == 2) {
             // check apa ada prioritas 2
             if (!$applicant->priorityDivision2) {
@@ -900,5 +904,4 @@ enum DocumentType: String
     case Grades = 'Transkrip Nilai';
     case Skkk = 'Transkrip SKKK Petra Mobile';
     case Schedule = 'Jadwal Kuliah';
-    case Frontline_Test = 'Jawaban Tes Calon Frontline';
 }
