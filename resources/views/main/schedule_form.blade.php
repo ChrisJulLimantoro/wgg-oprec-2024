@@ -18,22 +18,23 @@
                     id="application-applicant">
                     @csrf
 
-                    <input type="hidden" name="division[]" id="division_1" value="{{ $applicant['priority_division1']['id'] }}">
+                    <input type="hidden" name="division[]" id="division_1"
+                        value="{{ $applicant['priority_division1']['id'] }}">
                     @if ($applicant['priority_division2'])
                         <input type="hidden" name="division[]" id="division_2"
                             value="{{ $applicant['priority_division2']['id'] }}">
                     @endif
 
-                {{-- Wawancara pertama --}}
-                <p class="text-lg font-semibold mb-4 text-white">Wawancara Divisi
-                    {{ strtoupper($applicant['priority_division1']['slug']) }}
+                    {{-- Wawancara pertama --}}
+                    <p class="text-lg font-semibold mb-4 text-white">Wawancara Divisi
+                        {{ strtoupper($applicant['priority_division1']['slug']) }}
 
-                    {{ $applicant['priority_division2'] && !$double_interview ? ' & ' . strtoupper($applicant['priority_division2']['slug']) : '' }}
+                        {{ $applicant['priority_division2'] && !$double_interview ? ' & ' . strtoupper($applicant['priority_division2']['slug']) : '' }}
 
-                    @if (in_array($applicant['priority_division1']['name'], $onsiteOnly))
-                        <span class="text-red-400">(Onsite Only)</span>
-                    @endif
-                </p>
+                        @if (in_array($applicant['priority_division1']['name'], $onsiteOnly))
+                            <span class="text-red-400">(Onsite Only)</span>
+                        @endif
+                    </p>
 
                     <div
                         class="grid {{ $read_only && $reschedule[0] ? 'sm:grid-cols-5' : ($read_only ? 'sm:grid-cols-4' : 'sm:grid-cols-3') }} sm:gap-4 mb-4">
@@ -61,19 +62,19 @@
                             @error('online') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                             @error('online.0') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
 
-                        <select data-te-select-init name="online[]" id="online_1" value=""
-                            {{ $read_only ? 'disabled' : '' }}>
-                            <option value="0"
-                                @if ($read_only) {{ strval($schedules[0]['online']) === '0' ? 'selected' : '' }} @endif
-                                @if (!empty(old('online'))) {{ old('online')[0] == '0' ? 'selected' : '' }} @endif>
-                                Onsite</option>
-                            @if (!in_array($applicant['priority_division1']['name'], $onsiteOnly))
-                                <option value="1"
-                                    @if ($read_only) {{ strval($schedules[0]['online']) === '1' ? 'selected' : '' }} @endif
-                                    @if (!empty(old('online'))) {{ old('online')[0] == '1' ? 'selected' : '' }} @endif>
-                                    Online</option>
-                            @endif
-                        </select>
+                            <select data-te-select-init name="online[]" id="online_1" value=""
+                                {{ $read_only ? 'disabled' : '' }}>
+                                <option value="0"
+                                    @if ($read_only) {{ strval($schedules[0]['online']) === '0' ? 'selected' : '' }} @endif
+                                    @if (!empty(old('online'))) {{ old('online')[0] == '0' ? 'selected' : '' }} @endif>
+                                    Onsite</option>
+                                @if (!in_array($applicant['priority_division1']['name'], $onsiteOnly))
+                                    <option value="1"
+                                        @if ($read_only) {{ strval($schedules[0]['online']) === '1' ? 'selected' : '' }} @endif
+                                        @if (!empty(old('online'))) {{ old('online')[0] == '1' ? 'selected' : '' }} @endif>
+                                        Online</option>
+                                @endif
+                            </select>
 
                             <label data-te-select-label-ref>Tipe</label>
                         </div>
@@ -99,21 +100,22 @@
                         @includeWhen($read_only && $reschedule[0], 'main.reschedule_button', ['i' => 0])
                     </div>
 
-                {{-- Wawancara kedua --}}
-                @if ($double_interview)
-                    <p class="text-lg font-semibold mt-10 md:mt-0 mb-4 text-white   ">Wawancara Divisi
-                        {{ strtoupper($applicant['priority_division2']['slug']) }}
-                        @if (in_array($applicant['priority_division2']['name'], $onsiteOnly))
-                            <span class="text-red-400">(Onsite Only)</span>
-                        @endif
-                    </p>
+                    {{-- Wawancara kedua --}}
+                    @if ($double_interview)
+                        <p class="text-lg font-semibold mt-10 md:mt-0 mb-4 text-white   ">Wawancara Divisi
+                            {{ strtoupper($applicant['priority_division2']['slug']) }}
+                            @if (in_array($applicant['priority_division2']['name'], $onsiteOnly))
+                                <span class="text-red-400">(Onsite Only)</span>
+                            @endif
+                        </p>
 
                         <div
                             class="grid {{ $read_only && $reschedule[1] ? 'sm:grid-cols-5' : ($read_only ? 'sm:grid-cols-4' : 'sm:grid-cols-3') }} sm:gap-4 mb-4">
                             <div data-te-validate="input" class="mb-4"
                                 @error('date_id') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                                 @error('date_id.1') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
-                                <select data-te-select-init name="date_id[]" id="date_2" {{ $read_only ? 'disabled' : '' }}>
+                                <select data-te-select-init name="date_id[]" id="date_2"
+                                    {{ $read_only ? 'disabled' : '' }}>
                                     @foreach ($dates as $d)
                                         <option value="{{ $d['id'] }}"
                                             @if ($read_only) {{ strval($schedules[1]['date_id']) === $d['id'] ? 'selected' : '' }} @endif
@@ -130,18 +132,19 @@
                                 @error('online') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                                 @error('online.1') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
 
-                            <select data-te-select-init name="online[]" id="online_2" {{ $read_only ? 'disabled' : '' }}>
-                                <option value="0"
-                                    @if ($read_only) {{ strval($schedules[1]['online']) === '0' ? 'selected' : '' }} @endif
-                                    @if (!empty(old('online'))) {{ old('online')[1] == '0' ? 'selected' : '' }} @endif>
-                                    Onsite</option>
-                                @if (!in_array($applicant['priority_division2']['name'], $onsiteOnly))
-                                    <option value="1"
-                                        @if ($read_only) {{ strval($schedules[1]['online']) === '1' ? 'selected' : '' }} @endif
-                                        @if (!empty(old('online'))) {{ old('online')[1] == '1' ? 'selected' : '' }} @endif>
-                                        Online</option>
-                                @endif
-                            </select>
+                                <select data-te-select-init name="online[]" id="online_2"
+                                    {{ $read_only ? 'disabled' : '' }}>
+                                    <option value="0"
+                                        @if ($read_only) {{ strval($schedules[1]['online']) === '0' ? 'selected' : '' }} @endif
+                                        @if (!empty(old('online'))) {{ old('online')[1] == '0' ? 'selected' : '' }} @endif>
+                                        Onsite</option>
+                                    @if (!in_array($applicant['priority_division2']['name'], $onsiteOnly))
+                                        <option value="1"
+                                            @if ($read_only) {{ strval($schedules[1]['online']) === '1' ? 'selected' : '' }} @endif
+                                            @if (!empty(old('online'))) {{ old('online')[1] == '1' ? 'selected' : '' }} @endif>
+                                            Online</option>
+                                    @endif
+                                </select>
 
                                 <label data-te-select-label-ref>Tipe</label>
                             </div>
@@ -150,7 +153,8 @@
                                 @error('time') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror
                                 @error('time.1') data-te-validation-state="invalid" data-te-invalid-feedback="{{ $message }}" @enderror>
 
-                                <select data-te-select-init name="time[]" id="time_2" {{ $read_only ? 'disabled' : '' }}>
+                                <select data-te-select-init name="time[]" id="time_2"
+                                    {{ $read_only ? 'disabled' : '' }}>
                                     @if ($read_only)
                                         <option value="{{ $schedules[1]['time'] }}" selected>
                                             {{ str_pad(strval($schedules[1]['time']), 2, '0', STR_PAD_LEFT) }}:00 -
@@ -168,18 +172,19 @@
                         </div>
                     @endif
 
-                <!--Submit button-->
-                <button type="submit"
-                    class="inline-block w-full rounded bg-primary px-6 pb-2 pt-2 mt-2 text-md font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] {{ $read_only ? 'hidden' : '' }}"
-                    data-te-ripple-init data-te-ripple-color="light">
-                    PILIH
-                </button>
+                    <!--Submit button-->
+                    <button type="submit"
+                        class="inline-block w-full rounded bg-primary px-6 pb-2 pt-2 mt-2 text-md font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] {{ $read_only ? 'hidden' : '' }}"
+                        data-te-ripple-init data-te-ripple-color="light">
+                        PILIH
+                    </button>
 
-                @if (!$read_only)
-                    <p class="mt-5 text-center text-white">Jika tidak menemukan jadwal, bisa menghubungi OA Line WGG <span
-                            class="text-[#e59980]">@328readn</span></p>
-                @endif
-            </form>
+                    @if (!$read_only)
+                        <p class="mt-5 text-center text-white">Jika tidak menemukan jadwal, bisa menghubungi OA Line WGG
+                            <span class="text-[#e59980]">@328readn</span>
+                        </p>
+                    @endif
+                </form>
 
                 <form action="{{ route('applicant.reschedule') }}" method="POST" id="reschedule-form0"
                     class="reschedule-form">
@@ -319,9 +324,10 @@
                     });
                 @endif
 
-            $("#modalLocationBtn0, #modalLocationBtn1, #btn-cp0, #btn-cp1").click(async function() {
-                $("div[data-te-backdrop-show]").remove();
+                $("#modalLocationBtn0, #modalLocationBtn1, #btn-cp0, #btn-cp1").click(async function() {
+                    $("div[data-te-backdrop-show]").remove();
+                })
             })
-        })
-    </script>
+        </script>
+    @endif
 @endsection
