@@ -279,7 +279,7 @@ class ScheduleController extends BaseController
         }
         $data['interview'] = json_encode($data['interview']);
 
-        $data['dates'] = Date::select('id', 'date')->where('date', '>', Carbon::now())->get()->toArray();
+        $data['dates'] = Date::select('id', 'date')->where('date', '>', Carbon::now('Asia/Jakarta'))->get()->toArray();
         $data['times'] = range(8, 19);
         // dd($data);
         return view('admin.interview.reschedule',$data);
