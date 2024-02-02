@@ -85,9 +85,9 @@ class InterviewScheduleTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_date_option_before_7pm(): void
+    public function test_date_option_before_9pm(): void
     {
-        $this->travelTo(now()->hours(18)->minutes(10));
+        $this->travelTo(now()->hours(19)->minutes(10));
 
         $response = $this->withSession([
             'email' => 'c14210089@john.petra.ac.id',
@@ -107,9 +107,9 @@ class InterviewScheduleTest extends TestCase
         $this->travelBack();
     }
 
-    public function test_date_option_after_7pm(): void
+    public function test_date_option_after_9pm(): void
     {
-        $this->travelTo(now()->hours(22)->minutes(10));
+        $this->travelTo(now()->hours(23)->minutes(10));
 
         $response = $this->withSession([
             'email' => 'c14210089@john.petra.ac.id',

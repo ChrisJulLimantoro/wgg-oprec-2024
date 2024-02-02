@@ -212,7 +212,7 @@ class ApplicantController extends BaseController
 
         $data['applicant'] = $applicant->toArray();
 
-        $lastHourToPickNextDay = 19;
+        $lastHourToPickNextDay = 21;
         if (now()->hour < $lastHourToPickNextDay) {
             $data['dates'] = Date::select('id', 'date')->where('date', '>', Carbon::now())->get()->toArray();
         } else {
