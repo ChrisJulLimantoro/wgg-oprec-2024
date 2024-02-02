@@ -212,8 +212,12 @@ class ApplicantController extends BaseController
 
         $data['applicant'] = $applicant->toArray();
 
-        // dd(Carbon::now()->addDays(1)->format('Y-m-d'));
-        $data['dates'] = Date::select('id', 'date')->where('date', '>', Carbon::now('Asia/Jakarta'))->get()->toArray();
+        $lastHourToPickNextDay = 19;
+        if (now()->hour < $lastHourToPickNextDay) {
+            $data['dates'] = Date::select('id', 'date')->where('date', '>', Carbon::now())->get()->toArray();
+        } else {
+            $data['dates'] = Date::select('id', 'date')->where('date', '>', Carbon::tomorrow())->get()->toArray();
+        }
 
         // dd($data);
 

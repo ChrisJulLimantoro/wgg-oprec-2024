@@ -3,16 +3,16 @@
 namespace Tests\Feature;
 
 use App\Models\Applicant;
+use App\Models\Date;
 use App\Models\Disease;
 use App\Models\Division;
 use App\Models\Faculty;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Session;
 use Tests\TestCase;
 
-
-class StoringApplicationTest extends TestCase
+class InterviewScheduleTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -23,14 +23,24 @@ class StoringApplicationTest extends TestCase
         parent::setUp();
 
         $this->refreshDatabase();
-    }
 
-    /**
-     * A basic feature test example.
-     */
-    public function test_storing_application(): void
-    {
-        $body = [
+        for ($i = 1; $i < 4; $i++) {
+            Date::create([
+                'date' => now()->subDays($i)->format('Y-m-d'),
+            ]);
+        }
+
+        Date::create([
+            'date' => now()->format('Y-m-d'),
+        ]);
+
+        for ($i = 1; $i < 5; $i++) {
+            Date::create([
+                'date' => now()->addDays($i)->format('Y-m-d'),
+            ]);
+        }
+
+        $applicant = [
             'name' => 'test',
             'email' => 'c14210089@john.petra.ac.id',
             'major_id' => Faculty::where('code', 'C')->first()->majors->first()->id,
@@ -60,38 +70,61 @@ class StoringApplicationTest extends TestCase
                 'medication_allergy' => 'medication_allergy',
             ],
             'diseases' => Disease::inRandomOrder()->limit(2)->get()->pluck('id')->toArray(),
-            'stage' => 1,
+            'astor' => 0,
+            'stage' => 2,
             'priority_division1' => Division::first()->id,
             'priority_division2' => null,
             'acceptance_stage' => 1,
             'documents' => null,
             'reschedule' => '00',
         ];
+
+        Applicant::create($applicant);
+    }
+
+    /**
+     * A basic feature test example.
+     */
+    public function test_date_option_before_7pm(): void
+    {
+        $this->travelTo(now()->hours(18)->minutes(10));
+
         $response = $this->withSession([
             'email' => 'c14210089@john.petra.ac.id',
             'name' => 'c14210089',
             'nrp' => 'c14210089',
             'isAdmin' => false
-        ])
-            ->from(route('applicant.application-form'))
-            ->post(route('applicant.application.store'), $body);
+        ])->get(route('applicant.schedule-form'));
 
-        $response->assertRedirect(route('applicant.application-form'));
-        $response->assertFound();
-        $response->assertSessionHasNoErrors();
-        $this->assertDatabaseHas('applicants', [
-            'name' => $body['name'],
-            'email' => $body['email'],
-            'province' => $body['province'],
-            'city' => $body['city'],
-        ]);
+        $dates = $response->viewData('dates');
+        echo '----before 7pm----' . PHP_EOL;
 
-        $applicantId = Applicant::where('email', $body['email'])->first()->id;
-        foreach ($body['diseases'] as $disease) {
-            $this->assertDatabaseHas('applicant_disease', [
-                'applicant_id' => $applicantId,
-                'disease_id' => $disease,
-            ]);
+        foreach ($dates as $date) {
+            echo $date['date'] . PHP_EOL;
+            $this->assertGreaterThan(now()->format('Y-m-d'), $date['date']);
         }
+
+        $this->travelBack();
+    }
+
+    public function test_date_option_after_7pm(): void
+    {
+        $this->travelTo(now()->hours(22)->minutes(10));
+
+        $response = $this->withSession([
+            'email' => 'c14210089@john.petra.ac.id',
+            'name' => 'c14210089',
+            'nrp' => 'c14210089',
+            'isAdmin' => false
+        ])->get(route('applicant.schedule-form'));
+
+        $dates = $response->viewData('dates');
+        echo '----after 7pm----' . PHP_EOL;
+        foreach ($dates as $date) {
+            echo $date['date'] . PHP_EOL;
+            $this->assertGreaterThan(Carbon::tomorrow()->format('Y-m-d'), $date['date']);
+        }
+
+        $this->travelBack();
     }
 }
