@@ -536,9 +536,7 @@
                                 <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
                                     Kesehatan
                                 </h3>
-                                <p class="mt-2">Divisi yang memberikan bantuan yang berhubungan dengan kesehatan dan
-                                    bertanggung
-                                    jawab atas kesehatan mahasiswa dan panitia selama WGG.</p>
+                                <p class="mt-2">Divisi yang membantu dan bertanggung jawab atas kesehatan mahasiswa baru dan panitia selama WGG berlangsung.</p>
                             </div>
                         </div>
                     </div>
