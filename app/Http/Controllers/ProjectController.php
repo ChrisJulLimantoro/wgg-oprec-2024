@@ -61,6 +61,7 @@ class ProjectController extends BaseController
 
         if ($selected == 2 && !$applicant['priority_division2']) abort(404);
 
+        $applicant = $applicant->toArray();
         $data['applicant'] = $applicant;
         $data['selected'] = $selected;
 

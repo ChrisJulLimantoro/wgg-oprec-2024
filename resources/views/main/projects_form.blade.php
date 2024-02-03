@@ -49,11 +49,11 @@
                     </div>
                     @if (isset($projectDescription))
                         <div
-                            class="block w-full rounded-lg bg-white px-5 py-4 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 mb-6">
-                            <div class="mb-2 text-lg font-medium leading-tight text-neutral-800 dark:text-neutral-50">
+                            class="block w-full rounded-lg px-5 py-4 shadow-[5px_5px_10px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 mb-6">
+                            <div class="mb-2 text-lg font-medium leading-tight text-white">
                                 Project Description
                             </div>
-                            <div class="mb-4 text-sm text-neutral-600 dark:text-neutral-200 project-description">
+                            <div class="mb-4 text-sm text-white project-description">
                                 {!! $projectDescription !!}
                             </div>
                         </div>
@@ -66,7 +66,8 @@
                             <textarea id="project" name="project" @if (!$selected || $passedDeadline) disabled @endif
                                 class="w-full bg-transparent border-2 font-serif disabled:!bg-gray-400/25 text-sm rounded-lg block py-3 pl-3 shadow-lg enabled:hover:shadow-xl"
                                 rows="2" placeholder="Link Project">{{ data_get($applicant, 'documents.projects.' . $selected) }}</textarea>
-                            <div class="text-xs mx-1 mt-1 text-white">Jangan lupa atur access file supaya dapat diakses oleh panitia
+                            <div class="text-xs mx-1 mt-1 text-white">Jangan lupa atur access file supaya dapat diakses oleh
+                                panitia
                             </div>
                         </div>
                         <button type="submit" data-te-ripple-init data-te-ripple-color="light" id="submitProject"
