@@ -190,7 +190,7 @@ class AnswerController extends BaseController
             $questions = array_merge($open,$questions,$close);
         }else if($schedule->type == 1){
             $applicant = Applicant::with(['priorityDivision1.questions','answers'])->where(['id' => $request->applicant_id])->first();
-            $questions = $applicant->priorityDivision1->questions->pluck('id');
+            $questions = $applicant->priorityDivision1->questions->pluck('id')->toArray();
             $open = Question::where(['division_id' => Division::where(['slug' => 'open'])->first()->id])->orderBy('number','asc')->get()->pluck('id')->toArray();
             $close = Question::where(['division_id' => Division::where(['slug' => 'close'])->first()->id])->orderBy('number','asc')->get()->pluck('id')->toArray();
             $questions = array_merge($open,$questions,$close);
