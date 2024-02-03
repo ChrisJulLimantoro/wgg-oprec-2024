@@ -287,20 +287,22 @@ class AnswerController extends BaseController
         if($applicant->priorityDivision1->project == null){
             $project[] = ['name' => $applicant->priorityDivision1->name,'project' => null];
         }else{
-            $project[] = ['name' => $applicant->priorityDivision1->name,'project' => $applicant->priorityDivision1->project, 'result' => data_get($applicant->documents,'project.1')];
+            $project[] = ['name' => $applicant->priorityDivision1->name,'project' => $applicant->priorityDivision1->project, 'result' => data_get($applicant->documents,'projects.1')];
         }
+        // dd($applicant->documents);
 
         if($applicant->priorityDivision2 != null){
             if($applicant->priorityDivision2->project == null){
                 $project[] = ['name' => $applicant->priorityDivision2->name,'project' => null];
             }else{
-                $project[] = ['name' => $applicant->priorityDivision2->name,'project' => $applicant->priorityDivision2->project, 'result' => data_get($applicant->documents,'project.2')];
+                $project[] = ['name' => $applicant->priorityDivision2->name,'project' => $applicant->priorityDivision2->project, 'result' => data_get($applicant->documents,'projects.2')];
             }
         }
 
         $data['applicant'] = $applicant;
         $data['sections'] = $sections;
         $data['project'] = $project;
+        // dd($project);
         return view('admin.interview.answer',$data);
     }
 }
