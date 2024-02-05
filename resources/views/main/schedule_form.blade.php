@@ -4,7 +4,7 @@
     @include('main.stepper', ['applicant' => $applicant])
 
     @php
-        $onsiteOnly = ['Creative', 'Keamanan'];
+        $onsiteOnly = ['Creative', 'Keamanan', 'Peran'];
     @endphp
 
     <h1 class="text-3xl font-bold text-center text-white">Pilih Jadwal Wawancara</h1>
