@@ -1242,7 +1242,7 @@
 
     <!-- Tulisan Oprec & Tema -->
     <script>
-        const texts = ["WGG 2024", "On The Solid Rock, I Stand"];
+        const texts = ["WGG 2024", "On The Solid Rock I Stand"];
         const typingContainer = document.getElementById("typing-container");
         let currentTextIndex = 0;
         let currentText = "";
