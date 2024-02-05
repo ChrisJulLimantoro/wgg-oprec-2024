@@ -49,7 +49,7 @@ class ProjectController extends BaseController
         $data['title'] = 'Projects Form';
         $applicant = $this->model->findByNrp(
             $nrp,
-            ['id', 'priority_division1', 'priority_division2', 'documents', 'stage'],
+            ['id', 'priority_division1', 'priority_division2', 'documents', 'stage', 'astor'],
             ['priorityDivision1', 'priorityDivision2']
         );
 
@@ -62,6 +62,9 @@ class ProjectController extends BaseController
         $applicant = $applicant->toArray();
         $data['applicant'] = $applicant;
         $data['selected'] = $selected;
+        if ($applicant['astor'])
+            return view('main.projects_form', $data);
+    
 
         if (!$selected) return view('main.projects_form', $data);
 
