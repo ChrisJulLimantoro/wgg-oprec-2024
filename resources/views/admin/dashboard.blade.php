@@ -125,7 +125,7 @@
                 "Konsumsi": "linear-gradient(90deg, hsla(175, 79%, 63%, 1) 0%, hsla(82, 96%, 57%, 1) 100%)",
                 "Peran": "linear-gradient(90deg, hsla(286, 44%, 49%, 1) 0%, hsla(35, 79%, 68%, 1) 100%)",
                 "Perlengkapan": "linear-gradient(90deg, hsla(217, 100%, 50%, 1) 0%, hsla(186, 100%, 69%, 1) 100%)",
-                "Regulasi": "linear-gradient(90deg, #1b8b00 0%, #A2D240 74%)",
+                "Keamanan": "linear-gradient(90deg, #1b8b00 0%, #A2D240 74%)",
                 "Sekretariat": "linear-gradient(90deg, hsla(17, 95%, 50%, 1) 0%, hsla(42, 94%, 57%, 1) 100%)",
             }
 

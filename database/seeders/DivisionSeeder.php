@@ -40,7 +40,7 @@ class DivisionSeeder extends Seeder
                 "slug" => "perkap"
             ],
             [
-                "name" => "Regulasi",
+                "name" => "Keamanan",
                 "slug" => "regul"
             ],
             [

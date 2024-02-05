@@ -574,7 +574,7 @@
                                 <img src="{{ asset('assets/logo-regulasi.png') }}" alt=""
                                     class="top-[-65px] left-[60px] scale-[0.8]">
                                 <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
-                                    Regulasi
+                                    Keamanan
                                 </h3>
                                 <p class="mt-2">Tim yang menjaga keamanan, kelancaran, dan ketertiban acara dalam proses mahasiswa baru mengenal Petra Christian University.</p>
                             </div>
