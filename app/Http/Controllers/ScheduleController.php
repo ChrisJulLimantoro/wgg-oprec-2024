@@ -102,7 +102,7 @@ class ScheduleController extends BaseController
             $temp['type'] = $i['type'];
             $temp['online'] = $i['online'];
             $temp['link'] = route('admin.interview.start',$i['id']);
-            $temp['detail'] = route('admin.applicant.cv',$i['applicant_id']);
+            $temp['detail'] = route('admin.applicant.detail',$i['applicant_id']);
             $temp['spot'] = $i['admin']['spot'];
             $temp['meet'] = $i['admin']['meet'];
             $data['interview'][] = $temp;
@@ -143,7 +143,7 @@ class ScheduleController extends BaseController
             $temp['link'] = route('admin.interview.start',$i['id']);
             $temp['interviewer'] = $i['admin']['name'];
             $temp['inter_id'] = $i['admin_id'];
-            $temp['detail'] = route('admin.applicant.cv',$i['applicant_id']);
+            $temp['detail'] = route('admin.applicant.detail',$i['applicant_id']);
             $temp['spot'] = $i['admin']['spot'];
             $temp['meet'] = $i['admin']['meet'];
             $data['interview'][] = $temp;
@@ -194,7 +194,7 @@ class ScheduleController extends BaseController
             $temp['link'] = route('admin.interview.start',$i['id']);
             $temp['interviewer'] = $i['admin']['name'];
             $temp['inter_id'] = $i['admin_id'];
-            $temp['detail'] = route('admin.applicant.cv',$i['applicant_id']);
+            $temp['detail'] = route('admin.applicant.detail',$i['applicant_id']);
             $temp['spot'] = $i['admin']['spot'];
             $temp['meet'] = $i['admin']['meet'];
             $data[] = $temp;

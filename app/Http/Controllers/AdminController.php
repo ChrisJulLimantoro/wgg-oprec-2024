@@ -124,4 +124,24 @@ class AdminController extends BaseController
 
         return redirect()->back()->with('success','Medical History Updated');
     }
+
+    public function detail(Applicant $applicant)
+    {
+        if ($applicant->stage < 2) {
+            return 'Pendaftar masih belum mengupload berkas';
+        }
+        $applicant->load($applicant->relations());
+        $data = [
+            'title' => 'Detail Pendaftar',  
+            'applicant' => $applicant,
+            'documentTypes' => self::documentTypes()
+        ];
+        return view('admin.detail', $data);
+    }
+
+    public static function documentTypes()
+    {
+        $allDocuments = array_column(DocumentType::cases(), 'value', 'name');
+        return $allDocuments;
+    }
 }

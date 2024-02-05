@@ -132,6 +132,8 @@ Route::prefix('admin')->middleware(['session', 'admin'])->group(function () {
         Route::get('/', [SettingController::class, 'index'])->name('admin.setting');
         Route::post('/update', [SettingController::class, 'settingUpdate'])->name('admin.setting.update');
     });
+
+    Route::get('/detail/{applicant}', [AdminController::class, 'detail'])->name('admin.applicant.detail');
 });
 
 // Route::get('interview-mail', function () {
