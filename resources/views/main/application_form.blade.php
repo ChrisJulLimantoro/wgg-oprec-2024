@@ -107,10 +107,10 @@
                         <select data-te-select-init name="gender">
                             <option value="" selected disabled hidden></option>
                             <option value="0"
-                                {{ old('gender') === '0' || data_get($form, 'gender', '-1') === 0 ? 'selected' : '' }}>
+                                {{ old('gender') === '0' || data_get($form, 'gender', '-1') == 0 ? 'selected' : '' }}>
                                 Laki-laki</option>
                             <option value="1"
-                                {{ old('gender') === '1' || data_get($form, 'gender', '-1') === 1 ? 'selected' : '' }}>
+                                {{ old('gender') === '1' || data_get($form, 'gender', '-1') == 1 ? 'selected' : '' }}>
                                 Perempuan</option>
                         </select>
                         <label data-te-select-label-ref>Jenis Kelamin</label>
