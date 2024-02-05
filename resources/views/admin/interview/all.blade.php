@@ -2,7 +2,7 @@
 @section('content')
 <div class="flex flex-col w-full py-8 rounded-lg shadow-xl items-center justify-center mb-10">
     <h1 class="text-center text-4xl uppercase font-bold">Division Schedule</h1>
-    @if(session('role') == 'it')
+    @if(in_array(session('role'),['it','sekret']))
         <div class="px-10 mt-5 w-full">
             <h3 class="text-center text-xl uppercase font-bold mb-3">Choose Division</h3>
             <select class="w-full" data-te-select-init id="division">
