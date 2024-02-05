@@ -2,7 +2,7 @@
 @section('content')
 <div class="flex flex-col w-full py-8 rounded-lg shadow-xl items-center justify-center mb-10">
     <h1 class="text-center text-4xl uppercase font-bold">Division Schedule</h1>
-    @if(session('role') == 'it')
+    @if(in_array(session('role'),['it','sekret']))
         <div class="px-10 mt-5 w-full">
             <h3 class="text-center text-xl uppercase font-bold mb-3">Choose Division</h3>
             <select class="w-full" data-te-select-init id="division">
@@ -266,34 +266,45 @@
                     })
                     return;
                 }else{
-                    await $.ajax({
-                        url : "{{ route('admin.interview.kidnap') }}",
-                        method : "POST",
-                        data : {
-                            schedule_id : schedule_id,
-                            _token : "{{ csrf_token() }}"
-                        },
-                        success : async function(data){
-                            if(data.success){
-                                await Swal.fire({
-                                    icon: 'success',
-                                    title: 'Success',
-                                    text: 'Interview kidnapped',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                location.reload();
-                            }else{
-                                await Swal.fire({
-                                    icon: 'error',
-                                    title: 'Failed',
-                                    text: data.message ? data.message : 'Something went wrong',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                            }
-                        }
-                    });
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You want to kidnap this interview?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes'
+                    }).then((result) => {
+                        if (result.isConfirmed)
+                            $.ajax({
+                                url : "{{ route('admin.interview.kidnap') }}",
+                                method : "POST",
+                                data : {
+                                    schedule_id : schedule_id,
+                                    _token : "{{ csrf_token() }}"
+                                },
+                                success : async function(data){
+                                    if(data.success){
+                                        await Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: 'Interview kidnapped',
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        })
+                                        location.reload();
+                                    }else{
+                                        await Swal.fire({
+                                            icon: 'error',
+                                            title: 'Failed',
+                                            text: data.message ? data.message : 'Something went wrong',
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        })
+                                    }
+                                }
+                            });
+                    })
                 }
             })
         })

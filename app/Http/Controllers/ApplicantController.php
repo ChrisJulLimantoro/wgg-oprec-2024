@@ -270,7 +270,7 @@ class ApplicantController extends BaseController
 
         $pickedSchedule = [];
         $count = $isPeran && $applicant->priority_division2 != null ? 2 : 1;
-        $onsiteOnly = ['Creative', 'Regulasi'];
+        $onsiteOnly = ['Creative', 'Keamanan'];
 
         for ($i = 0; $i < $count; $i++) {
             // check whether the selected division allow online interview

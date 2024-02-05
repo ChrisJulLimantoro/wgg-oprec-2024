@@ -44,7 +44,7 @@
                 role="tab"
                 aria-controls="regul"
                 aria-selected="false"
-                >Regulasi</a
+                >Keamanan</a
             >
         </li>
         <li role="presentation" class="flex-auto text-center">
@@ -207,7 +207,7 @@
         id="regul"
         role="tabpanel"
         aria-labelledby="tabs-regul">
-            <h1 class="text-xl font-bold uppercase mb-1">Divisi Regulasi</h1>
+            <h1 class="text-xl font-bold uppercase mb-1">Divisi Keamanan</h1>
             <hr class="h-[2px] bg-slate-200 dark:bg-gray-600 mb-8 border-none" />
             <div class="px-8 w-full mb-1">
                 <div class="relative mb-4 flex w-full flex-wrap items-stretch">

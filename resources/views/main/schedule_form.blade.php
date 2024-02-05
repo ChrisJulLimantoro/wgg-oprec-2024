@@ -4,7 +4,7 @@
     @include('main.stepper', ['applicant' => $applicant])
 
     @php
-        $onsiteOnly = ['Creative', 'Regulasi'];
+        $onsiteOnly = ['Creative', 'Keamanan'];
     @endphp
 
     <h1 class="text-3xl font-bold text-center text-white">Pilih Jadwal Wawancara</h1>
@@ -27,9 +27,9 @@
 
                     {{-- Wawancara pertama --}}
                     <p class="text-lg font-semibold mb-4 text-white">Wawancara Divisi
-                        {{ strtoupper($applicant['priority_division1']['slug']) }}
+                        {{ strtoupper($applicant['priority_division1']['name']) }}
 
-                        {{ $applicant['priority_division2'] && !$double_interview ? ' & ' . strtoupper($applicant['priority_division2']['slug']) : '' }}
+                        {{ $applicant['priority_division2'] && !$double_interview ? ' & ' . strtoupper($applicant['priority_division2']['name']) : '' }}
 
                         @if (in_array($applicant['priority_division1']['name'], $onsiteOnly))
                             <span class="text-red-400">(Onsite Only)</span>
@@ -103,7 +103,7 @@
                     {{-- Wawancara kedua --}}
                     @if ($double_interview)
                         <p class="text-lg font-semibold mt-10 md:mt-0 mb-4 text-white   ">Wawancara Divisi
-                            {{ strtoupper($applicant['priority_division2']['slug']) }}
+                            {{ strtoupper($applicant['priority_division2']['name']) }}
                             @if (in_array($applicant['priority_division2']['name'], $onsiteOnly))
                                 <span class="text-red-400">(Onsite Only)</span>
                             @endif

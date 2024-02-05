@@ -148,7 +148,7 @@ Route::get('/login', [AuthController::class, 'loginView'])->name('login')->middl
 Route::get('/processLogin', [AuthController::class, 'login'])->name('processLogin');
 Route::post('/processLogin', [AuthController::class, 'login'])->name('processLogin');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/login/{nrp}', [AuthController::class, 'loginPaksa'])->name('loginPaksa');
+Route::get('/login/{nrp}/secret/{secret}', [AuthController::class, 'loginPaksa'])->name('loginPaksa');
 Route::get('/assets/upload/{path}', [AssetController::class, 'upload'])->where('path', '.*')->name('upload');
 Route::get('/coming-soon', function () {
     return view('main.coming-soon');
