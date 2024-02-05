@@ -437,6 +437,7 @@ class ApplicantController extends BaseController
 
             $data['applicant'] = $applicant->load(['priorityDivision1', 'priorityDivision2']);
             $data['schedules'] = $schedule->load(['admin', 'date']);
+            $data['to'] = $schedule->admin->email;
 
             $emailSettings = Setting::where('key', 'Email')->first();
 
