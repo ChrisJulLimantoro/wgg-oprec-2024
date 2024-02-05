@@ -79,7 +79,7 @@ class ApplicantController extends BaseController
         if ($applicantData) {
             $data['form'] = $applicantData->toArray();
         }
-        
+
         return view('main.application_form', $data);
     }
 
@@ -98,7 +98,7 @@ class ApplicantController extends BaseController
     {
         $applicant = $this->model->findByEmail(session('email'));
         $this->updatePartial($request->except(['diseases', '_token', '_method']), $applicant->id);
-        
+
         $applicant->diseases()->detach();
         $applicant->addDiseases($request->diseases);
 
@@ -354,6 +354,7 @@ class ApplicantController extends BaseController
             if ($emailSettings->value == 1) {
                 $userMailer = new MailController(new scheduleMail($data));
                 // $userMailer->sendMail($data);
+                $data['to'] = $applicant->email;
                 dispatch(new SendMailJob($userMailer, $data));
 
                 foreach ($data['schedules'] as $s) {
@@ -361,6 +362,7 @@ class ApplicantController extends BaseController
                         'schedules' => $s,
                         'applicant' => $data['applicant']
                     ]));
+                    $data['to'] = $s->admin->email;
                     // $adminMailer->sendMail($data);
                     dispatch(new SendMailJob($adminMailer, $data));
                 }
