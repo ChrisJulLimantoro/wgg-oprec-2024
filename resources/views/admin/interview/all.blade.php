@@ -266,34 +266,45 @@
                     })
                     return;
                 }else{
-                    await $.ajax({
-                        url : "{{ route('admin.interview.kidnap') }}",
-                        method : "POST",
-                        data : {
-                            schedule_id : schedule_id,
-                            _token : "{{ csrf_token() }}"
-                        },
-                        success : async function(data){
-                            if(data.success){
-                                await Swal.fire({
-                                    icon: 'success',
-                                    title: 'Success',
-                                    text: 'Interview kidnapped',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                location.reload();
-                            }else{
-                                await Swal.fire({
-                                    icon: 'error',
-                                    title: 'Failed',
-                                    text: data.message ? data.message : 'Something went wrong',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                            }
-                        }
-                    });
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You want to kidnap this interview?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes'
+                    }).then((result) => {
+                        if (result.isConfirmed)
+                            $.ajax({
+                                url : "{{ route('admin.interview.kidnap') }}",
+                                method : "POST",
+                                data : {
+                                    schedule_id : schedule_id,
+                                    _token : "{{ csrf_token() }}"
+                                },
+                                success : async function(data){
+                                    if(data.success){
+                                        await Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: 'Interview kidnapped',
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        })
+                                        location.reload();
+                                    }else{
+                                        await Swal.fire({
+                                            icon: 'error',
+                                            title: 'Failed',
+                                            text: data.message ? data.message : 'Something went wrong',
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        })
+                                    }
+                                }
+                            });
+                    })
                 }
             })
         })
