@@ -99,6 +99,7 @@
 
                         @includeWhen($read_only && $reschedule[0], 'main.reschedule_button', ['i' => 0])
                     </div>
+                    {{-- End wawancara pertama --}}
 
                     {{-- Wawancara kedua --}}
                     @if ($double_interview)
@@ -171,6 +172,7 @@
                             @includeWhen($read_only && $reschedule[1], 'main.reschedule_button', ['i' => 1])
                         </div>
                     @endif
+                    {{-- End wawancara kedua --}}
 
                     <!--Submit button-->
                     <button type="submit"
@@ -197,6 +199,11 @@
             @endif
         </div>
     </section>
+
+    @includeWhen($read_only, 'main.interview_location_modal', ['i' => 0])
+    @includeWhen($double_interview && $read_only, 'main.interview_location_modal', ['i' => 1])
+    @includeWhen($read_only && $reschedule[0], 'main.reschedule_modal', ['i' => 0])
+    @includeWhen($double_interview && $read_only && $reschedule[1], 'main.reschedule_modal', ['i' => 1])
 @endsection
 
 @section('scripts')
@@ -324,9 +331,9 @@
                     });
                 @endif
 
-                $("#modalLocationBtn0, #modalLocationBtn1, #btn-cp0, #btn-cp1").click(async function() {
-                    $("div[data-te-backdrop-show]").remove();
-                })
+                // $("#modalLocationBtn0, #modalLocationBtn1, #btn-cp0, #btn-cp1").click(async function() {
+                //     $("div[data-te-backdrop-show]").remove();
+                // })
             })
         </script>
     @endif
