@@ -15,12 +15,13 @@ class MailController extends Controller
         $this->mail = $mail;
     }
 
-    public function determineTarget(string $email) {
-        // return 'c14210017@john.petra.ac.id';
-        return(env("APP_ENV") === "local" ? 'c14210017@john.petra.ac.id' : $email);
+    public function determineTarget(string $email)
+    {
+        return (env("APP_ENV") == "local" ? 'c14210017@john.petra.ac.id' : $email);
     }
 
-    public function sendMail($data) {
-        return Mail::to($this->determineTarget($data['applicant']->email))->send($this->mail);
+    public function sendMail($data)
+    {
+        return Mail::to($this->determineTarget($data['to']))->send($this->mail);
     }
 }
