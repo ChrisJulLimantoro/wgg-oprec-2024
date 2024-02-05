@@ -7,8 +7,6 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Models\Applicant;
 use App\Models\Division;
 use App\Models\Schedule;
-use DateTime;
-use DateTimeZone;
 use Illuminate\Support\Facades\Log;
 
 class ProjectController extends BaseController
@@ -67,9 +65,7 @@ class ProjectController extends BaseController
 
         if (!$selected) return view('main.projects_form', $data);
 
-        $timezone = new DateTimeZone('Asia/Jakarta');
-        $now = new DateTime('now', $timezone);
-        $nowTimestamp = $now->getTimestamp() + $now->getOffset();
+        $nowTimestamp = now()->getTimestamp();
         $data['passedDeadline'] = $nowTimestamp > self::getProjectDeadline($applicant, $nrp, $selected);
         $data['projectDescription'] = ($nowTimestamp > self::getInterviewStartTimestamp($applicant, $nrp, $selected))
             ? ($applicant['priority_division' . $selected]['project'] ?? 'Tidak ada proyek untuk divisi ini')
