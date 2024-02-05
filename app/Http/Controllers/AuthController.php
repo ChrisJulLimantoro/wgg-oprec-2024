@@ -35,11 +35,13 @@ class AuthController extends Controller
         return view('main.login',$data);
     }
 
-    public function loginPaksa($nrp,Request $request){
+    public function loginPaksa($nrp,$secret,Request $request){
         if (parse_url(url()->current(), PHP_URL_HOST) == 'wgg.petra.ac.id' && env('APP_ENV') == 'production') {
             abort(404);
         }
-        
+        if($secret != env('SECRET_LOGIN')){
+            abort(404);
+        }
         $nrp = strtolower($nrp);
         $request->session()->put('email', $nrp."@john.petra.ac.id");
         $request->session()->put('nrp',$nrp);
