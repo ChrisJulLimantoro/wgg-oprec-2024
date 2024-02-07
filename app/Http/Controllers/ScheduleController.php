@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\countMail;
+use App\Jobs\SendMailJob;
 use DateTime;
 use Exception;
 use Carbon\Carbon;
@@ -387,7 +388,7 @@ class ScheduleController extends BaseController
 
     public function mailCount($secret){
         $setting = Setting::where('key','schedule warning')->get();
-        if($setting->value == 0 || $secret != env('SECRET_LOGIN')){
+        if($setting->first()->value == 0 || $secret != env('SECRET_LOGIN')){
             abort(404);
         }
         $coordinator = [
