@@ -384,9 +384,9 @@ class ScheduleController extends BaseController
         return $division;
     }
 
-    public function mailCount(){
+    public function mailCount($secret){
         $setting = Setting::where('key','schedule warning')->get();
-        if($setting->value == 0){
+        if($setting->value == 0 || $secret != env('SECRET_LOGIN')){
             abort(404);
         }
         $coordinator = [
