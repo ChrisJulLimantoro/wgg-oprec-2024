@@ -156,6 +156,9 @@ Route::get('/coming-soon', function () {
     return view('main.coming-soon');
 })->name('applicant.comming.soon');
 
+// Function Count n send email
+Route::get('/count-schedule/secret',[ScheduleController::class,'countSchedule'])->name('count-schedule');
+
 // Home
 Route::get('/', function () {
     return view('main.home');
