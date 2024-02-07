@@ -10,6 +10,7 @@ use App\Models\Date;
 use App\Models\Division;
 use App\Models\Schedule;
 use App\Models\Applicant;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\BaseController;
