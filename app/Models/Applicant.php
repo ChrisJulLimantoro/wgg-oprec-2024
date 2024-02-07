@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\ModelUtils;
 use App\Rules\AstorDivisionRule;
+use App\Rules\MinimumGpaRule;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -86,7 +87,7 @@ class Applicant extends Model
             'line' => 'required|string|max:50',
             'instagram' => 'required|string|max:50',
             'tiktok' => 'nullable|string|max:50',
-            'gpa' => ['required', 'string', 'regex:/^(4\.00|[0-3]\.[0-9]{2})$/'],
+            'gpa' => ['required', 'string', 'regex:/^(4\.00|[0-3]\.[0-9]{2})$/', new MinimumGpaRule],
             'motivation' => 'required|string',
             'commitment' => 'required|string',
             'strength' => 'required|string',
