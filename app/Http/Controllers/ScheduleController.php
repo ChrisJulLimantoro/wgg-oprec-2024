@@ -436,7 +436,7 @@ class ScheduleController extends BaseController
 
         $count = $this->countSchedule();
         foreach($count as $d => $c){
-            if($c <= 20){
+            if($c <= 80){
                 $mail = new MailController( new countMail([
                     'slug' => $d,
                     'email' => $coordinator[$d]['email'],

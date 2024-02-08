@@ -52,7 +52,7 @@
         <div class="greetings">
             <p><b>Dear {{ $data['name'] }},</b></p><br />
             <p><b>{{ $data['slug'] }} Division has low available schedule count with only {{ $data['count'] }} schedules.</b></p><br>
-            <p><b>Please kindly make new schedule at minimum of 20 schedules!</b></p>
+            <p><b>Please kindly make new schedule at minimum of 80 schedules!</b></p>
         </div>
 
         <div class="closing">
