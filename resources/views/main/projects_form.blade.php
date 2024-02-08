@@ -92,17 +92,17 @@
     </div>
 @endsection
 
-@error('project')
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: '{{ $message }}',
-        })
-    </script>
-@enderror
 
 @section('scripts')
+    @error('project')
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ $message }}',
+            })
+        </script>
+    @enderror
     <script>
         $(document).ready(() => {
             $('#selectDivision').change(function() {

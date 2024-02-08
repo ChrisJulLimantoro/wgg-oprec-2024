@@ -26,8 +26,7 @@ class StoreProjectRequest extends FormRequest
         if (!$applicant['priority_division2']) return false;
 
         $deadline = ProjectController::getProjectDeadline($applicant, $nrp, $selectedPriority);
-        $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
-        $nowTimestamp = $now->getTimestamp() + $now->getOffset();
+        $nowTimestamp = now('Asia/Jakarta')->getTimestamp();
 
         if ($nowTimestamp > $deadline) return false;
 
