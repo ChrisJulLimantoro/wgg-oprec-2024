@@ -392,6 +392,12 @@ class AdminSeeder extends Seeder
                 'line' => 'kotonarimasu2711',
                 'division_id' => Division::where('slug','konsum')->first()->id 
             ],
+            [
+                'name' => 'Arnold Brilliant',
+                'email' => 'c13220026@john.petra.ac.id',
+                'line' => 'arnoldbw03',
+                'division_id' => Division::where('slug','peran')->first()->id 
+            ],
         ];
         foreach($admins as $admin){
             Admin::create($admin);
