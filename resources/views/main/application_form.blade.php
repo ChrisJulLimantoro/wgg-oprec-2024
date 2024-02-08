@@ -471,7 +471,8 @@
                         <select {{ !empty(old('astor')) || data_get($form, 'astor', false) ? 'disabled' : '' }}
                             {{ array_key_exists('id', $form) ? 'disabled' : '' }} data-te-select-init
                             id="priority-division2" name="priority_division2">
-                            <option value="" selected class="h-10"></option>
+                            <option value="" selected hidden></option>
+                            <option value="">-</option>
                             @foreach ($divisions as $division)
                                 <option value="{{ $division['id'] }}"
                                     {{ old('priority_division2') === $division['id'] || data_get($form, 'priority_division2', '-1') === $division['id'] ? 'selected' : '' }}>
