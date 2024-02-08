@@ -64,7 +64,9 @@
             <h1 class="uppercase text-lg mb-3"><b class="text-xl font-bold italic">Experience : </b>{{ $applicant->experience }}</h1>
             <h1 class="uppercase text-lg mb-3"><b class="text-xl font-bold italic">Astor : </b>{{ ['tidak','iya'][$applicant->astor] }}</h1>
             <h1 class="uppercase text-lg mb-3"><b class="text-xl font-bold italic">First Division : </b>{{ $applicant->priorityDivision1['name'] }}</h1>
+            @isset($applicant->priorityDivision2)
             <h1 class="uppercase text-lg mb-3"><b class="text-xl font-bold italic">Second Division : </b>{{ $applicant->priorityDivision2['name'] }}</h1>
+            @endIsset
         </div>
         @foreach ($documentTypes as $type => $label)
         @php
