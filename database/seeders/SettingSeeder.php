@@ -30,6 +30,11 @@ class SettingSeeder extends Seeder
                 'key' => 'BPH',
                 'value' => 1,
                 'description' => 'BPH bisa interview semua divisi (1) atau peran saja (0)'
+            ],
+            [
+                'key' => 'schedule warning',
+                'value' => 1,
+                'description' => 'Warning if the schedule available count is lower than 20'
             ]
         ];
         foreach($settings as $setting){

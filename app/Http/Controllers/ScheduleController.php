@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\countMail;
+use App\Jobs\SendMailJob;
 use DateTime;
 use Exception;
 use Carbon\Carbon;
@@ -9,6 +11,7 @@ use App\Models\Date;
 use App\Models\Division;
 use App\Models\Schedule;
 use App\Models\Applicant;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\BaseController;
@@ -371,5 +374,78 @@ class ScheduleController extends BaseController
         
         $applicant->reschedule = $index == 0 ? $status . $reschedule_status[1] : $reschedule_status[0] . $status;
         $applicant->save();
+    }
+
+    public function countSchedule(){
+        $date = Date::select('id', 'date')->where('date', '>', Carbon::now('Asia/Jakarta'))->get()->pluck('id')->toArray();
+        $data = Schedule::with(['admin.division'])->where('status','1')->whereIn('date_id',$date)->get()->pluck('admin.division.slug')->toArray();
+        $division = array_fill_keys(Division::where('slug','!=','open')->where('slug','!=','close')->get()->pluck('slug')->toArray(),0);
+        foreach ($data as $d){
+            $division[$d] += 1;
+        }
+        return $division;
+    }
+
+    public function mailCount($secret){
+        $setting = Setting::where('key','schedule warning')->get();
+        if($setting->first()->value == 0 || $secret != env('SECRET_LOGIN')){
+            abort(404);
+        }
+        $coordinator = [
+            'it' => [
+                'email' => 'c14220061@john.petra.ac.id',
+                'name' => 'Ebet',
+            ],
+            'bph' => [
+                'email' => 'd11210185@john.petra.ac.id',
+                'name' => 'Everson',
+            ],
+            'acara' => [
+                'email' => 'd11220093@john.petra.ac.id',
+                'name' => 'Marcel',
+            ],
+            'creative' => [
+                'email' => 'b11210011@john.petra.ac.id',
+                'name' => 'Nathken',
+            ],
+            'perkap' => [
+                'email' => 'd11210178@john.petra.ac.id',
+                'name' => 'Liem',
+            ],
+            'regul' => [
+                'email' => 'f11210005@john.petra.ac.id',
+                'name' => 'Emanuel',
+            ],
+            'sekret' => [
+                'email' => 'a11220010@john.petra.ac.id',
+                'name' => 'Monica',
+            ],
+            'konsum' => [
+                'email' => 'd11220344@john.petra.ac.id',
+                'name' => 'Kezia',
+            ],
+            'kesehatan' => [
+                'email' => 'c14220133@john.petra.ac.id',
+                'name' => 'Cathlyn',
+            ],
+            'peran' => [
+                'email' => 'd11210058@john.petra.ac.id',
+                'name' => 'Fena',
+            ]
+        ];
+
+        $count = $this->countSchedule();
+        foreach($count as $d => $c){
+            if($c <= 20){
+                $mail = new MailController( new countMail([
+                    'slug' => $d,
+                    'email' => $coordinator[$d]['email'],
+                    'name' => $coordinator[$d]['name'],
+                    'count' => $c,
+                ]));
+                $data['to'] = $coordinator[$d]['email'];
+                dispatch(new SendMailJob($mail,$data));
+            }
+        }
     }
 }

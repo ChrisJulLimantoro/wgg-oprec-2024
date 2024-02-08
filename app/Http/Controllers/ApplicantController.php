@@ -456,6 +456,8 @@ class ApplicantController extends BaseController
 
     public function canReschedule($date, $time)
     {
+        return true;
+        
         date_default_timezone_set('Asia/Jakarta');
 
         //max date to reschedule
