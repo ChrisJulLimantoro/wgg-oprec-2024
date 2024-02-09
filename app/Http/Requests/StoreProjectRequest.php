@@ -4,8 +4,6 @@ namespace App\Http\Requests;
 
 use App\Http\Controllers\ProjectController;
 use App\Models\Applicant;
-use DateTime;
-use DateTimeZone;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProjectRequest extends FormRequest
@@ -28,7 +26,7 @@ class StoreProjectRequest extends FormRequest
         $deadline = ProjectController::getProjectDeadline($applicant, $nrp, $selectedPriority);
         $nowTimestamp = now('Asia/Jakarta')->getTimestamp();
 
-        // if ($nowTimestamp > $deadline) return false;
+        if ($nowTimestamp > $deadline) return false;
 
         return true;
     }
