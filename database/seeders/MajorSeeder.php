@@ -54,8 +54,8 @@ class MajorSeeder extends Seeder
             array('code' => '4', 'name' => 'DESAIN KOMUNIKASI VISUAL',                            'english_name' => 'VISUAL COMMUNICATION DESIGN',                            'faculty_id' => Faculty::where('code', 'H')->first()->id),
             array('code' => '4', 'name' => 'TEXTILE AND FASHION DESIGN',                          'english_name' => 'TEXTILE AND FASHION DESIGN',                             'faculty_id' => Faculty::where('code', 'H')->first()->id),
             array('code' => '4', 'name' => 'INTERNATIONAL PROGRAM IN DIGITAL MEDIA',              'english_name' => 'INTERNATIONAL PROGRAM IN DIGITAL MEDIA',                 'faculty_id' => Faculty::where('code', 'H')->first()->id),
-            array('code' => '5', 'name' => 'BROADCAST AND JOURNALISM',                            'english_name' => 'BROADCAST AND JOURNALISM',                               'faculty_id' => Faculty::where('code', 'F')->first()->id),
-            array('code' => '5', 'name' => 'STRATEGIC COMMUNICATION',                             'english_name' => 'STRATEGIC COMMUNICATION',                                'faculty_id' => Faculty::where('code', 'F')->first()->id),
+            array('code' => '1', 'name' => 'BROADCAST AND JOURNALISM',                            'english_name' => 'BROADCAST AND JOURNALISM',                               'faculty_id' => Faculty::where('code', 'F')->first()->id),
+            array('code' => '1', 'name' => 'STRATEGIC COMMUNICATION',                             'english_name' => 'STRATEGIC COMMUNICATION',                                'faculty_id' => Faculty::where('code', 'F')->first()->id),
             array('code' => '5', 'name' => 'BROADCAST AND JOURNALISM',                            'english_name' => 'BROADCAST AND JOURNALISM',                               'faculty_id' => Faculty::where('code', 'H')->first()->id),
             array('code' => '5', 'name' => 'STRATEGIC COMMUNICATION',                             'english_name' => 'STRATEGIC COMMUNICATION',                                'faculty_id' => Faculty::where('code', 'H')->first()->id),
         );
