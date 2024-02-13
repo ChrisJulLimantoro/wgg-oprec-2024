@@ -64,11 +64,11 @@ class ProjectController extends BaseController
         $data['selected'] = $selected;
         if ($applicant['astor'])
             return view('main.projects_form', $data);
-    
 
         if (!$selected) return view('main.projects_form', $data);
 
         $nowTimestamp = now()->getTimestamp();
+        $data['projectExist'] = !empty($applicant['priority_division' . $selected]['project']);
         $data['deadline'] = self::getProjectDeadline($applicant, $nrp, $selected);
         $data['passedDeadline'] = $nowTimestamp > $data['deadline'];
         $data['projectDescription'] = ($nowTimestamp > self::getInterviewStartTimestamp($applicant, $nrp, $selected))
