@@ -69,7 +69,8 @@ class ProjectController extends BaseController
         if (!$selected) return view('main.projects_form', $data);
 
         $nowTimestamp = now()->getTimestamp();
-        $data['passedDeadline'] = $nowTimestamp > self::getProjectDeadline($applicant, $nrp, $selected);
+        $data['deadline'] = self::getProjectDeadline($applicant, $nrp, $selected);
+        $data['passedDeadline'] = $nowTimestamp > $data['deadline'];
         $data['projectDescription'] = ($nowTimestamp > self::getInterviewStartTimestamp($applicant, $nrp, $selected))
             ? ($applicant['priority_division' . $selected]['project'] ?? 'Tidak ada proyek untuk divisi ini')
             : 'Silahkan lakukan interview terlebih dahulu untuk melihat deskripsi proyek';

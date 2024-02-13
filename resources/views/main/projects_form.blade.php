@@ -57,6 +57,12 @@
                                 <div class="mb-4 text-sm text-white project-description">
                                     {!! $projectDescription !!}
                                 </div>
+                                <div class="text-danger pt-3">
+                                    deadline: {{ date('l, d F Y H:i:s', $deadline) }}
+                                </div>
+                                <div class="text-white text-sm">
+                                    Setelah waktu melewati deadline pengumpulan secara otomatis akan tertutup
+                                </div>
                             </div>
                         @endif
                         <form action="{{ $selected ? route('applicant.project.store', $selected) : '' }}" method="POST"
