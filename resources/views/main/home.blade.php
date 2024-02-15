@@ -467,7 +467,8 @@
                                 style=" text-shadow: 0px 1px 1px hsla(0, 0%, 100%, 1);"><span
                                     class="font-dillan">Welcome Grateful Generation</span>
                                 atau yang kerap kita kenal
-                                sebagai WGG adalah kegiatan penyambutan mahasiswa baru di Petra Christian University. Pada
+                                sebagai WGG adalah kegiatan penyambutan mahasiswa baru di Petra Christian University.
+                                Pada
                                 acara ini, para mahasiswa baru diajak untuk mengenal dan beradaptasi dengan lingkungan
                                 kampus.</p>
                         </div>
@@ -495,7 +496,9 @@
                                     class="top-[-60px] left-[80px]">
                                 <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
                                     Acara</h3>
-                                <p class="mt-2">Divisi yang merancang, mempersiapkan, dan memimpin pelaksanaan seluruh rangkaian acara sesuai dengan esensi yang ingin disampaikan kepada mahasiswa baru.</p>
+                                <p class="mt-2">Divisi yang merancang, mempersiapkan, dan memimpin pelaksanaan seluruh
+                                    rangkaian acara sesuai dengan esensi yang ingin disampaikan kepada mahasiswa baru.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -507,7 +510,8 @@
                                 <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
                                     Creative
                                 </h3>
-                                <p class="mt-2">Divisi yang menjadi tempat kalian bertumbuh dan berkarya melalui ide kreatif yang diekspresikan dalam bentuk desain ilustrasi dan video.</p>
+                                <p class="mt-2">Divisi yang menjadi tempat kalian bertumbuh dan berkarya melalui ide
+                                    kreatif yang diekspresikan dalam bentuk desain ilustrasi dan video.</p>
                             </div>
                         </div>
                     </div>
@@ -518,7 +522,8 @@
                                     class="top-[-70px] left-[60px]">
                                 <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
                                     IT</h3>
-                                <p class="mt-2">Divisi yang mengelola website dan aplikasi yang digunakan oleh mahasiswa baru dan panitia.</p>
+                                <p class="mt-2">Divisi yang mengelola website dan aplikasi yang digunakan oleh
+                                    mahasiswa baru dan panitia.</p>
                             </div>
                         </div>
                     </div>
@@ -530,7 +535,8 @@
                                 <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
                                     Kesehatan
                                 </h3>
-                                <p class="mt-2">Divisi yang bertanggung jawab atas kesehatan mahasiswa baru dan panitia selama WGG berlangsung.</p>
+                                <p class="mt-2">Divisi yang bertanggung jawab atas kesehatan mahasiswa baru dan
+                                    panitia selama WGG berlangsung.</p>
                             </div>
                         </div>
                     </div>
@@ -542,7 +548,8 @@
                                 <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
                                     Konsumsi
                                 </h3>
-                                <p class="mt-2">Divisi yang bertanggung jawab dalam mempersiapkan segala kebutuhan konsumsi dalam jumlah dan waktu yang tepat.</p>
+                                <p class="mt-2">Divisi yang bertanggung jawab dalam mempersiapkan segala kebutuhan
+                                    konsumsi dalam jumlah dan waktu yang tepat.</p>
                             </div>
                         </div>
                     </div>
@@ -553,7 +560,9 @@
                                     class="top-[-70px] left-[60px] scale-75">
                                 <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
                                     Peran</h3>
-                                <p class="mt-2">Divisi PERAN merupakan divisi yang menyambut dan mendampingi persiapan mahasiswa baru agar mereka siap untuk menghadapi dunia perkuliahan dengan dasar yang benar.</p>
+                                <p class="mt-2">Divisi PERAN merupakan divisi yang menyambut dan mendampingi
+                                    persiapan mahasiswa baru agar mereka siap untuk menghadapi dunia perkuliahan dengan
+                                    dasar yang benar.</p>
                             </div>
                         </div>
                     </div>
@@ -564,7 +573,8 @@
                                     class="top-[-60px] left-[60px] scale-90">
                                 <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
                                     Perlengkapan</h3>
-                                <p class="mt-2">Divisi yang bertanggung jawab untuk menyiapkan kebutuhan barang dan ruangan, serta mengoperasikan alat-alat untuk teknis acara WGG.</p>
+                                <p class="mt-2">Divisi yang bertanggung jawab untuk menyiapkan kebutuhan barang dan
+                                    ruangan, serta mengoperasikan alat-alat untuk teknis acara WGG.</p>
                             </div>
                         </div>
                     </div>
@@ -576,7 +586,8 @@
                                 <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
                                     Keamanan
                                 </h3>
-                                <p class="mt-2">Tim yang menjaga keamanan, kelancaran, dan ketertiban acara dalam proses mahasiswa baru mengenal Petra Christian University.</p>
+                                <p class="mt-2">Tim yang menjaga keamanan, kelancaran, dan ketertiban acara dalam
+                                    proses mahasiswa baru mengenal Petra Christian University.</p>
                             </div>
                         </div>
                     </div>
@@ -588,7 +599,8 @@
                                 <h3 class="uppercase drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] font-dillan text-2xl">
                                     Sekretariat
                                 </h3>
-                                <p class="mt-2">Divisi yang bertanggung jawab atas data dan informasi bagi mahasiswa baru maupun panitia selama kegiatan WGG.</p>
+                                <p class="mt-2">Divisi yang bertanggung jawab atas data dan informasi bagi mahasiswa
+                                    baru maupun panitia selama kegiatan WGG.</p>
                             </div>
                         </div>
                     </div>
@@ -604,7 +616,8 @@
             <h1 class="font-dillan text-[8vw] font-bold xl:text-[4vw] text-white gs_reveal gs_reveal_fromRight"
                 id="howtojoin">HOW TO JOIN?</h1>
         </div>
-        <div class="font-dillan mx-auto text-yellow-400 uppercase text-md text-center py-8 px-6 sm:py-3 sm:px-3 sm:text-xl gs_reveal gs_reveal_fromRight" id="info">
+        <div class="font-dillan mx-auto text-yellow-400 uppercase text-md text-center py-8 px-6 sm:py-3 sm:px-3 sm:text-xl gs_reveal gs_reveal_fromRight"
+            id="info">
             Registration Opened from 5th February 2024 until 28th February 2024 <br>
             The interview process will be held until 29th February 2024
         </div>
@@ -778,7 +791,8 @@
         scene.add(camera);
 
         const renderer = new THREE.WebGLRenderer({
-            alpha: true
+            alpha: true,
+            antialias: true,
         });
         renderer.setSize(width, height);
         document.body.appendChild(renderer.domElement);
