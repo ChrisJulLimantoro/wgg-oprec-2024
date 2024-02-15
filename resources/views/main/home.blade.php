@@ -792,7 +792,6 @@
 
         const renderer = new THREE.WebGLRenderer({
             alpha: true,
-            antialias: true,
         });
         renderer.setSize(width, height);
         document.body.appendChild(renderer.domElement);
