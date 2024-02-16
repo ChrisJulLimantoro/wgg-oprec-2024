@@ -21,7 +21,7 @@ class StoreProjectRequest extends FormRequest
             ->where('email', $nrp . '@john.petra.ac.id')
             ->first()->toArray();
 
-        if (!$applicant['priority_division2']) return false;
+        if (!$applicant['priority_division2'] && $selectedPriority == 2) return false;
 
         $deadline = ProjectController::getProjectDeadline($applicant, $nrp, $selectedPriority);
         $nowTimestamp = now('Asia/Jakarta')->getTimestamp();
